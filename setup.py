@@ -7,7 +7,7 @@ from os import path
 from setuptools import setup, find_packages
 
 if not sys.version_info[:2] >= (3, 8):
-    sys.exit(f"subsurface is only meant for Python 3.8 and up.\n"
+    sys.exit(f"vector-geology is only meant for Python 3.10 and up.\n"
              f"Current version: {sys.version_info[0]}.{sys.version_info[1]}.")
 
 this_directory = path.abspath(path.dirname(__file__))
@@ -26,22 +26,21 @@ CLASSIFIERS = [
 ]
 
 setup(
-    name="subsurface",
+    name="vector-geology",
     packages=find_packages(exclude=("tests", "docs", "examples")),
-    description="Subsurface data types and utilities",
+    description="TO BE UPDATED",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://softwareunderground.github.io/subsurface",
-    author="Software Underground",
-    author_email="hello@softwareunderground.org",
-    license="Apache-2.0",
-    install_requires=["xarray", ],
+    url="https://vectorproject.eu/",
+    author="The Vector Team",
+    author_email="miguel@terranigma-solutions.com",
+    license="EUPL-1.2",
     classifiers=CLASSIFIERS,
     zip_safe=False,
     use_scm_version={
         "root": ".",
         "relative_to": __file__,
-        "write_to": path.join("subsurface", "_version.py"),
+        "write_to": path.join("vector-geology", "_version.py"),
     },
     setup_requires=["setuptools_scm"],
 )
