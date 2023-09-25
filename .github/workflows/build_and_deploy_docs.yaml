@@ -28,7 +28,9 @@ jobs:
         run: pip install -r requirements_dev.txt
         
       - name: Build Sphinx Docs
-        run: make html  # adjust based on your Makefile
+        run: |
+          cd docs
+          make html  # adjust based on your Makefile
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
