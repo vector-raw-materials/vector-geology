@@ -1,12 +1,8 @@
-import numpy as np
-import pandas as pd
-import pyvista
 import omfvista
-from dotenv import dotenv_values
-
 import pytest
-
+import pyvista
 import subsurface
+from dotenv import dotenv_values
 from subsurface import TriSurf
 from subsurface.visualization import to_pyvista_mesh, pv_plot
 from subsurface.writer import base_structs_to_binary_file
