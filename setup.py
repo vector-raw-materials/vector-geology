@@ -7,7 +7,7 @@ from os import path
 from setuptools import setup, find_packages
 
 if not sys.version_info[:2] >= (3, 8):
-    sys.exit(f"vector-geology is only meant for Python 3.10 and up.\n"
+    sys.exit(f"vector_geology is only meant for Python 3.10 and up.\n"
              f"Current version: {sys.version_info[0]}.{sys.version_info[1]}.")
 
 this_directory = path.abspath(path.dirname(__file__))
@@ -26,7 +26,7 @@ CLASSIFIERS = [
 ]
 
 setup(
-    name="vector-geology",
+    name="vector_geology",
     packages=find_packages(exclude=("tests", "docs", "examples")),
     description="TO BE UPDATED",
     long_description=long_description,
@@ -40,7 +40,7 @@ setup(
     use_scm_version={
         "root": ".",
         "relative_to": __file__,
-        "write_to": path.join("vector-geology", "_version.py"),
+        "write_to": path.join("vector_geology", "_version.py"),
     },
     setup_requires=["setuptools_scm"],
 )

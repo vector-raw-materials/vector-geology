@@ -2,7 +2,7 @@ import time
 import os
 import sys
 import warnings
-from visual_bayesic import __version__
+from vector_geology import __version__
 
 from sphinx_gallery.sorting import FileNameSortKey
 import pyvista
