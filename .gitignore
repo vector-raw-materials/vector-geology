@@ -254,3 +254,4 @@ cython_debug/
 /docs/source/examples/
 /docs/source/external/
 /docs/source/gen_modules/
+/docs/source/errors.txt
