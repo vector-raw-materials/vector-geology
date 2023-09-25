@@ -30,15 +30,12 @@ overridden by environment variables. Any environment variables are overridden
 by values set in a '.env' file (if it exists), and in turn by those set in a
 file specified by the '--config-file' option."
 
-echo "docs.gempy.org" > docs/build/html/CNAME
-
 
 parse_args() {
-	# Set args from a local environment file.
-	if [ -e ".env" ]; then
-		source .env
-	fi
-
+  # Read environment variables from .env file if it exists
+  if [ -f .env ]; then
+    source .env
+  fi
 	# Set args from file specified on the command-line.
 	if [[ $1 = "-c" || $1 = "--config-file" ]]; then
 		source "$2"
@@ -166,13 +163,18 @@ incremental_deploy() {
 	esac
 }
 
+
 commit+push() {
 	set_user_id
+	
+  # Adding the authentication token for git push
+  deploy_repo=$(echo "$repo" | sed -e "s/https:\/\//https:\/\/${GIT_PERSONAL_ACCESS_TOKEN}@/g")
+	
 	git --work-tree "$deploy_directory" commit -m "$commit_message"
 
 	disable_expanded_output
 	#--quiet is important here to avoid outputting the repo URL, which may contain a secret token
-	git push --quiet $repo $deploy_branch
+	git push --quiet $deploy_repo $deploy_branch
 	enable_expanded_output
 }
 
