@@ -44,8 +44,6 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx_gallery.gen_gallery',
-    'sphinx_automodapi.automodapi',
-    'sphinx_automodapi.smart_resolver',
     "pyvista.ext.plot_directive"
 ]
 
@@ -139,7 +137,6 @@ linkcheck_request_header = {
 
 
 # -- Options for HTML output ----------------------------------------------
-html_theme = 'sphinx_rtd_theme'
 html_theme_options = {
     'logo_only': True,
     'display_version': True,
