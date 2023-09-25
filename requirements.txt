@@ -1,1 +1,4 @@
 .
+numpy
+matplotlib
+git+https://github.com/terranigma-solutions/subsurface.git#egg=subsurface
