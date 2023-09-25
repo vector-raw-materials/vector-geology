@@ -40,7 +40,8 @@ def test_omf_to_unstruct_single_block(load_omf):
         cells=cells_pyvista,
     )
 
-    base_structs_to_binary_file("leapfrog1", unstruct)
+    if TO_LIQUID_EARTH:=False:
+        base_structs_to_binary_file("leapfrog1", unstruct)
 
     ts = TriSurf(mesh=unstruct)
     s = to_pyvista_mesh(ts)
