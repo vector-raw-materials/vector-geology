@@ -24,9 +24,11 @@ git reset .env
 git commit -m "Update documentation"
 
 # Use the personal access token to push changes
-git push https://${GIT_PERSONAL_ACCESS_TOKEN}@github.com/vector-raw-materials/vector-geology.git gh-pages
+# * NOTE(Miguel): Pushing directly is becoming a bit of a pain so for now this script will just prepare the branch so that we can just push with our normal git config
+
+#git push https://${GIT_PERSONAL_ACCESS_TOKEN}@github.com/vector-raw-materials/vector-geology.git gh-pages
 
 # Switch back to the original branch
-git checkout -
-
-echo "Documentation updated and pushed to gh-pages."
+#git checkout -
+#
+#echo "Documentation updated and pushed to gh-pages."
