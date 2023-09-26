@@ -1,6 +1,6 @@
-.. image:: https://raw.githubusercontent.com/softwareunderground/subsurface/main/docs/source/_static/logos/subsurface.png
-   :target: https://softwareunderground.github.io/subsurface
-   :alt: subsurface logo
+.. image:: https://raw.githubusercontent.com/vector-raw-materials/vector-geology/main/docs/source/_static/logos/vector-logo.png
+   :target: https://github.com/vector-raw-materials/vector-geology
+   :alt: vector logo
 
 
 .. image:: https://img.shields.io/badge/python-3.8+-blue.svg

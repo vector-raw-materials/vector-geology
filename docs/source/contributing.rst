@@ -1,7 +1,7 @@
 Contributing
 ------------
 
-The package ``VisualBayesic`` is a community effort, and contributions of any kind
+The package ``vector-geology`` is a community effort, and contributions of any kind
 (code, documentation, bug reports, examples) are very welcomed; please get in
 touch!
 

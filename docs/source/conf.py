@@ -146,7 +146,7 @@ html_theme_options = {
     'prev_next_buttons_location': 'both',
 }
 html_static_path = ['_static']
-html_logo = '_static/logos/subsurface.png'
+html_logo = '_static/logos/vector-logo.png'
 html_favicon = '_static/logos/favicon.ico'
 html_sidebars = {
     '**': [

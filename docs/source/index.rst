@@ -1,12 +1,12 @@
 .. _subsurface-manual:
 
 ########################
-subsurface Documentation
+vector-geology Documentation
 ########################
 
 :Release: |version|
 :Date: |today|
-:Source: `github.com/softwareunderground/subsurface <https://github.com/softwareunderground/subsurface>`_
+:Source: `github.com/vector-raw-materials/vector-geology <https://github.com/vector-raw-materials/vector-geology>`_
 
 ----
 
@@ -17,10 +17,10 @@ subsurface Documentation
 
 Requirements
 ------------
+The requirements for the core functionality of the package are:
 
-The **only** requirement for ``subsurface`` is ``xarray`` (which, in turn,
-requires ``pandas`` and ``numpy``).
-
+.. include:: ../../requirements_opt.txt
+   :literal:
 
 Optional requirements
 ---------------------
