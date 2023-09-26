@@ -6,7 +6,8 @@ set -e
 
 # Load personal access token
 # Load personal access token and remove any carriage return characters
-GIT_PERSONAL_ACCESS_TOKEN=$(grep -o 'GIT_PERSONAL_ACCESS_TOKEN=.*' .env | cut -f 2- -d '=' | tr -d '\r')
+#GIT_PERSONAL_ACCESS_TOKEN=$(grep -o 'GIT_PERSONAL_ACCESS_TOKEN=.*' .env | cut -f 2- -d '=' | tr -d '\r')
+source .env
 
 # Switch to gh-pages branch
 git checkout gh-pages
