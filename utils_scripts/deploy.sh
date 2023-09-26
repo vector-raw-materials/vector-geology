@@ -168,7 +168,6 @@ commit+push() {
 	set_user_id
 	
   echo "Token: ${GIT_PERSONAL_ACCESS_TOKEN}"
-  foo
   # Adding the authentication token for git push
   deploy_repo=$(echo "$repo" | sed -e "s/https:\/\//https:\/\/${GIT_PERSONAL_ACCESS_TOKEN}@/g")
 	
