@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>subsurface Documentation &#8212; Visual Bayesic 0.1.dev16+g525c9e2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b849a4e9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css?v=f2a985cd" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=f5ef4c94"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Manual" href="manual.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="subsurface-documentation">
+<span id="subsurface-manual"></span><h1>subsurface Documentation<a class="headerlink" href="#subsurface-documentation" title="Permalink to this heading">¶</a></h1>
+<dl class="field-list simple">
+<dt class="field-odd">Release<span class="colon">:</span></dt>
+<dd class="field-odd"><p>0.1.dev16+g525c9e2</p>
+</dd>
+<dt class="field-even">Date<span class="colon">:</span></dt>
+<dd class="field-even"><p>25 September 2023</p>
+</dd>
+<dt class="field-odd">Source<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://github.com/softwareunderground/subsurface">github.com/softwareunderground/subsurface</a></p>
+</dd>
+</dl>
+<hr class="docutils" />
+<section id="visual-bayesic">
+<h2>Visual Bayesic<a class="headerlink" href="#visual-bayesic" title="Permalink to this heading">¶</a></h2>
+<p>Visual Bayesic is a Python package for Bayesian inversion of geophysical data.</p>
+<section id="documentation-wip">
+<h3>Documentation (WIP)<a class="headerlink" href="#documentation-wip" title="Permalink to this heading">¶</a></h3>
+<p>Note that <code class="docutils literal notranslate"><span class="pre">Visual</span> <span class="pre">Bayesic</span></code> is still in early days; do expect things to change.</p>
+<p>An early version of the documentation can be found here:</p>
+<p><a class="reference external" href="https://softwareunderground.github.io/subsurface/">https://softwareunderground.github.io/subsurface/</a></p>
+<p>Direct links:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://softwareunderground.github.io/subsurface/maintenance.html">Developers-guide</a></p></li>
+<li><p><a class="reference external" href="https://softwareunderground.github.io/subsurface/changelog.html">Changelog</a></p></li>
+</ul>
+</section>
+<section id="installation">
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">pip install visual-bayesic</span>
+</pre></div>
+</div>
+<p>Be aware that to read different formats you will need to manually install the
+specific dependency (e.g. <code class="docutils literal notranslate"><span class="pre">welly</span></code> to read well data).</p>
+</section>
+<section id="requirements">
+<h3>Requirements<a class="headerlink" href="#requirements" title="Permalink to this heading">¶</a></h3>
+<p>The <strong>only</strong> requirement for <code class="docutils literal notranslate"><span class="pre">subsurface</span></code> is <code class="docutils literal notranslate"><span class="pre">xarray</span></code> (which, in turn,
+requires <code class="docutils literal notranslate"><span class="pre">pandas</span></code> and <code class="docutils literal notranslate"><span class="pre">numpy</span></code>).</p>
+</section>
+<section id="optional-requirements">
+<h3>Optional requirements<a class="headerlink" href="#optional-requirements" title="Permalink to this heading">¶</a></h3>
+<p>There are many optional requirements, depending on the data format you want to
+read/write. Currently, the <code class="docutils literal notranslate"><span class="pre">requierements_opt.txt</span></code> reads like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span><span class="o">+</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">terranigma</span><span class="o">-</span><span class="n">solutions</span><span class="o">/</span><span class="n">subsurface</span><span class="o">.</span><span class="n">git</span><span class="c1">#egg=subsurface</span>
+<span class="n">omfvista</span>
+<span class="n">pyvista</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/subsurface.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="#">Visual Bayesic</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Vector Examples II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html#vector-examples">Vector Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external/external_examples.html">External Examples</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023-2023, Miguel de la Varga and Maximilian Hallenberger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/index.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

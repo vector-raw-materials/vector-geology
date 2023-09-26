@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Maintenance &#8212; Visual Bayesic 0.1.dev16+g525c9e2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b849a4e9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css?v=f2a985cd" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=f5ef4c94"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=4825356b"></script>
+    <link rel="icon" href="_static/favicon.ico"/>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Vector Examples II" href="examples/index.html" />
+    <link rel="prev" title="Contributing" href="contributing.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="maintenance">
+<h1>Maintenance<a class="headerlink" href="#maintenance" title="Permalink to this heading">¶</a></h1>
+<section id="making-a-release">
+<h2>Making a release<a class="headerlink" href="#making-a-release" title="Permalink to this heading">¶</a></h2>
+<ol class="arabic simple">
+<li><p>Add release notes to <code class="docutils literal notranslate"><span class="pre">CHANGELOG.rst</span></code>.</p></li>
+<li><p>Create a release on GitHub, add the above release notes to it.</p></li>
+</ol>
+<p>When you create a release on GitHub it will run the tests, and subsequently
+deploy the version to PyPI, from where it will also be picked up to
+conda-forge. If everything works fine it should be available from PyPI within
+minutes after the tests passed, and within an hour or two from conda-forge.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Important.</strong> Due to the use of <code class="docutils literal notranslate"><span class="pre">setuptools_scm</span></code>, everything is by
+default added to the wheel on PyPI. Files and folders that should not be in
+a release have to be excluded by adding it to the <code class="docutils literal notranslate"><span class="pre">MANIFEST.in</span></code>.</p>
+</div>
+</section>
+<section id="type-of-commits">
+<h2>Type of commits<a class="headerlink" href="#type-of-commits" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p>ENH: Enhancement, new functionality</p></li>
+<li><p>BUG: Bug fix</p></li>
+<li><p>DOC: Additions/updates to documentation</p></li>
+<li><p>TST: Additions/updates to tests</p></li>
+<li><p>BLD: Updates to the build process/scripts</p></li>
+<li><p>PERF: Performance improvement</p></li>
+<li><p>CLN: Code cleanup</p></li>
+</ul>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/subsurface.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="index.html">Visual Bayesic</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Maintenance</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#making-a-release">Making a release</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#type-of-commits">Type of commits</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Vector Examples II</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html#vector-examples">Vector Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external/external_examples.html">External Examples</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023-2023, Miguel de la Varga and Maximilian Hallenberger.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/maintenance.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
