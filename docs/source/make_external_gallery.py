@@ -62,17 +62,7 @@ articles = dict(
         link="https://segysak.readthedocs.io/en/latest/examples/example_subsurface.html",
         image="https://raw.githubusercontent.com/trhallam/segysak/main/docs/_static/logo_small.png",
     ),
-    pygimli=Example(
-        title="GemPy To pyGIMLi 3D using subsurface",
-        description="GemPy To pyGIMLi 3D using subsurface",
-        link="https://htmlpreview.github.io/?https://raw.githubusercontent.com/andieie/t21_hacksubsurface/main/gempy_to_pygimli.html",
-    )
-    # entry=Example(
-    #     title="",
-    #     description="",
-    #     link="",
-    #     image="",
-    # ),
+ 
 )
 
 
