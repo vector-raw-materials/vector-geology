@@ -19,7 +19,7 @@ Requirements
 ------------
 The requirements for the core functionality of the package are:
 
-.. include:: ../../requirements_opt.txt
+.. include:: ../../requirements.txt
    :literal:
 
 Optional requirements
