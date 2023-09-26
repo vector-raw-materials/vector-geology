@@ -14,25 +14,20 @@
 .. sphinx-inclusion-marker
 
 
-Visual Bayesic
+vector-geology
 ==============
 
-Visual Bayesic is a Python package for Bayesian inversion of geophysical data.
+vector-geology is a Python package for Bayesian inversion of geophysical data.
 
 
 Documentation (WIP)
 -------------------
 
-Note that ``Visual Bayesic`` is still in early days; do expect things to change. 
-
-An early version of the documentation can be found here:
-
-https://softwareunderground.github.io/subsurface/
+Note that ``vector-geology`` is still in early days; do expect things to change. 
 
 Direct links:
 
-- `Developers-guide <https://softwareunderground.github.io/subsurface/maintenance.html>`_
-- `Changelog <https://softwareunderground.github.io/subsurface/changelog.html>`_
+- `Project Website <https://vectorproject.eu//>`_
 
 
 Installation
@@ -40,8 +35,5 @@ Installation
 
 .. code-block:: console
 
-    pip install visual-bayesic
-
-Be aware that to read different formats you will need to manually install the
-specific dependency (e.g. ``welly`` to read well data).
+    pip install vector-geology
 

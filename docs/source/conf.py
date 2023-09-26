@@ -79,8 +79,8 @@ source_suffix = ['.rst']
 master_doc = 'index'
 
 # General information about the project.
-project = 'Visual Bayesic'
-author = 'Miguel de la Varga and Maximilian Hallenberger'
+project = 'Vector Geology'
+author = 'Vector Geology Team'
 copyright = f'2023-{time.strftime("%Y")}, {author}'
 
 # |version| and |today| tags (|release|-tag is not used).
