@@ -6,6 +6,12 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10.12 WSL (Ubuntu-22.04): (/home/leguark/.virtualenvs/gempy-geotop-pilot/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="subsurface" />
+    <orderEntry type="module" module-name="gempy_engine" />
+    <orderEntry type="module" module-name="gempy_plugins" />
+    <orderEntry type="module" module-name="gempy" />
+    <orderEntry type="module" module-name="gempy_probability" />
+    <orderEntry type="module" module-name="gempy_viewer" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="renderExternalDocumentation" value="true" />
