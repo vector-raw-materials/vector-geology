@@ -1,38 +1,22 @@
 """
 Modified after https://github.com/pyvista/pyvista/blob/ab70c26edbcfb107286c827bd4914562056219fb/docs/make_external_gallery.py
 
-A helper script to generate the external examples gallery.
+A helper script to generate the external 2-examples gallery.
 """
 import os
+from io import StringIO
+
 
 def format_icon(title, description, link, image):
     body = r"""
-.. raw:: html
+   .. grid-item-card:: {}
+      :link: {}
+      :text-align: center
+      :class-title: pyvista-card-title
 
-    <div class="sphx-glr-thumbcontainer" tooltip="{}">
-
-
-.. only:: html
-
-    .. figure:: {}
-       :target: {}
-
-       {}
-
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-
-   {} <{}>
-
+      .. image:: {}
 """
-    content = body.format(description, image, link, title, title, link)
+    content = body.format(title, link, image)
     return content
 
 
@@ -50,54 +34,73 @@ class Example():
 ###############################################################################
 
 articles = dict(
-    gempy_well=Example(
-        title="GemPy - Subsurface Link",
-        description="Build a model from Subsurface object and export result back to subsurface",
-        link="https://docs.gempy.org/integrations/gempy_subsurface.html#sphx-glr-integrations-gempy-subsurface-py",
-        image="https://docs.gempy.org/_images/sphx_glr_gempy_subsurface_002.png",
+    advanced_bayes=Example(
+        title="More advanced example",
+        description="Multiple Priors and likelihoods",
+        link="https://gempy-project.github.io/gempy_probability/examples_basic_geology/1-thickness_problem.html#sphx-glr-examples-basic-geology-1-thickness-problem-py",
+        image="https://gempy-project.github.io/gempy_probability/_images/sphx_glr_1-thickness_problem_005.png",
     ),
-    segysag=Example(
-        title="Using segysak with subsurface",
-        description="Loading a segy cube into `subsurface.StructuredData`.",
-        link="https://segysak.readthedocs.io/en/latest/examples/example_subsurface.html",
-        image="https://raw.githubusercontent.com/trhallam/segysak/main/docs/_static/logo_small.png",
+    simple_bayes=Example(
+        title="Simple example",
+        description="Build a basic Bayesian model with Pyro",
+        link="https://gempy-project.github.io/gempy_probability/examples_first_example_of_inference/1-bayesian_basics/1.1_Intro_to_Bayesian_Inference.html#sphx-glr-examples-first-example-of-inference-1-bayesian-basics-1-1-intro-to-bayesian-inference-py",
+        image="https://gempy-project.github.io/gempy_probability/_images/sphx_glr_1.1_Intro_to_Bayesian_Inference_004.png",
     ),
- 
+    theory=Example(
+        title="Bayesian Inference Theory",
+        description="A brief introduction to Bayesian inference theory.",
+        link="https://gempy-project.github.io/gempy_probability/examples_intro/index.html",
+        image="https://gempy-project.github.io/gempy_probability/_images/Model_space2.png",
+    )
 )
 
 
 ###############################################################################
 
 def make_example_gallery():
-    filename = "external/external_examples.rst"
+    """Make the example gallery."""
+    path = "./external/external_examples.rst"
 
-    if os.path.exists(filename):
-        os.remove(filename)
+    with StringIO() as new_fid:
+        new_fid.write(
+            """.. _external_examples:
 
-    with open(filename, "w") as f:
-        f.write("""
 External Examples
 =================
 
-This is a list of packages using ``subsurface`` as input or output of a
-workflow. If you have your own example let us know to be added to the gallery.
+Examples from other repositories within the Vector project.
 
-.. caution::
+.. grid:: 3
+   :gutter: 1
 
-    Please note that these examples link to external websites.
-    If any of these links are broken, please raise an issue on the repository.
-
-""")
-
+"""
+        )
         # Reverse to put the latest items at the top
-        for Example in list(articles.values())[::-1]:
-            f.write(Example.format())
+        for example in list(articles.values())[::-1]:
+            new_fid.write(example.format())
 
-        f.write("""
+        new_fid.write(
+            """
+
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>
 
-""")
+
+"""
+        )
+        new_fid.seek(0)
+        new_text = new_fid.read()
+
+    # check if it's necessary to overwrite the table
+    existing = ""
+    if os.path.exists(path):
+        with open(path) as existing_fid:
+            existing = existing_fid.read()
+
+    # write if different or does not exist
+    if new_text != existing:
+        with open(path, "w", encoding="utf-8") as fid:
+            fid.write(new_text)
 
     return
