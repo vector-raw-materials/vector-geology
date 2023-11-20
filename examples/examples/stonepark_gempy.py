@@ -3,7 +3,7 @@ Construct a 3D geological model of the Stonepark deposit using GemPy.
 
 
 """
-
+import numpy as np
 # %%
 # Read nc from subsurface
 
@@ -71,6 +71,20 @@ import gempy_viewer as gpv
 gempy_vista = gpv.plot_3d(geo_model, show=False)
 unstruct = subsurface.UnstructuredData(dataset)
 ts = subsurface.TriSurf(mesh=unstruct)
-s = subsurface.visualization.to_pyvista_mesh(ts)
-gempy_vista.p.add_mesh(s, color="red", opacity=0.5)
-gempy_vista.p.show()
+triangulated_mesh = subsurface.visualization.to_pyvista_mesh(ts)
+
+# gempy_vista.p.add_mesh(s, color="red", opacity=0.5)
+# gempy_vista.p.show()
+
+# %%
+# Decimate the mesh to reduce the number of points
+decimated_mesh = triangulated_mesh.decimate_pro(0.95)
+
+# Compute normals
+normals = decimated_mesh.compute_normals(point_normals=False, cell_normals=True, consistent_normals=True)
+
+normals_array = np.array(normals.cell_data["Normals"])
+
+# Extract the points and normals from the decimated mesh
+sampled_points = normals.cell_centers().points
+sampled_normals = normals_array
