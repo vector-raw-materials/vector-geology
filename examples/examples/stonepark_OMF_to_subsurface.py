@@ -12,15 +12,17 @@ This tutorial demonstrates how to read an OMF project file in COLLINSTOWN.
 #
 # Import the required libraries. 
 
-import omfvista
 import pandas as pd
 import pyvista
+import xarray
+
 import subsurface
 from subsurface import TriSurf, LineSet
 from subsurface.visualization import to_pyvista_mesh, pv_plot, to_pyvista_line, init_plotter
 from subsurface.writer import base_structs_to_binary_file
-from dotenv import dotenv_values
 
+from vector_geology.utils import load_omf
+import xarray as xr
 
 # %%
 # Load OMF Project:
@@ -28,14 +30,7 @@ from dotenv import dotenv_values
 #
 # Load the OMF project using a fixture.
 
-def load_omf():
-    config = dotenv_values()
-    path = config.get('PATH_TO_STONEPARK')
-    omf = omfvista.load_project(path)
-    return omf
-
-
-omf = load_omf()
+omf = load_omf("PATH_TO_STONEPARK")
 
 # %%
 # Read OMF with PyVista:
@@ -57,6 +52,8 @@ meshes_far = []
 meshes = []
 lines_1 = []
 lines_far = []
+
+dataset: xarray.Dataset = None
 
 for e in range(omf.n_blocks):
     block_name = omf.get_block_name(e)
@@ -88,7 +85,13 @@ for e in range(omf.n_blocks):
             if e == 5:
                 meshes_far.append(s)  # * This mesh is far from the rest. I am still unsure what is meant to represent.
             else:
+                from subsurface.structs.base_structures.common_data_utils import to_netcdf
+                to_netcdf(
+                    base_data=unstruct,
+                    path=f"./{block_name}.nc",
+                )
                 meshes.append(s)
+                
 
         case pyvista.CellType.LINE:
             if e > 11: continue

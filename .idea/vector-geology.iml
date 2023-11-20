@@ -12,6 +12,7 @@
     <orderEntry type="module" module-name="gempy" />
     <orderEntry type="module" module-name="gempy_probability" />
     <orderEntry type="module" module-name="gempy_viewer" />
+    <orderEntry type="module" module-name="subsurface" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="renderExternalDocumentation" value="true" />
