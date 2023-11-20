@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$/../subsurface/subsurface" />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.10.12 WSL (Ubuntu-22.04): (/home/leguark/.virtualenvs/gempy-geotop-pilot/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="subsurface" />
     <orderEntry type="module" module-name="gempy_engine" />
     <orderEntry type="module" module-name="gempy_plugins" />
     <orderEntry type="module" module-name="gempy" />
