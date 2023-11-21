@@ -103,14 +103,14 @@ surface_points = gp.data.SurfacePointsTable.from_arrays(
     z=surface_points_xyz[:, 2],
     names="channel_1"
 )
-
+n = 0
 orientations = gp.data.OrientationsTable.from_arrays(
-    x=surface_points_xyz[:, 0],
-    y=surface_points_xyz[:, 1],
-    z=surface_points_xyz[:, 2],
-    G_x=orientations_gxyz[:, 0],
-    G_y=orientations_gxyz[:, 1],
-    G_z=orientations_gxyz[:, 2],
+    x=surface_points_xyz[n:, 0],
+    y=surface_points_xyz[n:, 1],
+    z=surface_points_xyz[n:, 2],
+    G_x=orientations_gxyz[n:, 0],
+    G_y=orientations_gxyz[n:, 1],
+    G_z=orientations_gxyz[n:, 2],
     nugget=1,
     names="channel_1"
 )
@@ -121,16 +121,87 @@ structural_frame.structural_elements[0].surface_points = surface_points
 structural_frame.structural_elements[0].orientations = orientations
 
 geo_model.interpolation_options.mesh_extraction = True
+geo_model.interpolation_options.kernel_options.compute_condition_number = True
 geo_model.update_transform()
 
 gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
-        backend=gp.data.AvailableBackends.numpy
+        backend=gp.data.AvailableBackends.PYTORCH,
     )
 )
+
+sp_gradients = geo_model.taped_interpolation_input.surface_points.sp_coords.grad
+orientations_gradients_pos = geo_model.taped_interpolation_input.orientations.dip_positions
+orientations_gradients_pos = geo_model.taped_interpolation_input.orientations.dip_gradients.grad
+orientations_gradients_gxyz = geo_model.taped_interpolation_input.orientations.dip_gradients.grad
+
+import matplotlib.pyplot as plt
+
+sp_gradients_numpy = sp_gradients.detach().numpy()
+x_grad = sp_gradients_numpy[:, 0]
+y_grad = sp_gradients_numpy[:, 1]
+z_grad = sp_gradients_numpy[:, 2]
+bool_z = z_grad > 100200
+bool_y = y_grad > 10000
+bool_x = x_grad > 10000
+bool_ = np.logical_and(bool_z, bool_y, bool_x)
+
+plt.hist(z_grad, bins=50, color='blue', alpha=0.7, log=True)
+plt.xlabel('Eigenvalue')
+plt.ylabel('Frequency')
+plt.title('Histogram of Eigenvalues (Z-grad)')
+plt.show()
+
+plt.hist(x_grad, bins=50, color='red', alpha=0.7, log=True)
+plt.xlabel('Eigenvalue')
+plt.ylabel('Frequency')
+plt.title('Histogram of Eigenvalues (X-grad)')
+plt.show()
+
+plt.hist(y_grad, bins=50, color='green', alpha=0.7, log=True)
+plt.xlabel('Eigenvalue')
+plt.ylabel('Frequency')
+plt.title('Histogram of Eigenvalues (Y-grad)')
+plt.show()
+
+
+clean_sp = surface_points_xyz[bool_]
+
+# surface_points = gp.data.SurfacePointsTable.from_arrays(
+#     x=clean_sp[:, 0],
+#     y=clean_sp[:, 1],
+#     z=clean_sp[:, 2],
+#     names="channel_1"
+# )
+# 
+# 
+# structural_frame.structural_elements[0].surface_points = surface_points
 
 gempy_vista = gpv.plot_3d(geo_model, show=False)
 if ADD_ORIGINAL_MESH := False:
     gempy_vista.p.add_mesh(triangulated_mesh, color="red", opacity=0.5)
+
+
+
+import pyvista as pv
+# Create a point cloud mesh
+point_cloud = pv.PolyData(surface_points_xyz)
+
+# Ensure there are no non-positive values in 'vales' before taking the logarithm
+values =np.linalg.norm(sp_gradients_numpy, axis=1)
+values = np.maximum(values, 1e-6)
+log_values = np.log(values)  # Apply logarithmic transformation
+
+point_cloud['log_values'] = log_values  # Add the log values as a scalar array
+gempy_vista.p.add_mesh(
+    point_cloud,
+    scalars='log_values',
+    cmap='inferno',
+    point_size=25
+)
+# gempy_vista.p.add_mesh(surface_points_xyz[bool_x], color="red", point_size=30)
+# gempy_vista.p.add_mesh(surface_points_xyz[bool_y], color="green", point_size=25)
+# gempy_vista.p.add_mesh(surface_points_xyz[bool_z], color="blue", point_size=20)
+
 gempy_vista.p.show()
