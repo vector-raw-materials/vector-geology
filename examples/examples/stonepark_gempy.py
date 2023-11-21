@@ -126,11 +126,11 @@ geo_model.update_transform()
 gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
-        backend=gp.data.AvailableBackends.PYTORCH
+        backend=gp.data.AvailableBackends.numpy
     )
 )
 
 gempy_vista = gpv.plot_3d(geo_model, show=False)
 if ADD_ORIGINAL_MESH := False:
     gempy_vista.p.add_mesh(triangulated_mesh, color="red", opacity=0.5)
-# gempy_vista.p.show()
+gempy_vista.p.show()
