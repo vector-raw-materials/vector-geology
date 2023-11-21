@@ -68,17 +68,13 @@ geo_model
 # %% 
 import gempy_viewer as gpv
 
-gempy_vista = gpv.plot_3d(geo_model, show=False)
 unstruct = subsurface.UnstructuredData(dataset)
 ts = subsurface.TriSurf(mesh=unstruct)
 triangulated_mesh = subsurface.visualization.to_pyvista_mesh(ts)
 
-# gempy_vista.p.add_mesh(s, color="red", opacity=0.5)
-# gempy_vista.p.show()
-
 # %%
 # Decimate the mesh to reduce the number of points
-decimated_mesh = triangulated_mesh.decimate_pro(0.95)
+decimated_mesh = triangulated_mesh.decimate_pro(0.98)
 
 # Compute normals
 normals = decimated_mesh.compute_normals(point_normals=False, cell_normals=True, consistent_normals=True)
@@ -86,5 +82,55 @@ normals = decimated_mesh.compute_normals(point_normals=False, cell_normals=True,
 normals_array = np.array(normals.cell_data["Normals"])
 
 # Extract the points and normals from the decimated mesh
-sampled_points = normals.cell_centers().points
-sampled_normals = normals_array
+vertex_sp = normals.cell_centers().points
+vertex_grads = normals_array
+
+# Filter out the points where the z-component of the normal is positive
+# and is the largest component of the normal vector
+positive_z = vertex_grads[:, 2] > 0
+largest_component_z = np.all(vertex_grads[:, 2:3] >= np.abs(vertex_grads[:, :2]), axis=1)
+
+# Combine both conditions
+filter_mask = np.logical_and(positive_z, largest_component_z)
+
+# Apply the filter to points and normals
+surface_points_xyz = vertex_sp[filter_mask]
+orientations_gxyz = vertex_grads[filter_mask]
+
+surface_points = gp.data.SurfacePointsTable.from_arrays(
+    x=surface_points_xyz[:, 0],
+    y=surface_points_xyz[:, 1],
+    z=surface_points_xyz[:, 2],
+    names="channel_1"
+)
+
+orientations = gp.data.OrientationsTable.from_arrays(
+    x=surface_points_xyz[:, 0],
+    y=surface_points_xyz[:, 1],
+    z=surface_points_xyz[:, 2],
+    G_x=orientations_gxyz[:, 0],
+    G_y=orientations_gxyz[:, 1],
+    G_z=orientations_gxyz[:, 2],
+    nugget=1,
+    names="channel_1"
+)
+
+structural_frame = geo_model.structural_frame
+
+structural_frame.structural_elements[0].surface_points = surface_points
+structural_frame.structural_elements[0].orientations = orientations
+
+geo_model.interpolation_options.mesh_extraction = True
+geo_model.update_transform()
+
+gp.compute_model(
+    gempy_model=geo_model,
+    engine_config=gp.data.GemPyEngineConfig(
+        backend=gp.data.AvailableBackends.PYTORCH
+    )
+)
+
+gempy_vista = gpv.plot_3d(geo_model, show=False)
+if ADD_ORIGINAL_MESH := False:
+    gempy_vista.p.add_mesh(triangulated_mesh, color="red", opacity=0.5)
+# gempy_vista.p.show()
