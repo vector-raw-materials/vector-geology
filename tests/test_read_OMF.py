@@ -7,10 +7,9 @@ from subsurface import TriSurf
 from subsurface.visualization import to_pyvista_mesh, pv_plot
 from subsurface.writer import base_structs_to_binary_file
 
-"""
-Example how to read COLLINSTOWN OMF project
+# skip these test for now until I have an open omf file to test
 
-"""
+
 @pytest.fixture(scope="module")
 def load_omf():
     config = dotenv_values()
