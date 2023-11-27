@@ -97,20 +97,35 @@ filter_mask = np.logical_and(positive_z, largest_component_z)
 surface_points_xyz = vertex_sp[filter_mask]
 orientations_gxyz = vertex_grads[filter_mask]
 
+
+
+claaned_sp_grab = np.array(surface_points_xyz)[:, 2]  
+# Get the values larger than -300
+claaned_sp_grab = np.where(claaned_sp_grab < -600)
+
+cleaned_supoints = surface_points_xyz[claaned_sp_grab]
+
+nuggets = np.ones(len(cleaned_supoints)) * 0.00001
+nuggets[0] = 0.0000001
+nuggets[1] = .1
+nuggets[2] = .01
+# nuggets[2:] = 1
 surface_points = gp.data.SurfacePointsTable.from_arrays(
-    x=surface_points_xyz[:, 0],
-    y=surface_points_xyz[:, 1],
-    z=surface_points_xyz[:, 2],
-    names="channel_1"
+    x=cleaned_supoints[:, 0],
+    y=cleaned_supoints[:, 1],
+    z=cleaned_supoints[:, 2],
+    names="channel_1",
+    nugget=nuggets
 )
+
 n = 0
 orientations = gp.data.OrientationsTable.from_arrays(
-    x=surface_points_xyz[n:, 0],
-    y=surface_points_xyz[n:, 1],
-    z=surface_points_xyz[n:, 2],
-    G_x=orientations_gxyz[n:, 0],
-    G_y=orientations_gxyz[n:, 1],
-    G_z=orientations_gxyz[n:, 2],
+    x=cleaned_supoints[n:, 0],
+    y=cleaned_supoints[n:, 1],
+    z=cleaned_supoints[n:, 2],
+    G_x=orientations_gxyz[claaned_sp_grab, 0],
+    G_y=orientations_gxyz[claaned_sp_grab, 1],
+    G_z=orientations_gxyz[claaned_sp_grab, 2],
     nugget=1,
     names="channel_1"
 )
@@ -124,27 +139,30 @@ geo_model.interpolation_options.mesh_extraction = True
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
 geo_model.update_transform()
 
+# gpv.plot_3d(geo_model)
+
 gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
-        backend=gp.data.AvailableBackends.PYTORCH,
+        backend=gp.data.AvailableBackends.numpy,
     )
 )
 
 sp_gradients = geo_model.taped_interpolation_input.surface_points.sp_coords.grad
+nugget_effect = geo_model.taped_interpolation_input.surface_points.nugget_effect_scalar.grad
 orientations_gradients_pos = geo_model.taped_interpolation_input.orientations.dip_positions
 orientations_gradients_pos = geo_model.taped_interpolation_input.orientations.dip_gradients.grad
 orientations_gradients_gxyz = geo_model.taped_interpolation_input.orientations.dip_gradients.grad
 
 import matplotlib.pyplot as plt
 
-sp_gradients_numpy = sp_gradients.detach().numpy()
+sp_gradients_numpy = sp_gradients.detach().numpy()[1:]
 x_grad = sp_gradients_numpy[:, 0]
 y_grad = sp_gradients_numpy[:, 1]
 z_grad = sp_gradients_numpy[:, 2]
-bool_z = z_grad > 100200
-bool_y = y_grad > 10000
-bool_x = x_grad > 10000
+bool_z = z_grad > 0
+bool_y = y_grad > 1
+bool_x = x_grad > 1
 bool_ = np.logical_and(bool_z, bool_y, bool_x)
 
 plt.hist(z_grad, bins=50, color='blue', alpha=0.7, log=True)
@@ -166,7 +184,7 @@ plt.title('Histogram of Eigenvalues (Y-grad)')
 plt.show()
 
 
-clean_sp = surface_points_xyz[bool_]
+clean_sp = cleaned_supoints[1:][bool_]
 
 # surface_points = gp.data.SurfacePointsTable.from_arrays(
 #     x=clean_sp[:, 0],
@@ -186,10 +204,10 @@ if ADD_ORIGINAL_MESH := False:
 
 import pyvista as pv
 # Create a point cloud mesh
-point_cloud = pv.PolyData(surface_points_xyz)
+point_cloud = pv.PolyData(clean_sp)
 
 # Ensure there are no non-positive values in 'vales' before taking the logarithm
-values =np.linalg.norm(sp_gradients_numpy, axis=1)
+values =np.linalg.norm(sp_gradients_numpy[bool_], axis=1)
 values = np.maximum(values, 1e-6)
 log_values = np.log(values)  # Apply logarithmic transformation
 
