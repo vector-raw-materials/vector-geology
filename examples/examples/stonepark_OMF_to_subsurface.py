@@ -86,15 +86,17 @@ for e in range(omf.n_blocks):
                 meshes_far.append(s)  # * This mesh is far from the rest. I am still unsure what is meant to represent.
             else:
                 from subsurface.structs.base_structures.common_data_utils import to_netcdf
-                to_netcdf(
-                    base_data=unstruct,
-                    path=f"./{block_name}.nc",
-                )
+                if False:
+                    to_netcdf(
+                        base_data=unstruct,
+                        path=f"./{block_name}.nc",
+                    )
                 meshes.append(s)
                 
 
         case pyvista.CellType.LINE:
             if e > 11: continue
+            continue # To ignore wells for now
             cells_pyvista = unstruct_pyvista.cells.reshape(-1, 3)[:, 1:]
             unstruct: subsurface.UnstructuredData = subsurface.UnstructuredData.from_array(
                 vertex=unstruct_pyvista.points,
@@ -119,7 +121,7 @@ if False:  # Replace with condition for exporting to Liquid Earth
 plotter = init_plotter()
 if plot_model_area := True:
     for mesh in meshes:
-        plotter.add_mesh(mesh, cmap="magma", opacity=0.7)
+        plotter.add_mesh(mesh, cmap="magma", opacity=1)
 
     for line in lines_far:
         plotter.add_mesh(line, cmap="viridis", opacity=1)
