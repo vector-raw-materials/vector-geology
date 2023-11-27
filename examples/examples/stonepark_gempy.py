@@ -14,6 +14,7 @@ import os
 from dotenv import dotenv_values
 
 import subsurface
+from gempy_engine.core.data.continue_epoch import ContinueEpoch
 
 config = dotenv_values()
 path = config.get("PATH_TO_STONEPARK_Subsurface")
@@ -101,15 +102,16 @@ orientations_gxyz = vertex_grads[filter_mask]
 
 claaned_sp_grab = np.array(surface_points_xyz)[:, 2]  
 # Get the values larger than -300
-claaned_sp_grab = np.where(claaned_sp_grab < -600)
+grab_ = claaned_sp_grab < -600
 
-cleaned_supoints = surface_points_xyz[claaned_sp_grab]
+# claaned_sp_grab = np.where(grab_)
+# cleaned_supoints = surface_points_xyz[claaned_sp_grab]
 
-nuggets = np.ones(len(cleaned_supoints)) * 0.00001
-nuggets[0] = 0.0000001
-nuggets[1] = .1
-nuggets[2] = .01
-# nuggets[2:] = 1
+cleaned_supoints = surface_points_xyz
+
+nuggets = np.ones(len(cleaned_supoints)) * 0.001
+nuggets[grab_] = .000001
+
 surface_points = gp.data.SurfacePointsTable.from_arrays(
     x=cleaned_supoints[:, 0],
     y=cleaned_supoints[:, 1],
@@ -123,9 +125,9 @@ orientations = gp.data.OrientationsTable.from_arrays(
     x=cleaned_supoints[n:, 0],
     y=cleaned_supoints[n:, 1],
     z=cleaned_supoints[n:, 2],
-    G_x=orientations_gxyz[claaned_sp_grab, 0],
-    G_y=orientations_gxyz[claaned_sp_grab, 1],
-    G_z=orientations_gxyz[claaned_sp_grab, 2],
+    G_x=orientations_gxyz[n:, 0],
+    G_y=orientations_gxyz[n:, 1],
+    G_z=orientations_gxyz[n:, 2],
     nugget=1,
     names="channel_1"
 )
@@ -139,30 +141,77 @@ geo_model.interpolation_options.mesh_extraction = True
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
 geo_model.update_transform()
 
-# gpv.plot_3d(geo_model)
 
+import torch
+# Define the optimizer
 gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
-        backend=gp.data.AvailableBackends.numpy,
+        backend=gp.data.AvailableBackends.PYTORCH,
     )
 )
 
+param = geo_model.taped_interpolation_input.surface_points.nugget_effect_scalar
+optimizer = torch.optim.Adam([param], lr=0.01)
+max_epochs = 10
+
+# Optimization loop
+def check_convergence_criterion():
+    pass
+
+import gempy_engine
+geo_model.interpolation_options.kernel_options.optimizing_condition_number = True
+for epoch in range(max_epochs):
+    optimizer.zero_grad()
+    
+    try:
+        geo_model.taped_interpolation_input.grid = geo_model.interpolation_input.grid
+
+        gempy_engine.compute_model(
+            interpolation_input=geo_model.taped_interpolation_input,
+            options=geo_model.interpolation_options,
+            data_descriptor=geo_model.input_data_descriptor,
+            geophysics_input=geo_model.geophysics_input,
+        )
+    except ContinueEpoch:
+        # Update the vector
+        optimizer.step()
+        param.data = param.data.clamp_(min=0)  # Replace negative values with 0
+        continue
+
+    # Optional: Apply constraints to the vector
+
+    # Monitor progress
+    if epoch % 100 == 0:
+        # print(f"Epoch {epoch}: Condition Number = {condition_number.item()}")
+        print(f"Epoch {epoch}: Condition Number =") 
+
+    # Check for convergence
+    if check_convergence_criterion():
+        break
+
+geo_model.interpolation_options.kernel_options.optimizing_condition_number = False
+
 sp_gradients = geo_model.taped_interpolation_input.surface_points.sp_coords.grad
-nugget_effect = geo_model.taped_interpolation_input.surface_points.nugget_effect_scalar.grad
+nugget_effect = param
 orientations_gradients_pos = geo_model.taped_interpolation_input.orientations.dip_positions
 orientations_gradients_pos = geo_model.taped_interpolation_input.orientations.dip_gradients.grad
 orientations_gradients_gxyz = geo_model.taped_interpolation_input.orientations.dip_gradients.grad
 
 import matplotlib.pyplot as plt
 
+
 sp_gradients_numpy = sp_gradients.detach().numpy()[1:]
+nugget_numpy = nugget_effect.detach().numpy()[:]
+
+array_to_plot = nugget_numpy
+
 x_grad = sp_gradients_numpy[:, 0]
 y_grad = sp_gradients_numpy[:, 1]
 z_grad = sp_gradients_numpy[:, 2]
 bool_z = z_grad > 0
-bool_y = y_grad > 1
-bool_x = x_grad > 1
+bool_y = y_grad > 0
+bool_x = x_grad > 0
 bool_ = np.logical_and(bool_z, bool_y, bool_x)
 
 plt.hist(z_grad, bins=50, color='blue', alpha=0.7, log=True)
@@ -184,6 +233,11 @@ plt.title('Histogram of Eigenvalues (Y-grad)')
 plt.show()
 
 
+plt.hist(nugget_numpy, bins=50, color='black', alpha=0.7, log=True)
+plt.xlabel('Eigenvalue')
+plt.ylabel('Frequency')
+plt.title('Histogram of Eigenvalues (nugget-grad)')
+plt.show()
 clean_sp = cleaned_supoints[1:][bool_]
 
 # surface_points = gp.data.SurfacePointsTable.from_arrays(
@@ -204,19 +258,25 @@ if ADD_ORIGINAL_MESH := False:
 
 import pyvista as pv
 # Create a point cloud mesh
-point_cloud = pv.PolyData(clean_sp)
+point_cloud = pv.PolyData(cleaned_supoints[0:])
 
 # Ensure there are no non-positive values in 'vales' before taking the logarithm
 values =np.linalg.norm(sp_gradients_numpy[bool_], axis=1)
 values = np.maximum(values, 1e-6)
-log_values = np.log(values)  # Apply logarithmic transformation
+
+log_values = np.log(np.abs(array_to_plot)) # Apply logarithmic transformation
 
 point_cloud['log_values'] = log_values  # Add the log values as a scalar array
+
+point_cloud['values'] = array_to_plot  # Add the log values as a scalar array
+
+
 gempy_vista.p.add_mesh(
     point_cloud,
-    scalars='log_values',
+    # scalars='log_values',
+    scalars='values',
     cmap='inferno',
-    point_size=25
+    point_size=25,
 )
 # gempy_vista.p.add_mesh(surface_points_xyz[bool_x], color="red", point_size=30)
 # gempy_vista.p.add_mesh(surface_points_xyz[bool_y], color="green", point_size=25)
