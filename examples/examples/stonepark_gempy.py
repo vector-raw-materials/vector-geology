@@ -74,6 +74,7 @@ structural_frame = gp.data.StructuralFrame(
 geo_model: gp.data.GeoModel = gp.create_geomodel(
     project_name='Tutorial_ch1_1_Basics',
     extent=global_extent,
+    resolution=[20, 10, 20],
     refinement=4,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
     structural_frame=structural_frame
 )
@@ -86,7 +87,7 @@ geo_model
 
 geo_model.interpolation_options.mesh_extraction = True
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
-geo_model.interpolation_options.kernel_options.range = 4
+geo_model.interpolation_options.kernel_options.range = 1
 geo_model.interpolation_options.kernel_options.c_o = 4
 
 geo_model.update_transform()
@@ -96,9 +97,20 @@ gp.API.compute_API.optimize_and_compute(
     engine_config=gp.data.GemPyEngineConfig(
         backend=gp.data.AvailableBackends.PYTORCH,
     ),
-    max_epochs=30
-    
+    max_epochs=100,
+    convergence_criteria=1e5
+
 )
+
+gpv.plot_2d(geo_model, show_scalar=True)
+
+# 
+# gp.compute_model(
+#     geo_model,
+#     engine_config=gp.data.GemPyEngineConfig(
+#         backend=gp.data.AvailableBackends.PYTORCH,
+#     ),
+# )
 
 nugget_effect = geo_model.taped_interpolation_input.surface_points.nugget_effect_scalar
 surface_points_xyz = geo_model.surface_points.df[['X', 'Y', 'Z']].to_numpy()
@@ -114,7 +126,8 @@ plt.title('Histogram of Eigenvalues (nugget-grad)')
 plt.show()
 clean_sp = surface_points_xyz[1:]
 
-gempy_vista = gpv.plot_3d(geo_model, show=False, kwargs_plot_structured_grid={'opacity': 0.2})
+gempy_vista = gpv.plot_3d(geo_model, show=False,
+                          kwargs_plot_structured_grid={'opacity': 0.3})
 
 if ADD_ORIGINAL_MESH := False:
     gempy_vista.p.add_mesh(triangulated_mesh, color="red", opacity=0.5)
