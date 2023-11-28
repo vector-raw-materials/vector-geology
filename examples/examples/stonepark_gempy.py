@@ -9,11 +9,9 @@ import numpy as np
 
 
 # %%
-import xarray as xr
 import os
 from dotenv import dotenv_values
 
-import subsurface
 import matplotlib.pyplot as plt
 import pyvista as pv
 
@@ -33,46 +31,43 @@ for e, filename in enumerate(os.listdir(path)):
     if ext == '.nc':
         structural_element, global_extent = process_file(os.path.join(path, filename), global_extent, color_gen)
         structural_elements.append(structural_element)
-# 
-# # %% 
-# # Operate in the dataset
-# 
-# # %%
-# # Get the extent from the dataset
-# 
-# # Assuming dataset.coords["XYZ"] is a 2D DataArray with shape (n, 3)
-# # where n is the number of points and each row is a point with [X, Y, Z] coordinates
-# 
-# # Extract X, Y, Z coordinates
-# x_coord = dataset.vertex[:, 0]  # Assuming the first column is X
-# y_coord = dataset.vertex[:, 1]  # Assuming the second column is Y
-# z_coord = dataset.vertex[:, 2]  # Assuming the third column is Z
-# 
-# # Calculate min and max for each
-# x_min = x_coord.min().values
-# x_max = x_coord.max().values
-# y_min = y_coord.min().values
-# y_max = y_coord.max().values
-# z_min = z_coord.min().values
-# z_max = z_coord.max().values
-# 
-# # Region of Interest
-# roi = [x_min, x_max, y_min, y_max, z_min, z_max]
-# # Print or use the region of interest
-# print(roi)
-# 
-# # %%
-# Setup gempy object
+# %%
+# Element 1 is an intrusion
 
-structural_group = gp.data.StructuralGroup(
-    name="Stonepark",
-    elements=structural_elements,
+
+#  %%
+# Setup gempy object
+# structural_elements.pop(1)
+
+structural_group_red = gp.data.StructuralGroup(
+    name="Red",
+    # elements=[structural_elements[i] for i in [0, 4, 6, 8]],
+    elements=[structural_elements[i] for i in [0, 4, 8]],
     structural_relation=gp.data.StackRelationType.ERODE
 )
 
+structural_group_green = gp.data.StructuralGroup(
+    name="Green",
+    elements=[structural_elements[i] for i in [5]],
+    structural_relation=gp.data.StackRelationType.ERODE
+)
+
+structural_group_blue = gp.data.StructuralGroup(
+    name="Blue",
+    elements=[structural_elements[i] for i in [2, 3]],
+    structural_relation=gp.data.StackRelationType.ERODE
+)
+
+structural_group_intrusion = gp.data.StructuralGroup(
+    name="Intrusion",
+    elements=[structural_elements[i] for i in [1]],
+    structural_relation=gp.data.StackRelationType.ERODE
+)
+
+structural_groups = [structural_group_intrusion, structural_group_green, structural_group_blue, structural_group_red]
 structural_frame = gp.data.StructuralFrame(
-    structural_groups=[structural_group],
-    color_gen = color_gen
+    structural_groups=structural_groups[3:],
+    color_gen=color_gen
 )
 # TODO: If elements do not have color maybe loop them on structural frame constructor?
 
@@ -87,20 +82,27 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
 geo_model
 
 # %% 
-gpv.plot_3d(geo_model)
+# gpv.plot_3d(geo_model)
 
 geo_model.interpolation_options.mesh_extraction = True
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
+geo_model.interpolation_options.kernel_options.range = 4
+geo_model.interpolation_options.kernel_options.c_o = 4
+
 geo_model.update_transform()
 
 gp.API.compute_API.optimize_and_compute(
     geo_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
         backend=gp.data.AvailableBackends.PYTORCH,
-    )
+    ),
+    max_epochs=30
+    
 )
 
 nugget_effect = geo_model.taped_interpolation_input.surface_points.nugget_effect_scalar
+surface_points_xyz = geo_model.surface_points.df[['X', 'Y', 'Z']].to_numpy()
+
 nugget_numpy = nugget_effect.detach().numpy()[:]
 
 array_to_plot = nugget_numpy
@@ -112,7 +114,8 @@ plt.title('Histogram of Eigenvalues (nugget-grad)')
 plt.show()
 clean_sp = surface_points_xyz[1:]
 
-gempy_vista = gpv.plot_3d(geo_model, show=False)
+gempy_vista = gpv.plot_3d(geo_model, show=False, kwargs_plot_structured_grid={'opacity': 0.2})
+
 if ADD_ORIGINAL_MESH := False:
     gempy_vista.p.add_mesh(triangulated_mesh, color="red", opacity=0.5)
 

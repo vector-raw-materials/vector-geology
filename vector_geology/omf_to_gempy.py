@@ -9,11 +9,15 @@ def calculate_extent(dataset):
     return [x_coord.min().values, x_coord.max().values, y_coord.min().values, y_coord.max().values, z_coord.min().values, z_coord.max().values]
 
 # Function to extract surface points and orientations from the dataset
+
 def extract_surface_points_and_orientations(dataset, name, color_generator) -> gp.data.StructuralElement:
     # Extract surface points and orientations
     unstruct = subsurface.UnstructuredData(dataset)
     ts = subsurface.TriSurf(mesh=unstruct)
     triangulated_mesh = subsurface.visualization.to_pyvista_mesh(ts)
+    # print(name)
+    # subsurface.visualization.pv_plot([triangulated_mesh])
+    
 
     # Decimate the mesh and compute normals
     decimated_mesh = triangulated_mesh.decimate_pro(0.98)
@@ -29,7 +33,7 @@ def extract_surface_points_and_orientations(dataset, name, color_generator) -> g
 
     surface_points_xyz = vertex_sp[filter_mask]
     orientations_gxyz = vertex_grads[filter_mask]
-    nuggets = np.ones(len(surface_points_xyz)) * 0.0001
+    nuggets = np.ones(len(surface_points_xyz)) * 0.000001
 
     # Create SurfacePointsTable and OrientationsTable
     surface_points = gp.data.SurfacePointsTable.from_arrays(
@@ -40,14 +44,15 @@ def extract_surface_points_and_orientations(dataset, name, color_generator) -> g
         nugget=nuggets
     )
 
+    every = 10
     orientations = gp.data.OrientationsTable.from_arrays(
-        x=surface_points_xyz[:, 0],
-        y=surface_points_xyz[:, 1],
-        z=surface_points_xyz[:, 2],
-        G_x=orientations_gxyz[:, 0],
-        G_y=orientations_gxyz[:, 1],
-        G_z=orientations_gxyz[:, 2],
-        nugget=1,
+        x=surface_points_xyz[::every, 0],
+        y=surface_points_xyz[::every, 1],
+        z=surface_points_xyz[::every, 2],
+        G_x=orientations_gxyz[::every, 0],
+        G_y=orientations_gxyz[::every, 1],
+        G_z=orientations_gxyz[::every, 2],
+        nugget=4,
         names=name
     )
     
