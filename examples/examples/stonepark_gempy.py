@@ -3,6 +3,11 @@ Construct a 3D geological model of the Stonepark deposit using GemPy.
 
 
 """
+
+import time
+
+start_time = time.time()  # start timer
+
 import numpy as np
 # %%
 # Read nc from subsurface
@@ -87,32 +92,43 @@ geo_model
 
 geo_model.interpolation_options.mesh_extraction = True
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
-geo_model.interpolation_options.kernel_options.range = 1
+geo_model.interpolation_options.kernel_options.range = 0.7
 geo_model.interpolation_options.kernel_options.c_o = 4
+
+surface_points_copy = geo_model.surface_points
 
 geo_model.update_transform()
 
-gp.API.compute_API.optimize_and_compute(
-    geo_model=geo_model,
-    engine_config=gp.data.GemPyEngineConfig(
-        backend=gp.data.AvailableBackends.PYTORCH,
-    ),
-    max_epochs=100,
-    convergence_criteria=1e5
+if REUSE_NUGGETS := True:
+    loaded_nuggets = np.load("nuggets.npy")
+    gp.modify_surface_points(
+        geo_model,
+        slice=None,
+        nugget=loaded_nuggets
+    )
 
-)
+    geo_model.interpolation_options.kernel_options.compute_condition_number = False
+    gp.compute_model(
+        geo_model,
+        engine_config=gp.data.GemPyEngineConfig(
+            backend=gp.data.AvailableBackends.PYTORCH,
+        ),
+    )
+else:
+    gp.API.compute_API.optimize_and_compute(
+        geo_model=geo_model,
+        engine_config=gp.data.GemPyEngineConfig(
+            backend=gp.data.AvailableBackends.PYTORCH,
+        ),
+        max_epochs=100,
+        convergence_criteria=1e5
+    )
 
 gpv.plot_2d(geo_model, show_scalar=True)
 
-# 
-# gp.compute_model(
-#     geo_model,
-#     engine_config=gp.data.GemPyEngineConfig(
-#         backend=gp.data.AvailableBackends.PYTORCH,
-#     ),
-# )
-
 nugget_effect = geo_model.taped_interpolation_input.surface_points.nugget_effect_scalar
+np.save("nuggets", nugget_effect.detach().numpy())
+
 surface_points_xyz = geo_model.surface_points.df[['X', 'Y', 'Z']].to_numpy()
 
 nugget_numpy = nugget_effect.detach().numpy()[:]
@@ -126,8 +142,16 @@ plt.title('Histogram of Eigenvalues (nugget-grad)')
 plt.show()
 clean_sp = surface_points_xyz[1:]
 
-gempy_vista = gpv.plot_3d(geo_model, show=False,
-                          kwargs_plot_structured_grid={'opacity': 0.3})
+end_time = time.time()
+execution_time = end_time - start_time
+
+print(f"The function executed in {execution_time} seconds.")
+
+gempy_vista = gpv.plot_3d(
+    model=geo_model,
+    show=False,
+    kwargs_plot_structured_grid={'opacity': 0.3}
+)
 
 if ADD_ORIGINAL_MESH := False:
     gempy_vista.p.add_mesh(triangulated_mesh, color="red", opacity=0.5)
