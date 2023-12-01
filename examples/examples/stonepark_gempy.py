@@ -1,4 +1,8 @@
-﻿"""
+"""
+Stonepark Geological Model
+--------------------------  
+
+
 Construct a 3D geological model of the Stonepark deposit using GemPy.
 
 

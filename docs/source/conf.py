@@ -47,7 +47,10 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
     'sphinx_gallery.gen_gallery',
-    "pyvista.ext.plot_directive"
+    "pyvista.ext.plot_directive",
+    "sphinx_design",
+    'sphinx_automodapi.automodapi',
+    'sphinx_automodapi.smart_resolver',
 ]
 
 linkcheck_retries = 3

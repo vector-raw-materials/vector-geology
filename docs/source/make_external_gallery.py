@@ -68,7 +68,15 @@ def make_example_gallery():
 External Examples
 =================
 
-Examples from other repositories within the Vector project.
+Got an impressive Bayesian inference workflow or visualization routine? Share it with the community! Contribute your work and help others learn from your expertise. Submit a PR at `visual-bayesic/visual-bayesic <https://github.com/visual-bayesic/visual-bayesic/>`_, and we'd be excited to feature it.
+
+.. caution::
+
+    Please note that these 2-examples link to external websites. If any of these
+    links are broken, please raise an `issue
+    <https://github.com/visual-bayesic/visual-bayesic/issues>`_.
+
+Do you have a sophisticated Bayesian inference workflow or visualization routine you would like to share? If so, please consider contributing your work by submitting a PR at `visual-bayesic/visual-bayesic <https://github.com/visual-bayesic/visual-bayesic/>`_. We welcome contributions and would be delighted to include your work in our collection.
 
 .. grid:: 3
    :gutter: 1
