@@ -1,67 +1,46 @@
+.. _external_examples:
 
 External Examples
 =================
 
-This is a list of packages using ``subsurface`` as input or output of a
-workflow. If you have your own example let us know to be added to the gallery.
+Got an impressive Bayesian inference workflow or visualization routine? Share it with the community! Contribute your work and help others learn from your expertise. Submit a PR at `visual-bayesic/visual-bayesic <https://github.com/visual-bayesic/visual-bayesic/>`_, and we'd be excited to feature it.
 
 .. caution::
 
-    Please note that these examples link to external websites.
-    If any of these links are broken, please raise an issue on the repository.
+    Please note that these 2-examples link to external websites. If any of these
+    links are broken, please raise an `issue
+    <https://github.com/visual-bayesic/visual-bayesic/issues>`_.
+
+Do you have a sophisticated Bayesian inference workflow or visualization routine you would like to share? If so, please consider contributing your work by submitting a PR at `visual-bayesic/visual-bayesic <https://github.com/visual-bayesic/visual-bayesic/>`_. We welcome contributions and would be delighted to include your work in our collection.
+
+.. grid:: 3
+   :gutter: 1
 
 
-.. raw:: html
+   .. grid-item-card:: Bayesian Inference Theory
+      :link: https://gempy-project.github.io/gempy_probability/examples_intro/index.html
+      :text-align: center
+      :class-title: pyvista-card-title
 
-    <div class="sphx-glr-thumbcontainer" tooltip="Loading a segy cube into `subsurface.StructuredData`.">
+      .. image:: https://gempy-project.github.io/gempy_probability/_images/Model_space2.png
 
+   .. grid-item-card:: Simple example
+      :link: https://gempy-project.github.io/gempy_probability/examples_first_example_of_inference/1-bayesian_basics/1.1_Intro_to_Bayesian_Inference.html#sphx-glr-examples-first-example-of-inference-1-bayesian-basics-1-1-intro-to-bayesian-inference-py
+      :text-align: center
+      :class-title: pyvista-card-title
 
-.. only:: html
+      .. image:: https://gempy-project.github.io/gempy_probability/_images/sphx_glr_1.1_Intro_to_Bayesian_Inference_004.png
 
-    .. figure:: https://raw.githubusercontent.com/trhallam/segysak/main/docs/_static/logo_small.png
-       :target: https://segysak.readthedocs.io/en/latest/examples/example_subsurface.html
+   .. grid-item-card:: More advanced example
+      :link: https://gempy-project.github.io/gempy_probability/examples_basic_geology/1-thickness_problem.html#sphx-glr-examples-basic-geology-1-thickness-problem-py
+      :text-align: center
+      :class-title: pyvista-card-title
 
-       Using segysak with subsurface
-
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-
-   Using segysak with subsurface <https://segysak.readthedocs.io/en/latest/examples/example_subsurface.html>
-
-
-.. raw:: html
-
-    <div class="sphx-glr-thumbcontainer" tooltip="Build a model from Subsurface object and export result back to subsurface">
-
-
-.. only:: html
-
-    .. figure:: https://docs.gempy.org/_images/sphx_glr_gempy_subsurface_002.png
-       :target: https://docs.gempy.org/integrations/gempy_subsurface.html#sphx-glr-integrations-gempy-subsurface-py
-
-       GemPy - Subsurface Link
-
-
-.. raw:: html
-
-    </div>
-
-
-.. toctree::
-   :hidden:
-
-
-   GemPy - Subsurface Link <https://docs.gempy.org/integrations/gempy_subsurface.html#sphx-glr-integrations-gempy-subsurface-py>
+      .. image:: https://gempy-project.github.io/gempy_probability/_images/sphx_glr_1-thickness_problem_005.png
 
 
 .. raw:: html
 
     <div class="sphx-glr-clear"></div>
+
 

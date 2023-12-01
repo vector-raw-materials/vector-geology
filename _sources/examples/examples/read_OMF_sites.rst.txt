@@ -47,13 +47,6 @@ Import the required libraries.
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/leguark/subsurface/subsurface/reader/__init__.py:14: UserWarning: Welly or Striplog not installed. No well reader possible.
-      warnings.warn("Welly or Striplog not installed. No well reader possible.")
-
 
 
 
@@ -172,14 +165,14 @@ Use Subsurface and PyVista to visualize the unstructured data.
  .. code-block:: none
 
 
-    <pyvista.plotting.plotting.Plotter object at 0x7f5cbc0f39a0>
+    <pyvista.plotting.plotting.Plotter object at 0x7f6df4760340>
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.677 seconds)
+   **Total running time of the script:** ( 0 minutes  1.293 seconds)
 
 
 .. _sphx_glr_download_examples_examples_read_OMF_sites.py:

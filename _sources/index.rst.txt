@@ -15,6 +15,20 @@ vector-geology Documentation
   :start-after: sphinx-inclusion-marker
 
 
+Explore Our Comprehensive Guides
+--------------------------------
+.. toctree::
+   :maxdepth: 2
+   :caption: Galleries
+
+   examples/index
+   external/external_examples
+
+.. include:: examples/index.rst
+
+.. include:: external/external_examples.rst  
+
+
 Requirements
 ------------
 The requirements for the core functionality of the package are:

@@ -8,19 +8,22 @@
     <title>Reading COLLINSTOWN OMF project &#8212; Vector Geology 0.1.dev16+g525c9e2 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
     <link rel="stylesheet" type="text/css" href="../../_static/style.css?v=f2a985cd" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=f5ef4c94"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="External Examples" href="../../external/external_examples.html" />
-    <link rel="prev" title="Geological Models" href="index.html" />
+    <link rel="next" title="Reading Stonepark OMF project" href="stonepark_OMF_to_subsurface.html" />
+    <link rel="prev" title="Reading COLLINSTOWN OMF project" href="collinstown_OMF_to_subsurface.html" />
    
   <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
   
@@ -55,10 +58,6 @@ to download the full example code</p>
 <span class="kn">from</span> <span class="nn">subsurface.visualization</span> <span class="kn">import</span> <span class="n">to_pyvista_mesh</span><span class="p">,</span> <span class="n">pv_plot</span>
 <span class="kn">from</span> <span class="nn">subsurface.writer</span> <span class="kn">import</span> <span class="n">base_structs_to_binary_file</span>
 <span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">dotenv_values</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/leguark/subsurface/subsurface/reader/__init__.py:14: UserWarning: Welly or Striplog not installed. No well reader possible.
-  warnings.warn(&quot;Welly or Striplog not installed. No well reader possible.&quot;)
 </pre></div>
 </div>
 </section>
@@ -108,10 +107,10 @@ to download the full example code</p>
 <span class="n">pv_plot</span><span class="p">([</span><a href="https://docs.pyvista.org/api/core/_autosummary/pyvista.PolyData.html#pyvista.PolyData" title="pyvista.PolyData" class="sphx-glr-backref-module-pyvista sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">s</span></a><span class="p">],</span> <span class="n">image_2d</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
-<img src="../../_images/sphx_glr_read_OMF_sites_002.png" srcset="../../_images/sphx_glr_read_OMF_sites_002.png" alt="read OMF sites" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;pyvista.plotting.plotting.Plotter object at 0x7f5cbc0f39a0&gt;
+<img src="../../_images/sphx_glr_read_OMF_sites_002.png" srcset="../../_images/sphx_glr_read_OMF_sites_002.png" alt="read OMF sites" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;pyvista.plotting.plotting.Plotter object at 0x7f6df4760340&gt;
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  2.677 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.293 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-examples-read-omf-sites-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4369ad747c2f34721fbe1dde6c7ad931/read_OMF_sites.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">read_OMF_sites.py</span></code></a></p>
@@ -144,6 +143,27 @@ to download the full example code</p>
 
 
 <h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Contents</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../external/external_examples.html">External Examples</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Geological Models</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="collinstown_OMF_to_subsurface.html">Reading COLLINSTOWN OMF project</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Reading COLLINSTOWN OMF project</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#required-libraries">Required Libraries:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#load-omf-project">Load OMF Project:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#read-omf-with-pyvista">Read OMF with PyVista:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convert-omf-to-unstructured-single-block">Convert OMF to Unstructured Single Block:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualize-unstructured-data">Visualize Unstructured Data:</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stonepark_OMF_to_subsurface.html">Reading Stonepark OMF project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stonepark_gempy.html">Stonepark Geological Model</a></li>
+</ul>
+</li>
+</ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../manual.html">Manual</a></li>
@@ -151,11 +171,8 @@ to download the full example code</p>
 <li class="toctree-l1"><a class="reference internal" href="../../maintenance.html">Maintenance</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Contents</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="../index.html#geological-models">Geological Models</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Contents</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../external/external_examples.html">External Examples</a></li>
 </ul>
 

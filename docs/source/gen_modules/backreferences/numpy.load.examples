@@ -1,0 +1,39 @@
+
+
+Examples using ``numpy.load``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+.. start-sphx-glr-thumbnails
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip=" Construct a 3D geological model of the Stonepark deposit using GemPy.">
+
+.. only:: html
+
+  .. image:: /examples/examples/images/thumb/sphx_glr_stonepark_gempy_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_examples_stonepark_gempy.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Stonepark Geological Model</div>
+    </div>
+
+
+.. only:: not html
+
+ * :ref:`sphx_glr_examples_examples_stonepark_gempy.py`
+
+.. raw:: html
+
+    </div>
+
