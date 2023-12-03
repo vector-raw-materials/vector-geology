@@ -120,7 +120,7 @@ if False:  # Replace with condition for exporting to Liquid Earth
 
 plotter = init_plotter()
 if plot_model_area := True:
-    for mesh in meshes:
+    for mesh in meshes[:1]:
         plotter.add_mesh(mesh, cmap="magma", opacity=1)
 
     for line in lines_far:

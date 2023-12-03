@@ -88,9 +88,13 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
     project_name='Tutorial_ch1_1_Basics',
     extent=global_extent,
     resolution=[20, 10, 20],
-    refinement=6,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
+    refinement=4,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
     structural_frame=structural_frame
 )
+
+# gpv.plot_2d(geo_model, show_data=True)
+# gempy_vista = gpv.plot_3d(geo_model, show_data=True, show=False)
+
 
 # %% 
 # ## Optimize nuggets
@@ -105,7 +109,9 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
 # %%
 from vector_geology.model_building_functions import optimize_nuggets_for_group
 
-if False:
+TRIGGER_OPTIMIZE_NUGGETS = False
+APPLY_OPTIMIZED_NUGGETS = False
+if TRIGGER_OPTIMIZE_NUGGETS:
     geo_model.interpolation_options.kernel_options.range = 0.7
     geo_model.interpolation_options.kernel_options.c_o = 4
     optimize_nuggets_for_group(
@@ -131,43 +137,44 @@ if False:
         plot_result=False
     )
 
+# %%
+if APPLY_OPTIMIZED_NUGGETS:
+    loaded_nuggets_red = np.load("nuggets_Red.npy")
+    loaded_nuggets_green = np.load("nuggets_Green.npy")
+    loaded_nuggets_blue = np.load("nuggets_Blue.npy")
+
+    gp.modify_surface_points(
+        geo_model,
+        slice=None,
+        elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Red').elements],
+        nugget=loaded_nuggets_red
+    )
+
+    gp.modify_surface_points(
+        geo_model,
+        slice=None,
+        elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Green').elements],
+        nugget=loaded_nuggets_green
+    )
+
+    gp.modify_surface_points(
+        geo_model,
+        slice=None,
+        elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Blue').elements],
+        nugget=loaded_nuggets_blue
+    )
 
 geo_model
 
 # %% 
 geo_model.interpolation_options.mesh_extraction = True
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
-geo_model.interpolation_options.kernel_options.range = 1
+geo_model.interpolation_options.kernel_options.range = 0.1
 geo_model.interpolation_options.kernel_options.c_o = 4
 
 surface_points_copy = geo_model.surface_points
 
 geo_model.update_transform()
-
-loaded_nuggets_red = np.load("nuggets_Red.npy")
-loaded_nuggets_green = np.load("nuggets_Green.npy")
-loaded_nuggets_blue = np.load("nuggets_Blue.npy")
-
-gp.modify_surface_points(
-    geo_model,
-    slice=None,
-    elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Red').elements],
-    nugget=loaded_nuggets_red
-)
-
-gp.modify_surface_points(
-    geo_model,
-    slice=None,
-    elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Green').elements],
-    nugget=loaded_nuggets_green
-)
-
-gp.modify_surface_points(
-    geo_model,
-    slice=None,
-    elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Blue').elements],
-    nugget=loaded_nuggets_blue
-)
 
 geo_model.interpolation_options.kernel_options.compute_condition_number = False
 gp.compute_model(
@@ -187,9 +194,8 @@ print(f"The function executed in {execution_time} seconds.")
 gempy_vista = gpv.plot_3d(
     model=geo_model,
     show=True,
-    kwargs_plot_structured_grid={'opacity': 0.8}
+    kwargs_plot_structured_grid={'opacity': 0.3}
 )
 
 if ADD_ORIGINAL_MESH := False:
     gempy_vista.p.add_mesh(triangulated_mesh, color="red", opacity=0.5)
-

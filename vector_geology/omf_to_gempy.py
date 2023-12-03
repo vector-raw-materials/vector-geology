@@ -44,7 +44,7 @@ def extract_surface_points_and_orientations(dataset, name, color_generator) -> g
         nugget=nuggets
     )
 
-    every = 10
+    every = 1
     orientations = gp.data.OrientationsTable.from_arrays(
         x=surface_points_xyz[::every, 0],
         y=surface_points_xyz[::every, 1],
