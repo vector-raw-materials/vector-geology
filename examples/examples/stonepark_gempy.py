@@ -48,6 +48,8 @@ for e, filename in enumerate(os.listdir(path)):
 # Setup gempy object
 # structural_elements.pop(1)
 
+
+# Red range 0.7 cov 4
 structural_group_red = gp.data.StructuralGroup(
     name="Red",
     # elements=[structural_elements[i] for i in [0, 4, 6, 8]],
@@ -55,12 +57,14 @@ structural_group_red = gp.data.StructuralGroup(
     structural_relation=gp.data.StackRelationType.ERODE
 )
 
+# Any, Probably we can decimize this an extra notch
 structural_group_green = gp.data.StructuralGroup(
     name="Green",
     elements=[structural_elements[i] for i in [5]],
     structural_relation=gp.data.StackRelationType.ERODE
 )
 
+# Blue range 2 cov 4
 structural_group_blue = gp.data.StructuralGroup(
     name="Blue",
     elements=[structural_elements[i] for i in [2, 3]],
@@ -75,7 +79,7 @@ structural_group_intrusion = gp.data.StructuralGroup(
 
 structural_groups = [structural_group_intrusion, structural_group_green, structural_group_blue, structural_group_red]
 structural_frame = gp.data.StructuralFrame(
-    structural_groups=structural_groups[3:],
+    structural_groups=structural_groups[1:],
     color_gen=color_gen
 )
 # TODO: If elements do not have color maybe loop them on structural frame constructor?
@@ -84,67 +88,96 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
     project_name='Tutorial_ch1_1_Basics',
     extent=global_extent,
     resolution=[20, 10, 20],
-    refinement=4,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
+    refinement=6,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
     structural_frame=structural_frame
 )
 
-# %% Extract surface points from the dataset
+# %% 
+# ## Optimize nuggets
+# In such a complex geometries often data does not fit perfectly. In order to account for this, GemPy allows to add a
+# small random noise to the data. This is done by adding a small random value to the diagonal of the covariance matrix.
+# We can optimize this value with respect to the condition number of the matrix. The condition number is a measure of
+# how well the matrix can be inverted. The higher the condition number, the worse the matrix can be inverted. This
+# means that the data is not well conditioned and the nugget should be increased. On the other hand, if the condition
+# number is too low, the data is overfitted and the nugget should be decreased. The optimal value is the one that
+# minimizes the condition number. This can be done with the following function:
+
+# %%
+from vector_geology.model_building_functions import optimize_nuggets_for_group
+
+if False:
+    geo_model.interpolation_options.kernel_options.range = 0.7
+    geo_model.interpolation_options.kernel_options.c_o = 4
+    optimize_nuggets_for_group(
+        geo_model=geo_model,
+        structural_group=structural_group_red,
+        plot_evaluation=False,
+        plot_result=True
+    )
+
+    geo_model.interpolation_options.kernel_options.range = 2
+    geo_model.interpolation_options.kernel_options.c_o = 4
+    optimize_nuggets_for_group(
+        geo_model=geo_model,
+        structural_group=structural_group_green,
+        plot_evaluation=False,
+        plot_result=True
+    )
+
+    optimize_nuggets_for_group(
+        geo_model=geo_model,
+        structural_group=structural_group_blue,
+        plot_evaluation=False,
+        plot_result=False
+    )
+
+
 geo_model
 
 # %% 
-# gpv.plot_3d(geo_model)
-
 geo_model.interpolation_options.mesh_extraction = True
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
-geo_model.interpolation_options.kernel_options.range = 0.7
+geo_model.interpolation_options.kernel_options.range = 1
 geo_model.interpolation_options.kernel_options.c_o = 4
 
 surface_points_copy = geo_model.surface_points
 
 geo_model.update_transform()
 
-if REUSE_NUGGETS := True:
-    loaded_nuggets = np.load("nuggets.npy")
-    gp.modify_surface_points(
-        geo_model,
-        slice=None,
-        nugget=loaded_nuggets
-    )
+loaded_nuggets_red = np.load("nuggets_Red.npy")
+loaded_nuggets_green = np.load("nuggets_Green.npy")
+loaded_nuggets_blue = np.load("nuggets_Blue.npy")
 
-    geo_model.interpolation_options.kernel_options.compute_condition_number = False
-    gp.compute_model(
-        geo_model,
-        engine_config=gp.data.GemPyEngineConfig(
-            backend=gp.data.AvailableBackends.PYTORCH,
-        ),
-    )
-else:
-    gp.API.compute_API.optimize_and_compute(
-        geo_model=geo_model,
-        engine_config=gp.data.GemPyEngineConfig(
-            backend=gp.data.AvailableBackends.PYTORCH,
-        ),
-        max_epochs=100,
-        convergence_criteria=1e5
-    )
+gp.modify_surface_points(
+    geo_model,
+    slice=None,
+    elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Red').elements],
+    nugget=loaded_nuggets_red
+)
+
+gp.modify_surface_points(
+    geo_model,
+    slice=None,
+    elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Green').elements],
+    nugget=loaded_nuggets_green
+)
+
+gp.modify_surface_points(
+    geo_model,
+    slice=None,
+    elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Blue').elements],
+    nugget=loaded_nuggets_blue
+)
+
+geo_model.interpolation_options.kernel_options.compute_condition_number = False
+gp.compute_model(
+    geo_model,
+    engine_config=gp.data.GemPyEngineConfig(
+        backend=gp.data.AvailableBackends.PYTORCH,
+    ),
+)
 
 gpv.plot_2d(geo_model, show_scalar=True)
-
-nugget_effect = geo_model.taped_interpolation_input.surface_points.nugget_effect_scalar
-np.save("nuggets", nugget_effect.detach().numpy())
-
-surface_points_xyz = geo_model.surface_points.df[['X', 'Y', 'Z']].to_numpy()
-
-nugget_numpy = nugget_effect.detach().numpy()[:]
-
-array_to_plot = nugget_numpy
-
-plt.hist(nugget_numpy, bins=50, color='black', alpha=0.7, log=True)
-plt.xlabel('Eigenvalue')
-plt.ylabel('Frequency')
-plt.title('Histogram of Eigenvalues (nugget-grad)')
-plt.show()
-clean_sp = surface_points_xyz[1:]
 
 end_time = time.time()
 execution_time = end_time - start_time
@@ -153,22 +186,10 @@ print(f"The function executed in {execution_time} seconds.")
 
 gempy_vista = gpv.plot_3d(
     model=geo_model,
-    show=False,
-    kwargs_plot_structured_grid={'opacity': 0.3}
+    show=True,
+    kwargs_plot_structured_grid={'opacity': 0.8}
 )
 
 if ADD_ORIGINAL_MESH := False:
     gempy_vista.p.add_mesh(triangulated_mesh, color="red", opacity=0.5)
 
-# Create a point cloud mesh
-point_cloud = pv.PolyData(surface_points_xyz[0:])
-point_cloud['values'] = array_to_plot  # Add the log values as a scalar array
-
-gempy_vista.p.add_mesh(
-    point_cloud,
-    scalars='values',
-    cmap='inferno',
-    point_size=25,
-)
-
-gempy_vista.p.show()
