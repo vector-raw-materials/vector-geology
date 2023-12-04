@@ -79,7 +79,7 @@ structural_group_intrusion = gp.data.StructuralGroup(
 
 structural_groups = [structural_group_intrusion, structural_group_green, structural_group_blue, structural_group_red]
 structural_frame = gp.data.StructuralFrame(
-    structural_groups=structural_groups[1:],
+    structural_groups=structural_groups[3:],
     color_gen=color_gen
 )
 # TODO: If elements do not have color maybe loop them on structural frame constructor?
@@ -110,8 +110,9 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
 from vector_geology.model_building_functions import optimize_nuggets_for_group
 
 TRIGGER_OPTIMIZE_NUGGETS = False
-APPLY_OPTIMIZED_NUGGETS = False
+APPLY_OPTIMIZED_NUGGETS = True
 if TRIGGER_OPTIMIZE_NUGGETS:
+    
     geo_model.interpolation_options.kernel_options.range = 0.7
     geo_model.interpolation_options.kernel_options.c_o = 4
     optimize_nuggets_for_group(
@@ -120,7 +121,7 @@ if TRIGGER_OPTIMIZE_NUGGETS:
         plot_evaluation=False,
         plot_result=True
     )
-
+    
     geo_model.interpolation_options.kernel_options.range = 2
     geo_model.interpolation_options.kernel_options.c_o = 4
     optimize_nuggets_for_group(
@@ -149,38 +150,39 @@ if APPLY_OPTIMIZED_NUGGETS:
         elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Red').elements],
         nugget=loaded_nuggets_red
     )
+    if False:
+        gp.modify_surface_points(
+            geo_model,
+            slice=None,
+            elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Green').elements],
+            nugget=loaded_nuggets_green
+        )
 
-    gp.modify_surface_points(
-        geo_model,
-        slice=None,
-        elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Green').elements],
-        nugget=loaded_nuggets_green
-    )
-
-    gp.modify_surface_points(
-        geo_model,
-        slice=None,
-        elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Blue').elements],
-        nugget=loaded_nuggets_blue
-    )
+        gp.modify_surface_points(
+            geo_model,
+            slice=None,
+            elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Blue').elements],
+            nugget=loaded_nuggets_blue
+        )
 
 geo_model
 
 # %% 
 geo_model.interpolation_options.mesh_extraction = True
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
-geo_model.interpolation_options.kernel_options.range = 0.1
+geo_model.interpolation_options.kernel_options.range = 0.7
 geo_model.interpolation_options.kernel_options.c_o = 4
+geo_model.interpolation_options.kernel_options.compute_condition_number = False
 
 surface_points_copy = geo_model.surface_points
 
 geo_model.update_transform()
 
-geo_model.interpolation_options.kernel_options.compute_condition_number = False
 gp.compute_model(
     geo_model,
     engine_config=gp.data.GemPyEngineConfig(
         backend=gp.data.AvailableBackends.PYTORCH,
+        dtype="float32"
     ),
 )
 
