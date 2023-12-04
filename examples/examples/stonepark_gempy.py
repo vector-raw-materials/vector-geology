@@ -169,10 +169,12 @@ geo_model
 
 # %% 
 geo_model.interpolation_options.mesh_extraction = True
+geo_model.interpolation_options.kernel_options.range = .7
+geo_model.interpolation_options.kernel_options.c_o = 3
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
-geo_model.interpolation_options.kernel_options.range = 0.7
-geo_model.interpolation_options.kernel_options.c_o = 4
-geo_model.interpolation_options.kernel_options.compute_condition_number = False
+
+from gempy_engine.core.data.kernel_classes.kernel_functions import AvailableKernelFunctions
+geo_model.interpolation_options.kernel_options.kernel_function = AvailableKernelFunctions.matern_5_2
 
 surface_points_copy = geo_model.surface_points
 
