@@ -79,7 +79,7 @@ structural_group_intrusion = gp.data.StructuralGroup(
 
 structural_groups = [structural_group_intrusion, structural_group_green, structural_group_blue, structural_group_red]
 structural_frame = gp.data.StructuralFrame(
-    structural_groups=structural_groups[3:],
+    structural_groups=structural_groups[2:],
     color_gen=color_gen
 )
 # TODO: If elements do not have color maybe loop them on structural frame constructor?
@@ -158,12 +158,13 @@ if APPLY_OPTIMIZED_NUGGETS:
             nugget=loaded_nuggets_green
         )
 
+    if True: # Ignore OB
         gp.modify_surface_points(
-            geo_model,
-            slice=None,
-            elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Blue').elements],
-            nugget=loaded_nuggets_blue
-        )
+                geo_model,
+                slice=None,
+                elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Blue').elements],
+                nugget=loaded_nuggets_blue
+            )
 
 geo_model
 
@@ -174,9 +175,21 @@ geo_model.interpolation_options.kernel_options.c_o = 3
 geo_model.interpolation_options.kernel_options.compute_condition_number = True
 
 from gempy_engine.core.data.kernel_classes.kernel_functions import AvailableKernelFunctions
-geo_model.interpolation_options.kernel_options.kernel_function = AvailableKernelFunctions.matern_5_2
+geo_model.interpolation_options.kernel_options.kernel_function = AvailableKernelFunctions.cubic
 
-surface_points_copy = geo_model.surface_points
+# %% 
+# Refine each layer
+# dark green: Stonepark_kkr to pink Knockroe
+# purple: Stonepark_LGR to cyan: Lough Gur Fm
+# light green: Stonepark_WAL light green: Waulsortian Limestone
+# blue: Stonepark_ABL to dark green: Ballysteen Fm
+# very light green basement to brown: Old red Sandstone
+
+geo_model.structural_frame.get_element_by_name("Stonepark_KKR").color = "#A46283"
+geo_model.structural_frame.get_element_by_name("Stonepark_LGR").color = "#6394A4"
+geo_model.structural_frame.get_element_by_name("Stonepark_WAL").color = "#72A473"
+geo_model.structural_frame.get_element_by_name("Stonepark_ABL").color = "#1D3943"
+geo_model.structural_frame.basement_color = "#8B4220"
 
 geo_model.update_transform()
 
@@ -184,11 +197,11 @@ gp.compute_model(
     geo_model,
     engine_config=gp.data.GemPyEngineConfig(
         backend=gp.data.AvailableBackends.PYTORCH,
-        dtype="float32"
+        dtype="float64"
     ),
 )
 
-gpv.plot_2d(geo_model, show_scalar=True)
+gpv.plot_2d(geo_model, show_scalar=False)
 
 end_time = time.time()
 execution_time = end_time - start_time
@@ -198,7 +211,7 @@ print(f"The function executed in {execution_time} seconds.")
 gempy_vista = gpv.plot_3d(
     model=geo_model,
     show=True,
-    kwargs_plot_structured_grid={'opacity': 0.3}
+    kwargs_plot_structured_grid={'opacity': 0.1}
 )
 
 if ADD_ORIGINAL_MESH := False:
