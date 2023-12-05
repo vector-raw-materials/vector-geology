@@ -10,6 +10,8 @@ Construct a 3D geological model of the Stonepark deposit using GemPy.
 
 import time
 
+import subsurface
+
 start_time = time.time()  # start timer
 
 import numpy as np
@@ -20,9 +22,6 @@ import numpy as np
 # %%
 import os
 from dotenv import dotenv_values
-
-import matplotlib.pyplot as plt
-import pyvista as pv
 
 from vector_geology.omf_to_gempy import process_file
 import gempy as gp
@@ -88,8 +87,18 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
     project_name='Tutorial_ch1_1_Basics',
     extent=global_extent,
     resolution=[20, 10, 20],
-    refinement=4,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
+    refinement=6,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
     structural_frame=structural_frame
+)
+
+# %% 
+# Add topography
+import xarray as xr
+dataset: xr.Dataset = xr.open_dataset(os.path.join(path, "Topography.nc"))
+
+gp.set_topography_from_arrays(
+    grid=geo_model.grid,
+    xyz_vertices= dataset.vertex.values
 )
 
 # gpv.plot_2d(geo_model, show_data=True)
@@ -189,6 +198,7 @@ geo_model.structural_frame.basement_color = "#8B4220"
 
 geo_model.update_transform()
 
+
 gp.compute_model(
     geo_model,
     engine_config=gp.data.GemPyEngineConfig(
@@ -207,7 +217,7 @@ print(f"The function executed in {execution_time} seconds.")
 gempy_vista = gpv.plot_3d(
     model=geo_model,
     show=True,
-    kwargs_plot_structured_grid={'opacity': 0.1}
+    kwargs_plot_structured_grid={'opacity': 0.8}
 )
 
 if ADD_ORIGINAL_MESH := False:
