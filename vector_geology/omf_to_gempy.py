@@ -20,7 +20,7 @@ def extract_surface_points_and_orientations(dataset, name, color_generator) -> g
     
 
     # Decimate the mesh and compute normals
-    decimated_mesh = triangulated_mesh.decimate_pro(0.98)
+    decimated_mesh = triangulated_mesh.decimate_pro(0.95)
     normals = decimated_mesh.compute_normals(point_normals=False, cell_normals=True, consistent_normals=True)
     normals_array = np.array(normals.cell_data["Normals"])
 
@@ -36,12 +36,13 @@ def extract_surface_points_and_orientations(dataset, name, color_generator) -> g
     nuggets = np.ones(len(surface_points_xyz)) * 0.000001
 
     # Create SurfacePointsTable and OrientationsTable
+    every = 10
     surface_points = gp.data.SurfacePointsTable.from_arrays(
-        x=surface_points_xyz[:, 0],
-        y=surface_points_xyz[:, 1],
-        z=surface_points_xyz[:, 2],
+        x=surface_points_xyz[::every, 0],
+        y=surface_points_xyz[::every, 1],
+        z=surface_points_xyz[::every, 2],
         names=name,
-        nugget=nuggets
+        nugget=nuggets[::every]
     )
 
     every = 10

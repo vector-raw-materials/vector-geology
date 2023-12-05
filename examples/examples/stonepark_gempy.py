@@ -124,19 +124,21 @@ if TRIGGER_OPTIMIZE_NUGGETS:
     
     geo_model.interpolation_options.kernel_options.range = 2
     geo_model.interpolation_options.kernel_options.c_o = 4
-    optimize_nuggets_for_group(
-        geo_model=geo_model,
-        structural_group=structural_group_green,
-        plot_evaluation=False,
-        plot_result=True
-    )
-
+    
     optimize_nuggets_for_group(
         geo_model=geo_model,
         structural_group=structural_group_blue,
         plot_evaluation=False,
         plot_result=False
     )
+
+    if False:
+        optimize_nuggets_for_group(
+            geo_model=geo_model,
+            structural_group=structural_group_green,
+            plot_evaluation=False,
+            plot_result=True
+        )
 
 # %%
 if APPLY_OPTIMIZED_NUGGETS:
@@ -150,14 +152,7 @@ if APPLY_OPTIMIZED_NUGGETS:
         elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Red').elements],
         nugget=loaded_nuggets_red
     )
-    if False:
-        gp.modify_surface_points(
-            geo_model,
-            slice=None,
-            elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Green').elements],
-            nugget=loaded_nuggets_green
-        )
-
+    
     if True: # Ignore OB
         gp.modify_surface_points(
                 geo_model,
@@ -165,6 +160,13 @@ if APPLY_OPTIMIZED_NUGGETS:
                 elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Blue').elements],
                 nugget=loaded_nuggets_blue
             )
+    if False:
+        gp.modify_surface_points(
+            geo_model,
+            slice=None,
+            elements_names=[element.name for element in geo_model.structural_frame.get_group_by_name('Green').elements],
+            nugget=loaded_nuggets_green
+        )
 
 geo_model
 
@@ -178,12 +180,6 @@ from gempy_engine.core.data.kernel_classes.kernel_functions import AvailableKern
 geo_model.interpolation_options.kernel_options.kernel_function = AvailableKernelFunctions.cubic
 
 # %% 
-# Refine each layer
-# dark green: Stonepark_kkr to pink Knockroe
-# purple: Stonepark_LGR to cyan: Lough Gur Fm
-# light green: Stonepark_WAL light green: Waulsortian Limestone
-# blue: Stonepark_ABL to dark green: Ballysteen Fm
-# very light green basement to brown: Old red Sandstone
 
 geo_model.structural_frame.get_element_by_name("Stonepark_KKR").color = "#A46283"
 geo_model.structural_frame.get_element_by_name("Stonepark_LGR").color = "#6394A4"
