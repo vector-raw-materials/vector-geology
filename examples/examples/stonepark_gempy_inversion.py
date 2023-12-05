@@ -11,6 +11,7 @@ Construct a 3D geological model of the Stonepark deposit using GemPy.
 import time
 
 import xarray as xr
+import pandas as pd
 
 from vector_geology.stonepark_builder import initialize_geo_model
 
@@ -57,6 +58,15 @@ geo_model = initialize_geo_model(
 geo_model
 
 # %% 
+df = pd.read_csv(
+    filepath_or_buffer=config.get("PATH_TO_STONEPARK_BOUGUER"),
+    sep=',',
+    header=0
+)
+
+interesting_columns = df[['X', 'Y', 'Bouguer_267_complete']]
+
+# %% 
 interpolation_options = geo_model.interpolation_options
 
 interpolation_options.mesh_extraction = True
@@ -74,6 +84,7 @@ gp.compute_model(
 )
 
 gpv.plot_2d(geo_model, show_scalar=False)
+gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"])
 
 end_time = time.time()
 execution_time = end_time - start_time
