@@ -8,7 +8,6 @@ from vector_geology.model_building_functions import optimize_nuggets_for_group
 def initialize_geo_model(structural_elements: list[gp.data.StructuralElement], extent: list[float],
                          topography: xr.Dataset, load_nuggets: bool = False
                          ) -> gp.data.GeoModel:
-
     structural_group_red = gp.data.StructuralGroup(
         name="Red",
         elements=[structural_elements[i] for i in [0, 4, 8]],
@@ -34,9 +33,7 @@ def initialize_geo_model(structural_elements: list[gp.data.StructuralElement], e
         elements=[structural_elements[i] for i in [1]],
         structural_relation=gp.data.StackRelationType.ERODE
     )
-    
 
-    
     structural_groups = [structural_group_intrusion, structural_group_green, structural_group_blue, structural_group_red]
     structural_frame = gp.data.StructuralFrame(
         structural_groups=structural_groups[2:],
@@ -51,13 +48,13 @@ def initialize_geo_model(structural_elements: list[gp.data.StructuralElement], e
         refinement=6,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
         structural_frame=structural_frame
     )
-    
+
     if topography is not None:
         gp.set_topography_from_arrays(
             grid=geo_model.grid,
             xyz_vertices=topography.vertex.values
         )
-    
+
     if load_nuggets:
         apply_optimized_nuggets(
             geo_model=geo_model,
@@ -125,3 +122,41 @@ def apply_optimized_nuggets(geo_model: gp.data.GeoModel, loaded_nuggets_red, loa
             nugget=loaded_nuggets_green
         )
 
+
+def setup_geophysics(env_path: str, geo_model: gp.data.GeoModel):
+    import pandas as pd
+    from dotenv import dotenv_values
+    config = dotenv_values()
+
+    df = pd.read_csv(
+        filepath_or_buffer=config.get(env_path),
+        sep=',',
+        header=0
+    )
+
+    # Remove the items that have X > 5650000
+    df = df[df['X'] < 565000]
+
+    interesting_columns = df[['X', 'Y', 'Bouguer_267_complete']]
+    # %%
+    device_location = interesting_columns[['X', 'Y']]
+    # stack 0 to the z axis
+    device_location['Z'] = 0
+
+    gp.set_centered_grid(
+        grid=geo_model.grid,
+        centers=device_location,
+        resolution=np.array([10, 10, 15]),
+        radius=np.array([5000, 5000, 5000])
+    )
+
+    gravity_gradient = gp.calculate_gravity_gradient(geo_model.grid.centered_grid)
+
+    # %%
+    from gempy_engine.core.backend_tensor import BackendTensor
+    geo_model.geophysics_input = gp.data.GeophysicsInput(
+        tz=BackendTensor.t.array(gravity_gradient),
+        densities=BackendTensor.t.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61]),
+    )
+
+    return interesting_columns
