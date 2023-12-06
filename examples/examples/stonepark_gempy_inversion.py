@@ -10,6 +10,7 @@ Construct a 3D geological model of the Stonepark deposit using GemPy.
 
 import time
 
+import numpy as np
 import xarray as xr
 import pandas as pd
 
@@ -26,6 +27,7 @@ from dotenv import dotenv_values
 from vector_geology.omf_to_gempy import process_file
 import gempy as gp
 import gempy_viewer as gpv
+from vector_geology.utils import extend_box
 
 start_time = time.time()  # start timer
 config = dotenv_values()
@@ -43,12 +45,13 @@ for e, filename in enumerate(os.listdir(path)):
 # %%
 # Element 1 is an intrusion
 
-#  %%
+#  %%j
 # Setup gempy object
-
+extent___ = np.array(global_extent)
+# extent___[1] = 570000 # move the extent far enough to include the last device
 geo_model = initialize_geo_model(
     structural_elements=structural_elements,
-    extent=global_extent,
+    extent=extent___,
     topography=(xr.open_dataset(os.path.join(path, "Topography.nc"))),
     load_nuggets=True
 )
@@ -84,7 +87,18 @@ gp.compute_model(
 )
 
 gpv.plot_2d(geo_model, show_scalar=False)
-gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"])
+plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
+plot2d.axes[0].scatter(
+    interesting_columns['X'],
+    interesting_columns['Y'], 
+    c=interesting_columns['Bouguer_267_complete'], 
+    cmap='viridis', 
+    s=100,
+    zorder=10000
+)
+
+plot2d.fig.show()
+
 
 end_time = time.time()
 execution_time = end_time - start_time
