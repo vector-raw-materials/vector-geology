@@ -13,6 +13,7 @@ import time
 import numpy as np
 import xarray as xr
 import pandas as pd
+from matplotlib import pyplot as plt
 
 from vector_geology.stonepark_builder import initialize_geo_model
 
@@ -45,13 +46,11 @@ for e, filename in enumerate(os.listdir(path)):
 # %%
 # Element 1 is an intrusion
 
-#  %%j
+#  %%
 # Setup gempy object
-extent___ = np.array(global_extent)
-# extent___[1] = 570000 # move the extent far enough to include the last device
 geo_model = initialize_geo_model(
     structural_elements=structural_elements,
-    extent=extent___,
+    extent=(np.array(global_extent)),
     topography=(xr.open_dataset(os.path.join(path, "Topography.nc"))),
     load_nuggets=True
 )
@@ -67,6 +66,9 @@ df = pd.read_csv(
     header=0
 )
 
+# Remove the items that have X > 5650000
+df = df[df['X'] < 565000]
+
 interesting_columns = df[['X', 'Y', 'Bouguer_267_complete']]
 
 # %% 
@@ -77,14 +79,6 @@ interpolation_options.kernel_options.range = .7
 interpolation_options.kernel_options.c_o = 3
 interpolation_options.kernel_options.compute_condition_number = True
 
-# %% 
-gp.compute_model(
-    geo_model,
-    engine_config=gp.data.GemPyEngineConfig(
-        backend=gp.data.AvailableBackends.PYTORCH,
-        dtype="float64"
-    ),
-)
 
 gpv.plot_2d(geo_model, show_scalar=False)
 plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
@@ -99,7 +93,6 @@ plot2d.axes[0].scatter(
 
 plot2d.fig.show()
 
-
 end_time = time.time()
 execution_time = end_time - start_time
 
@@ -108,5 +101,53 @@ print(f"The function executed in {execution_time} seconds.")
 gempy_vista = gpv.plot_3d(
     model=geo_model,
     show=True,
-    kwargs_plot_structured_grid={'opacity': 0.8}
+    kwargs_plot_structured_grid={'opacity': 0.8},
+    image=True
 )
+
+
+
+# %%
+device_location = interesting_columns[['X', 'Y']]
+# stack 0 to the z axis
+device_location['Z'] = 0
+
+gp.set_centered_grid(
+    grid=geo_model.grid,
+    centers=device_location,
+    resolution=np.array([10, 10, 15]),
+    radius=np.array([5000, 5000, 5000])
+)
+
+gravity_gradient = gp.calculate_gravity_gradient(geo_model.grid.centered_grid)
+gravity_gradient
+
+# %%
+geo_model.geophysics_input = gp.data.GeophysicsInput(
+    tz=gravity_gradient,
+    densities=np.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61]),
+)
+
+# %% 
+sol = gp.compute_model(
+    gempy_model=geo_model,
+    engine_config=gp.data.GemPyEngineConfig(
+        backend=gp.data.AvailableBackends.PYTORCH,
+        dtype='float64'
+    )
+)
+grav = - sol.gravity
+
+# %%
+# TODO: Scale the gravity data to the same scale as the model
+
+plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
+plot2d.axes[0].scatter(
+    interesting_columns['X'],
+    interesting_columns['Y'],
+    c=grav,
+    cmap='viridis',
+    s=100,
+    zorder=10000
+)
+plt.show()
