@@ -76,7 +76,7 @@ gp.compute_model(
     geo_model,
     engine_config=gp.data.GemPyEngineConfig(
         backend=gp.data.AvailableBackends.PYTORCH,
-        dtype="float64"
+        dtype="float32"
     ),
 )
 
