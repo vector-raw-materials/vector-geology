@@ -68,9 +68,10 @@ interpolation_options.kernel_options.compute_condition_number = True
 gp.modify_surface_points(
     geo_model,
     slice=0,
-    X = geo_model.surface_points.data[0][0] + 100,
+    X = geo_model.surface_points.data[0][0] + 150,
 )
 
+before_compute_time = time.time()
 gp.compute_model(
     geo_model,
     engine_config=gp.data.GemPyEngineConfig(
@@ -82,8 +83,12 @@ gp.compute_model(
 gpv.plot_2d(geo_model, show_scalar=False)
 
 end_time = time.time()
+prep_time = before_compute_time - start_time
+compute_time = end_time - before_compute_time
 execution_time = end_time - start_time
 
+print(f"The function executed in {prep_time} seconds.")
+print(f"The function executed in {compute_time} seconds.")
 print(f"The function executed in {execution_time} seconds.")
 
 gempy_vista = gpv.plot_3d(
