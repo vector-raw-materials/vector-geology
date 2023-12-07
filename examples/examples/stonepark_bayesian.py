@@ -68,10 +68,12 @@ geophysics_input = setup_geophysics(
 # %% 
 interpolation_options = geo_model.interpolation_options
 
-interpolation_options.mesh_extraction = True
 interpolation_options.kernel_options.range = .7
 interpolation_options.kernel_options.c_o = 3
 interpolation_options.kernel_options.compute_condition_number = True
+
+
+
 
 sol = gp.compute_model(
     gempy_model=geo_model,
@@ -150,6 +152,14 @@ def model(y_obs_list):
 
 
 y_obs_list = torch.tensor(geophysics_input['Bouguer_267_complete'].values[0])
+
+# %%
+# Optimize mesh
+interpolation_options.mesh_extraction = False
+interpolation_options.number_octree_levels = 1
+geo_model.grid.set_inactive("topography")
+geo_model.grid.set_inactive("regular")
+
 
 # %%
 import arviz as az
