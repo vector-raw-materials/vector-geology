@@ -15,6 +15,7 @@ import xarray as xr
 import pandas as pd
 from matplotlib import pyplot as plt
 
+from gempy_probability.plot_posterior import default_red, default_blue
 from vector_geology.stonepark_builder import initialize_geo_model, setup_geophysics
 
 # %%
@@ -72,9 +73,6 @@ interpolation_options.kernel_options.range = .7
 interpolation_options.kernel_options.c_o = 3
 interpolation_options.kernel_options.compute_condition_number = True
 
-
-
-
 sol = gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
@@ -116,7 +114,7 @@ import gempy_engine
 from gempy_engine.core.data.interpolation_input import InterpolationInput
 
 
-def model(y_obs_list):
+def model(y_obs_list, interpolation_input):
     """
     This Pyro model represents the probabilistic aspects of the geological model.
     It defines a prior distribution for the top layer's location and 
@@ -126,14 +124,14 @@ def model(y_obs_list):
     prior_mean = 2.62
     mu_density = pyro.sample(
         name=r'$\mu_{density}$', 
-        fn=dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float32))
+        fn=dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64))
     )
 
     # Update the model with the new top layer's location
-    interpolation_input: InterpolationInput = geo_model.interpolation_input
+    # interpolation_input: InterpolationInput = geo_model.interpolation_input
     geophysics_input = geo_model.geophysics_input
     geophysics_input.densities = torch.index_put(
-        input=geophysics_input.densities,
+        input=geophysics_input.densities.to(torch.float64),
         indices=(torch.tensor([0]),),
         values=mu_density
     )
@@ -143,15 +141,20 @@ def model(y_obs_list):
         interpolation_input=interpolation_input,
         options=geo_model.interpolation_options,
         data_descriptor=geo_model.input_data_descriptor,
-        geophysics_input=geo_model.geophysics_input,
+        geophysics_input=geophysics_input
     )
 
     simulated_geophysics = geo_model.solutions.gravity
-    pyro.deterministic(r'$\mu_{gravity}$', simulated_geophysics.detach())
-    y_gravity = pyro.sample(r'$y_{gravity}$', dist.Normal(simulated_geophysics[0], 50), obs=y_obs_list)
+    # pyro.deterministic(r'$\mu_{gravity}$', simulated_geophysics.detach())
+    y_gravity = pyro.sample(
+        name=r'$y_{gravity}$', 
+        fn=dist.Normal(simulated_geophysics[0], 50),
+        obs=y_obs_list
+    )
 
 
-y_obs_list = torch.tensor(geophysics_input['Bouguer_267_complete'].values[0])
+# y_obs_list = torch.tensor(geophysics_input['Bouguer_267_complete'].values[0])
+y_obs_list = torch.tensor([-436])
 
 # %%
 # Optimize mesh
@@ -165,7 +168,56 @@ geo_model.grid.set_inactive("regular")
 import arviz as az
 
 # Run prior sampling and visualization
-prior = Predictive(model, num_samples=50)(y_obs_list)
-data = az.from_pyro(prior=prior)
-az.plot_trace(data.prior)
+if False:
+    prior = Predictive(model, num_samples=50)(y_obs_list)
+    data = az.from_pyro(prior=prior)
+    az.plot_trace(data.prior)
+    plt.show()
+
+
+# Running MCMC using the NUTS algorithm
+
+pyro.primitives.enable_validation(is_validate=True)
+nuts_kernel = NUTS(model)
+mcmc = MCMC(nuts_kernel, num_samples=100, warmup_steps=20)
+mcmc.run(y_obs_list, interpolation_input=geo_model.interpolation_input)
+
+
+posterior_samples = mcmc.get_samples(50)
+posterior_predictive = Predictive(model, posterior_samples)(y_obs_list)
+
+# Creating a data object for ArviZ
+data = az.from_pyro(
+    posterior=mcmc,
+    prior=prior,
+    posterior_predictive=posterior_predictive
+)
+
+# Plotting trace of the sampled parameters
+az.plot_trace(data)
+plt.show()
+
+# %%
+# Density Plots of Posterior and Prior
+# ------------------------------------
+# Density plots provide a visual representation of the distribution of the sampled parameters.
+# Comparing the posterior and prior distributions allows us to assess the impact of the observed data.
+
+# Plotting density of posterior and prior distributions
+az.plot_density(
+    data=[data, data.prior],
+    shade=.9,
+    data_labels=["Posterior", "Prior"],
+    colors=[default_red, default_blue],
+)
+plt.show()
+
+
+az.plot_density(
+    data=[data.posterior_predictive, data.prior_predictive],
+    shade=.9,
+    var_names=[r'$\mu_{gravity}$'],
+    data_labels=["Posterior Predictive", "Prior Predictive"],
+    colors=[default_red, default_blue],
+)
 plt.show()
