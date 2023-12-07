@@ -65,6 +65,12 @@ interpolation_options.kernel_options.c_o = 3
 interpolation_options.kernel_options.compute_condition_number = True
 
 # %% 
+gp.modify_surface_points(
+    geo_model,
+    slice=0,
+    X = geo_model.surface_points.data[0][0] + 100,
+)
+
 gp.compute_model(
     geo_model,
     engine_config=gp.data.GemPyEngineConfig(
