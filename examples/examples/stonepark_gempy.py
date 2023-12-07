@@ -68,7 +68,7 @@ interpolation_options.kernel_options.compute_condition_number = True
 gp.modify_surface_points(
     geo_model,
     slice=0,
-    X = geo_model.surface_points.data[0][0] + 150,
+    X = geo_model.surface_points.data[0][0] + 130,
 )
 
 before_compute_time = time.time()
