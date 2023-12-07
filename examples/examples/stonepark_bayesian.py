@@ -114,6 +114,13 @@ import gempy_engine
 from gempy_engine.core.data.interpolation_input import InterpolationInput
 
 
+prior_tensor = BackendTensor.t.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61]).to(torch.float64)
+
+geo_model.geophysics_input = gp.data.GeophysicsInput(
+    tz=geo_model.geophysics_input.tz,
+    densities=prior_tensor,
+)
+
 def model(y_obs_list, interpolation_input):
     """
     This Pyro model represents the probabilistic aspects of the geological model.
@@ -129,9 +136,8 @@ def model(y_obs_list, interpolation_input):
 
     # Update the model with the new top layer's location
     # interpolation_input: InterpolationInput = geo_model.interpolation_input
-    geophysics_input = geo_model.geophysics_input
-    geophysics_input.densities = torch.index_put(
-        input=geophysics_input.densities.to(torch.float64),
+    geo_model.geophysics_input.densities = torch.index_put(
+        input=prior_tensor,
         indices=(torch.tensor([0]),),
         values=mu_density
     )
@@ -141,7 +147,7 @@ def model(y_obs_list, interpolation_input):
         interpolation_input=interpolation_input,
         options=geo_model.interpolation_options,
         data_descriptor=geo_model.input_data_descriptor,
-        geophysics_input=geophysics_input
+        geophysics_input=geo_model.geophysics_input
     )
 
     simulated_geophysics = geo_model.solutions.gravity
@@ -168,8 +174,8 @@ geo_model.grid.set_inactive("regular")
 import arviz as az
 
 # Run prior sampling and visualization
-if False:
-    prior = Predictive(model, num_samples=50)(y_obs_list)
+if True:
+    prior = Predictive(model, num_samples=50)(y_obs_list, interpolation_input=geo_model.interpolation_input)
     data = az.from_pyro(prior=prior)
     az.plot_trace(data.prior)
     plt.show()
@@ -184,7 +190,7 @@ mcmc.run(y_obs_list, interpolation_input=geo_model.interpolation_input)
 
 
 posterior_samples = mcmc.get_samples(50)
-posterior_predictive = Predictive(model, posterior_samples)(y_obs_list)
+posterior_predictive = Predictive(model, posterior_samples)(y_obs_list, interpolation_input=geo_model.interpolation_input)
 
 # Creating a data object for ArviZ
 data = az.from_pyro(
@@ -216,7 +222,7 @@ plt.show()
 az.plot_density(
     data=[data.posterior_predictive, data.prior_predictive],
     shade=.9,
-    var_names=[r'$\mu_{gravity}$'],
+    var_names=[r'$\mu_{density}$'],
     data_labels=["Posterior Predictive", "Prior Predictive"],
     colors=[default_red, default_blue],
 )

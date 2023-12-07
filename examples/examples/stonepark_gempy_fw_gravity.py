@@ -15,6 +15,7 @@ import xarray as xr
 import pandas as pd
 from matplotlib import pyplot as plt
 
+from gempy_engine.core.backend_tensor import BackendTensor
 from vector_geology.stonepark_builder import initialize_geo_model
 
 # %%
@@ -119,13 +120,16 @@ gp.set_centered_grid(
     radius=np.array([5000, 5000, 5000])
 )
 
+BackendTensor.change_backend_gempy(engine_backend=gp.data.AvailableBackends.PYTORCH, dtype="float64")
 gravity_gradient = gp.calculate_gravity_gradient(geo_model.grid.centered_grid)
 gravity_gradient
 
 # %%
+densities_tensor = BackendTensor.t.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61])
+densities_tensor.requires_grad = True
 geo_model.geophysics_input = gp.data.GeophysicsInput(
-    tz=gravity_gradient,
-    densities=np.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61]),
+    tz=BackendTensor.t.array(gravity_gradient),
+    densities=densities_tensor
 )
 
 # %% 
@@ -137,6 +141,9 @@ sol = gp.compute_model(
     )
 )
 grav = - sol.gravity
+
+grav[0].backward()
+print(densities_tensor.grad)
 
 # %%
 # TODO: Scale the gravity data to the same scale as the model
