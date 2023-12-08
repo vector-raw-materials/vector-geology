@@ -146,15 +146,61 @@ grav[0].backward()
 print(densities_tensor.grad)
 
 # %%
+# Your tensors
+import torch
+from sklearn.linear_model import LinearRegression
+
+A = interesting_columns["Bouguer_267_complete"]
+B = grav
+
+# Reshape tensors for sklearn
+A_reshaped = A.values.reshape(-1, 1)
+B_reshaped = B.detach().numpy().reshape(-1, 1)
+
+# Linear regression
+model = LinearRegression().fit(A_reshaped, B_reshaped)
+
+# Get scale and shift
+s = model.coef_[0][0]
+c = model.intercept_[0]
+
+print("Scale (s):", s)
+print("Shift (c):", c)
+
+adapted_grav = s * A + c
+
+diff = adapted_grav - B.detach().numpy()
+
+# %%
 # TODO: Scale the gravity data to the same scale as the model
 
 plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
 plot2d.axes[0].scatter(
     interesting_columns['X'],
     interesting_columns['Y'],
-    c=grav,
+    c=grav.detach().numpy(),
     cmap='viridis',
     s=100,
     zorder=10000
 )
 plt.show()
+
+
+# Calculate symmetric vmin and vmax for the colorbar
+max_diff = np.max(np.abs(diff))  # Get the maximum absolute value from diff
+vmin, vmax = -max_diff, max_diff  # Set vmin and vmax
+
+plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
+sc = plot2d.axes[0].scatter(
+    interesting_columns['X'],
+    interesting_columns['Y'],
+    c=diff,
+    cmap='bwr',
+    s=100,
+    zorder=10000,
+    vmin=vmin,
+    vmax=vmax
+)
+plt.colorbar(sc, label="Difference (mGal)" )
+plt.show()
+
