@@ -104,6 +104,9 @@ plot2d.axes[0].scatter(
 
 plt.show()
 
+# %% Calculate shift and scale
+
+
 # %%
 import pyro
 import pyro.distributions as dist
@@ -174,7 +177,7 @@ geo_model.grid.set_inactive("regular")
 import arviz as az
 
 # Run prior sampling and visualization
-if True:
+if False:
     prior = Predictive(model, num_samples=50)(y_obs_list, interpolation_input=geo_model.interpolation_input)
     data = az.from_pyro(prior=prior)
     az.plot_trace(data.prior)

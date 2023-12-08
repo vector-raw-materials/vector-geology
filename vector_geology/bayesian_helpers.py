@@ -1,0 +1,17 @@
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+
+def calculate_scale_shift(a: np.ndarray, b: np.ndarray) -> tuple:
+    # Reshape arrays for sklearn
+    a_reshaped = a.reshape(-1, 1)
+    b_reshaped = b.reshape(-1, 1)
+
+    # Linear regression
+    model = LinearRegression().fit(a_reshaped, b_reshaped)
+
+    # Get scale and shift
+    s = model.coef_[0][0]
+    c = model.intercept_[0]
+
+    return s, c

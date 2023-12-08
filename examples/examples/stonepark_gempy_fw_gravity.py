@@ -16,6 +16,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 from gempy_engine.core.backend_tensor import BackendTensor
+from vector_geology.bayesian_helpers import calculate_scale_shift
 from vector_geology.stonepark_builder import initialize_geo_model
 
 # %%
@@ -147,29 +148,19 @@ print(densities_tensor.grad)
 
 # %%
 # Your tensors
-import torch
-from sklearn.linear_model import LinearRegression
 
-A = interesting_columns["Bouguer_267_complete"]
-B = grav
-
-# Reshape tensors for sklearn
-A_reshaped = A.values.reshape(-1, 1)
-B_reshaped = B.detach().numpy().reshape(-1, 1)
-
-# Linear regression
-model = LinearRegression().fit(A_reshaped, B_reshaped)
-
-# Get scale and shift
-s = model.coef_[0][0]
-c = model.intercept_[0]
+# Use the function
+s, c = calculate_scale_shift(
+    a=interesting_columns["Bouguer_267_complete"].values,
+    b=(grav.detach().numpy())
+)
 
 print("Scale (s):", s)
 print("Shift (c):", c)
 
-adapted_grav = s * A + c
+adapted_grav = s * interesting_columns["Bouguer_267_complete"] + c
 
-diff = adapted_grav - B.detach().numpy()
+diff = adapted_grav - grav.detach().numpy().detach().numpy()
 
 # %%
 # TODO: Scale the gravity data to the same scale as the model
