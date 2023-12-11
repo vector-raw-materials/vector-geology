@@ -1,6 +1,6 @@
 """
 Reading Model 1 OMF project into Subsurface
-==========================================
+===========================================
 
 This tutorial demonstrates how to read an OMF project file and export it in subsurface.
 

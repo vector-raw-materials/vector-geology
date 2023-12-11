@@ -143,11 +143,6 @@ linkcheck_request_header = {
 
 
 # -- Options for HTML output ----------------------------------------------
-html_theme_options = {
-    'logo_only': True,
-    'display_version': True,
-    'prev_next_buttons_location': 'both',
-}
 html_static_path = ['_static']
 html_logo = '_static/logos/vector-logo.png'
 html_favicon = '_static/logos/favicon.ico'

@@ -1,8 +1,8 @@
 .. _subsurface-manual:
 
-########################
+############################
 vector-geology Documentation
-########################
+############################
 
 :Release: |version|
 :Date: |today|
@@ -58,9 +58,6 @@ read/write. Currently, the ``requirements_opt.txt`` reads like:
    :maxdepth: 2
    :hidden:
    :caption: Galleries
-
-   examples/index
-   external/external_examples
 
 
 Acknowledgements
