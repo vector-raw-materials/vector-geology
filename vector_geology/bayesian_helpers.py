@@ -15,3 +15,13 @@ def calculate_scale_shift(a: np.ndarray, b: np.ndarray) -> tuple:
     c = model.intercept_[0]
 
     return s, c
+
+
+def gaussian_kernel(locations, length_scale, variance):
+    import torch
+    # Compute the squared Euclidean distance between each pair of points
+    locations = torch.tensor(locations.values)
+    distance_squared = torch.cdist(locations, locations, p=2).pow(2)
+    # Compute the covariance matrix using the Gaussian kernel
+    covariance_matrix = variance * torch.exp(-0.5 * distance_squared / length_scale**2)
+    return covariance_matrix

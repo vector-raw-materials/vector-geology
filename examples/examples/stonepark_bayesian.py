@@ -16,6 +16,7 @@ import pandas as pd
 from matplotlib import pyplot as plt
 
 from gempy_probability.plot_posterior import default_red, default_blue
+from vector_geology.bayesian_helpers import calculate_scale_shift, gaussian_kernel
 from vector_geology.stonepark_builder import initialize_geo_model, setup_geophysics
 
 # %%
@@ -87,35 +88,45 @@ gempy_vista = gpv.plot_3d(
     kwargs_plot_structured_grid={'opacity': 0.8},
     image=True
 )
-grav = - sol.gravity
+grav = sol.gravity
+
+# %% Calculate shift and scale
+# Use the function
+s, c = calculate_scale_shift(
+    a=geophysics_input["Bouguer_267_complete"].values,
+    b=(grav.detach().numpy())
+)
+adapted_observed_grav = s * geophysics_input["Bouguer_267_complete"] + c
 
 # %%
 # TODO: Scale the gravity data to the same scale as the model
 
 plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
-plot2d.axes[0].scatter(
+sc = plot2d.axes[0].scatter(
     geophysics_input['X'],
     geophysics_input['Y'],
-    c=grav,
+    c=adapted_observed_grav,
     cmap='viridis',
     s=100,
     zorder=10000
 )
 
+plt.colorbar(sc, label="mGal" )
 plt.show()
 
-# %% Calculate shift and scale
-
+# %%
+import torch
+length_scale_prior = torch.tensor(1_000.0)  # Hyperparameter for the kernel
+variance_prior = torch.tensor(25.0 ** 2)  # Variance term for the kernel
+# The covariance matrix based on the Gaussian kernel
+covariance_matrix = gaussian_kernel(geophysics_input[[ 'X', 'Y' ]] , length_scale_prior, variance_prior)
 
 # %%
 import pyro
 import pyro.distributions as dist
 from pyro.infer import MCMC, NUTS, Predictive
-from pyro.infer.autoguide import init_to_mean
 import torch
 import gempy_engine
-from gempy_engine.core.data.interpolation_input import InterpolationInput
-
 
 prior_tensor = BackendTensor.t.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61]).to(torch.float64)
 
@@ -123,6 +134,7 @@ geo_model.geophysics_input = gp.data.GeophysicsInput(
     tz=geo_model.geophysics_input.tz,
     densities=prior_tensor,
 )
+
 
 def model(y_obs_list, interpolation_input):
     """
@@ -133,15 +145,15 @@ def model(y_obs_list, interpolation_input):
     # Define prior for the top layer's location
     prior_mean = 2.62
     mu_density = pyro.sample(
-        name=r'$\mu_{density}$', 
-        fn=dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64))
+        name=r'$\mu_{density}$',
+        fn=dist.Normal(prior_mean, torch.tensor(0.5, dtype=torch.float64))
     )
 
     # Update the model with the new top layer's location
     # interpolation_input: InterpolationInput = geo_model.interpolation_input
     geo_model.geophysics_input.densities = torch.index_put(
         input=prior_tensor,
-        indices=(torch.tensor([0]),),
+        indices=(torch.tensor([3]),),
         values=mu_density
     )
 
@@ -154,16 +166,28 @@ def model(y_obs_list, interpolation_input):
     )
 
     simulated_geophysics = geo_model.solutions.gravity
-    # pyro.deterministic(r'$\mu_{gravity}$', simulated_geophysics.detach())
-    y_gravity = pyro.sample(
-        name=r'$y_{gravity}$', 
-        fn=dist.Normal(simulated_geophysics[0], 50),
-        obs=y_obs_list
-    )
+
+    pyro.deterministic(r'$\mu_{gravity}$', simulated_geophysics)
+    if False:
+        y_gravity = pyro.sample(
+            name=r'$y_{gravity}$',
+            fn=dist.Normal(simulated_geophysics[0], 5),
+            obs=y_obs_list
+        )
+    else:
+        # The covariance matrix for the likelihood
+        # This is a simplified example; in practice, you'd need to
+        # carefully consider how to parameterize this matrix
+
+        # Observing the data
+        pyro.sample(
+            name="obs",
+            fn=dist.MultivariateNormal(simulated_geophysics, covariance_matrix),
+            obs=y_obs_list
+        )
 
 
-# y_obs_list = torch.tensor(geophysics_input['Bouguer_267_complete'].values[0])
-y_obs_list = torch.tensor([-436])
+y_obs_list = torch.tensor(adapted_observed_grav.values).view(1, 17)
 
 # %%
 # Optimize mesh
@@ -173,29 +197,28 @@ geo_model.grid.set_inactive("topography")
 geo_model.grid.set_inactive("regular")
 
 
+
 # %%
 import arviz as az
 
 # Run prior sampling and visualization
-if False:
+if True:
     prior = Predictive(model, num_samples=50)(y_obs_list, interpolation_input=geo_model.interpolation_input)
     data = az.from_pyro(prior=prior)
     az.plot_trace(data.prior)
     plt.show()
 
-
 # Running MCMC using the NUTS algorithm
 
 pyro.primitives.enable_validation(is_validate=True)
 nuts_kernel = NUTS(model)
-mcmc = MCMC(nuts_kernel, num_samples=100, warmup_steps=20)
+mcmc = MCMC(nuts_kernel, num_samples=1000, warmup_steps=300)
 mcmc.run(y_obs_list, interpolation_input=geo_model.interpolation_input)
-
 
 posterior_samples = mcmc.get_samples(50)
 posterior_predictive = Predictive(model, posterior_samples)(y_obs_list, interpolation_input=geo_model.interpolation_input)
 
-# Creating a data object for ArviZ
+# Creating a data object for Arviz 
 data = az.from_pyro(
     posterior=mcmc,
     prior=prior,
@@ -221,11 +244,10 @@ az.plot_density(
 )
 plt.show()
 
-
 az.plot_density(
     data=[data.posterior_predictive, data.prior_predictive],
     shade=.9,
-    var_names=[r'$\mu_{density}$'],
+    var_names=[r'$\mu_{gravity}$'],
     data_labels=["Posterior Predictive", "Prior Predictive"],
     colors=[default_red, default_blue],
 )
