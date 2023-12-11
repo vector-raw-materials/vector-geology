@@ -1,8 +1,8 @@
 """
-Reading COLLINSTOWN OMF project
+Reading OMF project Into Python
 ================================
 
-This tutorial demonstrates how to read an OMF project file in COLLINSTOWN.
+This tutorial demonstrates how to read an OMF project file in Python.
 
 """
 

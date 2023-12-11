@@ -1,8 +1,8 @@
 """
-Reading COLLINSTOWN OMF project
-================================
+Reading OMF project and export it to Subsurface: Example 1
+==========================================================
 
-This tutorial demonstrates how to read an OMF project file in COLLINSTOWN.
+This tutorial demonstrates how to read an OMF project file.
 
 """
 
@@ -15,11 +15,12 @@ This tutorial demonstrates how to read an OMF project file in COLLINSTOWN.
 import omfvista
 import pandas as pd
 import pyvista
+from dotenv import dotenv_values
+
 import subsurface
 from subsurface import TriSurf, LineSet
-from subsurface.visualization import to_pyvista_mesh, pv_plot, to_pyvista_line, init_plotter
-from subsurface.writer import base_structs_to_binary_file
-from dotenv import dotenv_values
+from subsurface.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
+
 
 # %%
 # Load OMF Project:
