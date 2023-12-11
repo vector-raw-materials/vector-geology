@@ -29,7 +29,7 @@ from dotenv import dotenv_values
 
 def load_omf():
     config = dotenv_values()
-    path = config.get('PATH_TO_COLLINSTOWN')
+    path = config.get('PATH_TO_MODEL_2')
     omf = omfvista.load_project(path)
     return omf
 

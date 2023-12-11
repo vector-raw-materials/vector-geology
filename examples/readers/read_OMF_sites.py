@@ -28,7 +28,7 @@ from dotenv import dotenv_values
 
 def load_omf():
     config = dotenv_values()
-    path = config.get('PATH_TO_COLLINSTOWN')
+    path = config.get('PATH_TO_MODEL_2')
     omf = omfvista.load_project(path)
     return omf
 
@@ -58,7 +58,7 @@ unstruct: subsurface.UnstructuredData = subsurface.UnstructuredData.from_array(
     cells=cells_pyvista,
 )
 
-if False:  # Replace with condition for exporting to Liquid Earth
+if TO_LIQUID_EARTH := False:  # Replace with condition for exporting to Liquid Earth
     base_structs_to_binary_file("leapfrog1", unstruct)
 
 # %%
