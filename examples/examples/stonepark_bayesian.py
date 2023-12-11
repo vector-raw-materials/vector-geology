@@ -239,6 +239,7 @@ plt.show()
 az.plot_density(
     data=[data, data.prior],
     shade=.9,
+    hdi_prob=.99,
     data_labels=["Posterior", "Prior"],
     colors=[default_red, default_blue],
 )
