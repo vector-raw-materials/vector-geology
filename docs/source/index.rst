@@ -15,8 +15,8 @@ vector-geology Documentation
   :start-after: sphinx-inclusion-marker
 
 
-Explore Our Comprehensive Guides
---------------------------------
+Explore Our Guides
+------------------
 .. toctree::
    :maxdepth: 2
    :caption: Galleries
@@ -40,7 +40,7 @@ Optional requirements
 ---------------------
 
 There are many optional requirements, depending on the data format you want to
-read/write. Currently, the ``requierements_opt.txt`` reads like:
+read/write. Currently, the ``requirements_opt.txt`` reads like:
 
 .. include:: ../../requirements_opt.txt
    :literal:
@@ -51,8 +51,6 @@ read/write. Currently, the ``requierements_opt.txt`` reads like:
    :hidden:
    :caption: User Guide
 
-   manual
-   changelog
    contributing
    maintenance
 
@@ -64,15 +62,12 @@ read/write. Currently, the ``requierements_opt.txt`` reads like:
    examples/index
    external/external_examples
 
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: API Reference
 
-   code-geological-formats
-   code-interfaces
-   code-reader
-   code-structs
-   code-utils
-   code-viz
-   code-writer
+Acknowledgements
+----------------
+
+This project has received funding from the European Union‘s Horizon Europe research and innovation programme under grant agreement No  101058483
+
+Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or Horizon Europe research and innovation programme
+
+TODO: Add icon

@@ -14,26 +14,35 @@
 .. sphinx-inclusion-marker
 
 
-vector-geology
-==============
+=======================
+Vector Geology Repository
+=======================
 
-vector-geology is a Python package for Bayesian inversion of geophysical data.
+Overview
+========
 
+Welcome to the Vector Geology repository, a collaborative platform integrating a suite of geophysical and remote sensing data processing tools developed by the `Vector consortium <https://vectorproject.eu//>`_ . This repository serves as the central hub for accessing, understanding, and utilizing a range of software packages designed for geological exploration and research.
 
-Documentation (WIP)
--------------------
+Key Features
+============
 
-Note that ``vector-geology`` is still in early days; do expect things to change. 
+* **Integrated Toolsets**: Collection of diverse code packages developed and maintained by Vector consortium members, offering a wide range of functionalities for geophysical data processing.
 
-Direct links:
+* **Comprehensive Tutorials**: Step-by-step guides demonstrating typical workflows, from data input to advanced inversion techniques.
 
-- `Project Website <https://vectorproject.eu//>`_
+* **Extensible Framework**: Designed to accommodate a variety of datasets and scientific inquiries, with the flexibility to adapt and expand to meet specific project needs.
 
+* **Collaborative Development**: Opportunities for users to contribute, enhancing the repository with their expertise and feedback.
 
-Installation
-------------
+Getting Started
+===============
 
-.. code-block:: console
+Prerequisites
+-------------
 
-    pip install vector-geology
+* Basic understanding of geophysical exploration techniques and remote sensing data.
+* Familiarity with programming languages and tools used in the repository (e.g., Python).
 
+.. admonition:: Note! 
+
+   Note that ``vector-geology`` is still in early days; do expect things to change. 

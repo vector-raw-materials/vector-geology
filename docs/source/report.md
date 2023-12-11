@@ -7,11 +7,12 @@
 
 ## Introduction
 
-The goal of this deliverable is to create a shared repository with tools and examples to read manipulate and invert different type of data typically used during exploration phases. The bulk of the work has been put on a selection of code packages - often owned by members of vector - as well as a new repository currently being developed exclusively for the vector project.
+This deliverable focuses on establishing a shared repository, equipped with tools and examples for reading, manipulating, and inverting various types of data commonly used during exploration phases. Emphasis has been placed on integrating a selection of code packages, primarily contributed by members of the Vector consortium, along with a new repository developed specifically for the Vector project.
 
-Besides actual code, necessary to perform inversion, we provide a quite extensive sets of tutorials guiding the user on a typical workflow from data reading to the final optimizations. Due to interlectual property concerns, all examples are annonimized and datasets to reproduce them will not be provided outside the Vector consortium. The hope is to resolve some of these issues over the duration of the project and trying to make everything described in this deliverable with free access.
+In addition to the code essential for performing data inversion, we have included a comprehensive set of tutorials. These guides lead users through typical workflows, from data reading to final optimization processes. Due to intellectual property constraints, all tutorial examples are anonymized, and the datasets required to replicate these examples are exclusive to the Vector consortium. Efforts are underway to address these limitations, aiming to make all materials described in this deliverable freely accessible in the future.
 
-This toolbox have been designed to be as flexible and extensible as possible. During exploration phases dataset and scientific questions are quite varied and will need of specific scripts to read formats or transform data in some specific case. Given the impossibility to create an exhaustive toolbox capable to deal with every possible case, we have been prioritizing to build the framework where we can construct on the future to every specific use case.
+The design of this toolbox emphasizes flexibility and extensibility, catering to the diverse datasets and scientific inquiries encountered during exploration. Recognizing the impracticality of creating a universally exhaustive toolbox, our approach has been to establish a robust framework. This framework can be expanded upon to accommodate specific use cases as they arise.
+
 
 
 ## Work Description
