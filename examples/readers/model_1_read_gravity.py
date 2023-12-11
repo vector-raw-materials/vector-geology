@@ -39,6 +39,9 @@ plt.colorbar(label='Bouguer_267_complete')
 plt.xlim(omf_extent[0], omf_extent[1])
 plt.ylim(omf_extent[2], omf_extent[3])
 
+# Hide axis labels
+plt.gca().axes.xaxis.set_ticklabels([])
+plt.gca().axes.yaxis.set_ticklabels([])
 
 # Display plot
 plt.show()
