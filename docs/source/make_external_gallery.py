@@ -51,6 +51,12 @@ articles = dict(
         description="A brief introduction to Bayesian inference theory.",
         link="https://gempy-project.github.io/gempy_probability/examples_intro/index.html",
         image="https://gempy-project.github.io/gempy_probability/_images/Model_space2.png",
+    ),
+    gempy=Example(
+        title="Structural Uncertainty",
+        description="Invert structural geometry.",
+        link="https://gempy-project.github.io/gempy_probability/examples_basic_geology/2-thickness_problem_gempy.html",
+        image="https://gempy-project.github.io/gempy_probability/_images/sphx_glr_2-thickness_problem_gempy_002.png"
     )
 )
 
