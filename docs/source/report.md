@@ -19,6 +19,7 @@ The design of this toolbox emphasizes flexibility and extensibility, catering to
 
 ### GemPy
 - [ ] Torch
+    - [ ] Automatic differentiation. Activation function
 - [ ] Pykeops
 - [ ] Adam optimization
 
@@ -30,6 +31,8 @@ The design of this toolbox emphasizes flexibility and extensibility, catering to
 - [ ] Use of simpeg
 - 
 #### Documentation
+
+## Outlook
 
 ## Conclusion
 

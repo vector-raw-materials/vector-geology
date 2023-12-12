@@ -1,10 +1,8 @@
 """
-Stonepark Geological Model
---------------------------  
+Model 1 Forward Gravity
+-----------------------  
 
-
-Construct a 3D geological model of the Stonepark deposit using GemPy.
-
+This script calculates the forward gravity of model 1.
 
 """
 
@@ -34,7 +32,7 @@ from vector_geology.utils import extend_box
 
 start_time = time.time()  # start timer
 config = dotenv_values()
-path = config.get("PATH_TO_STONEPARK_Subsurface")
+path = config.get("PATH_TO_MODEL_1_Subsurface")
 structural_elements = []
 accumulated_roi = []
 global_extent = None
@@ -63,7 +61,7 @@ geo_model
 
 # %% 
 df = pd.read_csv(
-    filepath_or_buffer=config.get("PATH_TO_STONEPARK_BOUGUER"),
+    filepath_or_buffer=config.get("PATH_TO_MODEL_1_BOUGUER"),
     sep=',',
     header=0
 )
@@ -192,6 +190,5 @@ sc = plot2d.axes[0].scatter(
     vmin=vmin,
     vmax=vmax
 )
-plt.colorbar(sc, label="Difference (mGal)" )
+plt.colorbar(sc, label="Difference (mGal)")
 plt.show()
-
