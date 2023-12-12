@@ -33,6 +33,7 @@ pyvista.FIGURE_PATH = os.path.join(os.path.abspath('./images/'), 'auto-generated
 if not os.path.exists(pyvista.FIGURE_PATH):
     os.makedirs(pyvista.FIGURE_PATH)
 
+import gempy # ! This seems important to load pykeops c++ library properly
 sys.path.insert(0, os.path.abspath('.'))
 
 # -- General configuration ------------------------------------------------

@@ -10,7 +10,11 @@ def calculate_extent(dataset):
 
 # Function to extract surface points and orientations from the dataset
 
+
 def extract_surface_points_and_orientations(dataset, name, color_generator) -> gp.data.StructuralElement:
+    name = name.replace("Stonepark_", "")
+    
+    
     # Extract surface points and orientations
     unstruct = subsurface.UnstructuredData(dataset)
     ts = subsurface.TriSurf(mesh=unstruct)

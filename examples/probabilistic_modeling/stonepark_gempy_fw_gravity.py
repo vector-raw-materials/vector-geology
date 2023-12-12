@@ -17,7 +17,7 @@ from matplotlib import pyplot as plt
 
 from gempy_engine.core.backend_tensor import BackendTensor
 from vector_geology.bayesian_helpers import calculate_scale_shift
-from vector_geology.stonepark_builder import initialize_geo_model
+from vector_geology.model_1_builder import initialize_geo_model
 
 # %%
 # Read nc from subsurface

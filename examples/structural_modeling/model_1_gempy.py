@@ -1,9 +1,10 @@
 """
-Stonepark Geological Model
---------------------------  
+Construct Model 1 with helper functions
+---------------------------------------
 
 
-Construct a 3D geological model of the Stonepark deposit using GemPy.
+Construct a 3D geological model of the model 1 deposit using GemPy and a bunch of custom APIs to reduce the amount 
+of necessary code.
 
 
 """
@@ -12,7 +13,7 @@ import time
 
 import xarray as xr
 
-from vector_geology.stonepark_builder import initialize_geo_model
+from vector_geology.model_1_builder import initialize_geo_model
 
 # %%
 # Read nc from subsurface
@@ -28,7 +29,7 @@ import gempy_viewer as gpv
 
 start_time = time.time()  # start timer
 config = dotenv_values()
-path = config.get("PATH_TO_STONEPARK_Subsurface")
+path = config.get("PATH_TO_MODEL_1_Subsurface")
 structural_elements = []
 accumulated_roi = []
 global_extent = None

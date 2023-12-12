@@ -17,7 +17,7 @@ from matplotlib import pyplot as plt
 
 from gempy_probability.plot_posterior import default_red, default_blue
 from vector_geology.bayesian_helpers import calculate_scale_shift, gaussian_kernel
-from vector_geology.stonepark_builder import initialize_geo_model, setup_geophysics
+from vector_geology.model_1_builder import initialize_geo_model, setup_geophysics
 
 # %%
 # Read nc from subsurface

@@ -1,9 +1,9 @@
 """
-Stonepark Geological Model
---------------------------  
+Constructing Structural Geological Model
+----------------------------------------  
 
 
-Construct a 3D geological model of the Stonepark deposit using GemPy.
+Construct a 3D geological model of a deposit using GemPy.
 
 
 """
@@ -26,7 +26,7 @@ import gempy as gp
 import gempy_viewer as gpv
 
 config = dotenv_values()
-path = config.get("PATH_TO_STONEPARK_Subsurface")
+path = config.get("PATH_TO_MODEL_1_Subsurface")
 structural_elements = []
 accumulated_roi = []
 global_extent = None
@@ -185,10 +185,10 @@ geo_model.interpolation_options.kernel_options.kernel_function = AvailableKernel
 
 # %% 
 
-geo_model.structural_frame.get_element_by_name("Stonepark_KKR").color = "#A46283"
-geo_model.structural_frame.get_element_by_name("Stonepark_LGR").color = "#6394A4"
-geo_model.structural_frame.get_element_by_name("Stonepark_WAL").color = "#72A473"
-geo_model.structural_frame.get_element_by_name("Stonepark_ABL").color = "#1D3943"
+geo_model.structural_frame.get_element_by_name("KKR").color = "#A46283"
+geo_model.structural_frame.get_element_by_name("LGR").color = "#6394A4"
+geo_model.structural_frame.get_element_by_name("WAL").color = "#72A473"
+geo_model.structural_frame.get_element_by_name("ABL").color = "#1D3943"
 geo_model.structural_frame.basement_color = "#8B4220"
 
 geo_model.update_transform()
@@ -202,6 +202,9 @@ gp.compute_model(
     ),
 )
 
+
+# %% 
+# sphinx_gallery_thumbnail_number = -1
 gpv.plot_2d(geo_model, show_scalar=False)
 
 end_time = time.time()

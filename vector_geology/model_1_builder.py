@@ -63,10 +63,10 @@ def initialize_geo_model(structural_elements: list[gp.data.StructuralElement], e
             loaded_nuggets_green=(np.load("nuggets_Green.npy"))
         )
 
-    geo_model.structural_frame.get_element_by_name("Stonepark_KKR").color = "#A46283"
-    geo_model.structural_frame.get_element_by_name("Stonepark_LGR").color = "#6394A4"
-    geo_model.structural_frame.get_element_by_name("Stonepark_WAL").color = "#72A473"
-    geo_model.structural_frame.get_element_by_name("Stonepark_ABL").color = "#1D3943"
+    geo_model.structural_frame.get_element_by_name("KKR").color = "#A46283"
+    geo_model.structural_frame.get_element_by_name("LGR").color = "#6394A4"
+    geo_model.structural_frame.get_element_by_name("WAL").color = "#72A473"
+    geo_model.structural_frame.get_element_by_name("ABL").color = "#1D3943"
     geo_model.structural_frame.basement_color = "#8B4220"
 
     geo_model.update_transform()
