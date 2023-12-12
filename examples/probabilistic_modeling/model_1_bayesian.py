@@ -1,10 +1,8 @@
-﻿"""
-Stonepark Geological Model
---------------------------  
+"""
+Probabilistic Inversion example Geological Model
+------------------------------------------------
 
-
-Construct a 3D geological model of the Stonepark deposit using GemPy.
-
+Probabilistic inversion of the geological model using the Bayesian framework.
 
 """
 
@@ -34,7 +32,7 @@ from vector_geology.utils import extend_box
 
 start_time = time.time()  # start timer
 config = dotenv_values()
-path = config.get("PATH_TO_STONEPARK_Subsurface")
+path = config.get("PATH_TO_MODEL_1_Subsurface")
 structural_elements = []
 accumulated_roi = []
 global_extent = None
@@ -63,7 +61,7 @@ geo_model = initialize_geo_model(
 
 # %%
 geophysics_input = setup_geophysics(
-    env_path="PATH_TO_STONEPARK_BOUGUER",
+    env_path="PATH_TO_MODEL_1_BOUGUER",
     geo_model=geo_model
 )
 
@@ -111,15 +109,16 @@ sc = plot2d.axes[0].scatter(
     zorder=10000
 )
 
-plt.colorbar(sc, label="mGal" )
+plt.colorbar(sc, label="mGal")
 plt.show()
 
 # %%
 import torch
+
 length_scale_prior = torch.tensor(1_000.0)  # Hyperparameter for the kernel
 variance_prior = torch.tensor(25.0 ** 2)  # Variance term for the kernel
 # The covariance matrix based on the Gaussian kernel
-covariance_matrix = gaussian_kernel(geophysics_input[[ 'X', 'Y' ]] , length_scale_prior, variance_prior)
+covariance_matrix = gaussian_kernel(geophysics_input[['X', 'Y']], length_scale_prior, variance_prior)
 
 # %%
 import pyro
@@ -168,23 +167,16 @@ def model(y_obs_list, interpolation_input):
     simulated_geophysics = geo_model.solutions.gravity
 
     pyro.deterministic(r'$\mu_{gravity}$', simulated_geophysics)
-    if False:
-        y_gravity = pyro.sample(
-            name=r'$y_{gravity}$',
-            fn=dist.Normal(simulated_geophysics[0], 5),
-            obs=y_obs_list
-        )
-    else:
-        # The covariance matrix for the likelihood
-        # This is a simplified example; in practice, you'd need to
-        # carefully consider how to parameterize this matrix
+    # The covariance matrix for the likelihood
+    # This is a simplified example; in practice, you'd need to
+    # carefully consider how to parameterize this matrix
 
-        # Observing the data
-        pyro.sample(
-            name="obs",
-            fn=dist.MultivariateNormal(simulated_geophysics, covariance_matrix),
-            obs=y_obs_list
-        )
+    # Observing the data
+    pyro.sample(
+        name="obs",
+        fn=dist.MultivariateNormal(simulated_geophysics, covariance_matrix),
+        obs=y_obs_list
+    )
 
 
 y_obs_list = torch.tensor(adapted_observed_grav.values).view(1, 17)
@@ -195,8 +187,6 @@ interpolation_options.mesh_extraction = False
 interpolation_options.number_octree_levels = 1
 geo_model.grid.set_inactive("topography")
 geo_model.grid.set_inactive("regular")
-
-
 
 # %%
 import arviz as az
@@ -245,6 +235,7 @@ az.plot_density(
 )
 plt.show()
 
+# %%
 az.plot_density(
     data=[data.posterior_predictive, data.prior_predictive],
     shade=.9,
@@ -253,3 +244,5 @@ az.plot_density(
     colors=[default_red, default_blue],
 )
 plt.show()
+
+# sphinx_gallery_thumbnail_number = -1
