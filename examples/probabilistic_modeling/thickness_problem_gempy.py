@@ -241,4 +241,4 @@ az.plot_density(
 )
 plt.show()
 
-# sphinx_gallery_thumbnail_number = -1
+# sphinx_gallery_thumbnail_number = 2
