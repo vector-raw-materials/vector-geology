@@ -36,6 +36,8 @@ import scipy.interpolate as interp
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import math as math
+
+from dotenv import dotenv_values
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
 
 from discretize.utils import mkvc, refine_tree_xyz, active_from_xyz
@@ -94,7 +96,10 @@ os.makedirs(path_to_output)
 # file_path: The path to the csv file.
 # header: Whether or not the csv file has a header row.
 
-file_path = 'Ireland_FTG_Gridded.csv'
+
+config = dotenv_values()
+file_path = config.get("PATH_TO_GRADIOMETRY")
+
 header = None
 
 # Read the csv file into a pandas dataframe and then convert it to a numpy array.
@@ -483,3 +488,4 @@ ax[0].ticklabel_format(axis="both", style="scientific", scilimits=(0, 0))
 plt.savefig(path_to_output + "/" + name + "_Learned_GMM.pdf", bbox_inches="tight")
 plt.show()
 #%%
+# sphinx_gallery_thumbnail_number = 2
