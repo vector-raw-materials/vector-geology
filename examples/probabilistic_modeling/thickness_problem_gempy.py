@@ -15,7 +15,6 @@ import pyro.distributions as dist
 from pyro.infer import MCMC, NUTS, Predictive
 from pyro.infer.autoguide import init_to_mean
 
-import config
 import gempy as gp
 import gempy_engine
 import gempy_viewer as gpv
