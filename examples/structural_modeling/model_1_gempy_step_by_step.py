@@ -146,9 +146,9 @@ if TRIGGER_OPTIMIZE_NUGGETS:
 
 # %%
 if APPLY_OPTIMIZED_NUGGETS:
-    loaded_nuggets_red = np.load("nuggets_Red.npy")
-    loaded_nuggets_green = np.load("nuggets_Green.npy")
-    loaded_nuggets_blue = np.load("nuggets_Blue.npy")
+    loaded_nuggets_red = np.load("../temp/nuggets_Red.npy")
+    loaded_nuggets_green = np.load("../temp/nuggets_Green.npy")
+    loaded_nuggets_blue = np.load("../temp/nuggets_Blue.npy")
 
     gp.modify_surface_points(
         geo_model,

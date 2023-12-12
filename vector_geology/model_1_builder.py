@@ -56,11 +56,15 @@ def initialize_geo_model(structural_elements: list[gp.data.StructuralElement], e
         )
 
     if load_nuggets:
+        import os
+
+        project_root = os.getcwd()
+        path_to_temp = os.path.join(project_root, "../temp")
         apply_optimized_nuggets(
             geo_model=geo_model,
-            loaded_nuggets_red=(np.load("nuggets_Red.npy")),
-            loaded_nuggets_blue=(np.load("nuggets_Blue.npy")),
-            loaded_nuggets_green=(np.load("nuggets_Green.npy"))
+            loaded_nuggets_red=(np.load(path_to_temp + "/nuggets_Red.npy")),
+            loaded_nuggets_blue=(np.load(path_to_temp + "/nuggets_Blue.npy")),
+            loaded_nuggets_green=(np.load(path_to_temp + "/nuggets_Green.npy"))
         )
 
     geo_model.structural_frame.get_element_by_name("KKR").color = "#A46283"

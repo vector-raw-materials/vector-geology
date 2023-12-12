@@ -158,7 +158,7 @@ print("Shift (c):", c)
 
 adapted_grav = s * interesting_columns["Bouguer_267_complete"] + c
 
-diff = adapted_grav - grav.detach().numpy().detach().numpy()
+diff = adapted_grav - grav.detach().numpy()
 
 # %%
 # TODO: Scale the gravity data to the same scale as the model
@@ -179,6 +179,7 @@ plt.show()
 max_diff = np.max(np.abs(diff))  # Get the maximum absolute value from diff
 vmin, vmax = -max_diff, max_diff  # Set vmin and vmax
 
+# %%
 plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
 sc = plot2d.axes[0].scatter(
     interesting_columns['X'],
@@ -192,3 +193,5 @@ sc = plot2d.axes[0].scatter(
 )
 plt.colorbar(sc, label="Difference (mGal)")
 plt.show()
+
+# sphinx_gallery_thumbnail_number = -1

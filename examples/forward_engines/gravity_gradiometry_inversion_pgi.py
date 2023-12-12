@@ -1,4 +1,4 @@
-﻿"""
+"""
 Inversion of Gravity Gradiometry Data on a Tree Mesh
 ----------------------------------------------------
 
