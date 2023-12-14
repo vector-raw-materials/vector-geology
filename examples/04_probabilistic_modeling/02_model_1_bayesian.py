@@ -49,6 +49,7 @@ for filename in os.listdir(path):
         structural_elements.append(structural_element)
 
 # Set up GemPy object
+BackendTensor.change_backend_gempy(engine_backend=gp.data.AvailableBackends.PYTORCH, dtype="float64")
 geo_model = initialize_geo_model(
     structural_elements=structural_elements,
     extent=(np.array(global_extent)),

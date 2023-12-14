@@ -1,5 +1,5 @@
 Probabilistic Modeling
-^^^^^^^^^^^^^^^^^^^^^^
+**********************
 
 In the dynamic and often uncertain realm of subsurface exploration, probabilistic modeling emerges as a key tool. This section delves into the application of Bayesian Statistics and probabilistic approaches to address the inherent uncertainties in subsurface data. Here’s what you’ll learn:
 
@@ -10,9 +10,3 @@ In the dynamic and often uncertain realm of subsurface exploration, probabilisti
 - **Integrating Structural Uncertainty**: Learn to integrate structural uncertainty into your models using GemPy. This approach enhances the realism and reliability of your geological interpretations.
 
 - **Probabilistic Inversions**: Explore how geophysical data can be used as observational constraints in probabilistic inversions. This technique allows for a more comprehensive understanding of subsurface structures by incorporating both geophysical measurements and geological knowledge.
-
-- **Practical Applications**: Each tutorial offers practical, hands-on examples, showing you how to apply these probabilistic techniques to real-world scenarios. You'll learn not only the theory but also the practical steps to implement these methods effectively.
-
-- **From Data to Decision-Making**: Our goal is to empower you with the skills to move from raw data to informed decision-making in geophysical exploration. By the end of this section, you will have a deeper understanding of how to apply probabilistic modeling techniques to manage uncertainty and derive more insightful geological interpretations.
-
-Prepare to explore the fascinating world of probabilistic modeling, where uncertainty is not just a challenge to overcome, but a valuable source of information in understanding the subsurface.
