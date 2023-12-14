@@ -488,4 +488,4 @@ ax[0].ticklabel_format(axis="both", style="scientific", scilimits=(0, 0))
 plt.savefig(path_to_output + "/" + name + "_Learned_GMM.pdf", bbox_inches="tight")
 plt.show()
 #%%
-# sphinx_gallery_thumbnail_number = -1
+# sphinx_gallery_thumbnail_number = -4

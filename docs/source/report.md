@@ -14,10 +14,19 @@ In addition to the code essential for performing data inversion, we have include
 The design of this toolbox emphasizes flexibility and extensibility, catering to the diverse datasets and scientific inquiries encountered during exploration. Recognizing the impracticality of creating a universally exhaustive toolbox, our approach has been to establish a robust framework. This framework can be expanded upon to accommodate specific use cases as they arise.
 
 
-
 ## Work Description
+- Some of the functionality are shared for multiple use cases not only geophysics. Therefore some of them will be treated in more detail in the 
+deliverable 4.3. (TODO: Check the exact name). In any case here we will at least mention the work done to achieve the functionality preseneted
+in this deliverable.
 
-### GemPy
+## Readers and Parsing
+### Subsurface
+
+## Structural Modeling
+#### Preprocessing
+- [ ] Extraction of structurl data from mesh model
+
+#### GemPy
 - [ ] Torch
     - [ ] Automatic differentiation. Activation function
 - [ ] Pykeops
