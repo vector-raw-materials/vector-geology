@@ -1,5 +1,5 @@
 Structural Modeling
-*******************
+===================
 
 
 Delve into the world of 3D subsurface modeling with our Structural Modeling tutorials. In this section, we focus on harnessing the capabilities of `gempy`, a powerful tool developed by a partner within the Vector consortium. Here’s what these tutorials offer:

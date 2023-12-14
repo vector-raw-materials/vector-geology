@@ -1,5 +1,5 @@
 Probabilistic Modeling
-**********************
+======================
 
 In the dynamic and often uncertain realm of subsurface exploration, probabilistic modeling emerges as a key tool. This section delves into the application of Bayesian Statistics and probabilistic approaches to address the inherent uncertainties in subsurface data. Here’s what you’ll learn:
 

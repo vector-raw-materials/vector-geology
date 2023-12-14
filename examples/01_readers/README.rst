@@ -1,5 +1,5 @@
 Readers and Parsers
-*******************
+===================
 
 Effective data analysis in geophysics begins with efficient data handling. This section is dedicated to demonstrating the use of specialized libraries to read and parse various data formats commonly encountered in the Vector Geology project. Here's what you can expect:
 

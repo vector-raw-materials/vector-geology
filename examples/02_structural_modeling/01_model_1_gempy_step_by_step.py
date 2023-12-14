@@ -21,8 +21,6 @@ from gempy_engine.core.data.kernel_classes.kernel_functions import AvailableKern
 start_time = time.time()
 
 # %%
-# Loading and Processing Data
-# ---------------------------
 # Load the data necessary for model construction. This involves processing data from nc files
 # and organizing it for use in the geological model.
 
@@ -83,8 +81,6 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
 )
 
 # %%
-# Adding Topography
-# -----------------
 # Incorporate topography into the model using a dataset in nc format. This adds realism to the model
 # by including surface variations.
 
@@ -150,8 +146,6 @@ if APPLY_OPTIMIZED_NUGGETS:
         )
 
 # %%
-# Model Computation
-# -----------------
 # Compute the geological model. This involves setting interpolation options and executing the computation
 # to generate the 3D geological structure.
 
@@ -180,13 +174,12 @@ gp.compute_model(
 )
 
 # %%
-# Visualization
-# -------------
 # Visualize the constructed geological model in both 2D and 3D formats to assess the structure and layout.
 
 # 2D visualization of the model
 gpv.plot_2d(geo_model, show_scalar=False)
 
+#%%
 # 3D visualization in GemPy viewer
 gempy_vista = gpv.plot_3d(
     model=geo_model,
@@ -195,8 +188,6 @@ gempy_vista = gpv.plot_3d(
 )
 
 # %%
-# Calculate Execution Time
-# ------------------------
 # Measure the total time taken to execute the script, providing insights into performance.
 
 end_time = time.time()

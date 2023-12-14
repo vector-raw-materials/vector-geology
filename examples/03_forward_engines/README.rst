@@ -1,7 +1,7 @@
 Forward GeoPhysics Engines and Inversion
-****************************************
+========================================
 
-Embark on a journey into the realm of geophysical simulation and inversion with this dedicated section. Our tutorials are crafted to guide you through the process of applying geophysical forward modeling and inversion techniques, using advanced tools like `gempy` and `simpeg`. Here’s what you can expect:
+Our tutorials are crafted to guide you through the process of applying geophysical forward modeling and inversion techniques, using advanced tools like `gempy` and `simpeg`. Here’s what you can expect:
 
 - **Geophysical Forward Modeling**: Learn how to transform structural models into geophysical models. These tutorials will show you how to use `gempy` to simulate geophysical responses based on your structural models. Whether you are a beginner or looking to refine your modeling skills, these guides offer comprehensive insights.
 
