@@ -209,6 +209,7 @@ az.plot_density(
 )
 plt.show()
 
+#%%
 az.plot_density(
     data=[data.posterior_predictive, data.prior_predictive],
     shade=.9,

@@ -24,8 +24,8 @@ Explore Our Guides
    examples/index
    external/external_examples
 
-.. include:: external/external_examples.rst  
 .. include:: examples/index.rst
+.. include:: external/external_examples.rst  
 
 
 Requirements
@@ -61,7 +61,7 @@ This project has received funding from the European Union‘s Horizon Europe res
 
 Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or Horizon Europe research and innovation programme
 
-.. image:: https://raw.githubusercontent.com/vector-raw-materials/vector-geology/main/docs/source/_static/logos/eu-logo.png
-    :width: 200
+.. image:: https://raw.githubusercontent.com/vector-raw-materials/vector-geology/main/docs/source/_static/logos/eu_logo.png
+    :width: 50
     :align: center
     :alt: EU logo

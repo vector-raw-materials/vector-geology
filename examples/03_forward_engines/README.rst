@@ -8,5 +8,7 @@ Our tutorials are crafted to guide you through the process of applying geophysic
 - **Classical Inversion Techniques**: Dive into the world of geophysical inversion using the powerful `simpeg` package. We'll demonstrate how to apply classical inversion methods to geophysical data, turning observations into meaningful geological insights.
 
 - **Current Implementations**: As of now, we have explored two areas:
+
   - **Bouguer Gravity**: Understand the principles and application of Bouguer gravity in geophysical modeling.
+
   - **Gravity Gradiometry**: Explore the use of gravity gradiometry in deriving detailed information about subsurface structures.
