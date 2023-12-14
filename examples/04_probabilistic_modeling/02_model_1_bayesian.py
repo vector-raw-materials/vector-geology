@@ -1,57 +1,53 @@
 """
-Probabilistic Inversion example Geological Model
-------------------------------------------------
+Probabilistic Inversion Example: Geological Model
+--------------------------------------------------
 
-Probabilistic inversion of the geological model using the Bayesian framework.
-
+This example demonstrates a probabilistic inversion of a geological model using Bayesian methods.
 """
 
 import time
-
+import os
 import numpy as np
 import xarray as xr
 import pandas as pd
+import torch
+import pyro
+import pyro.distributions as dist
+import gempy as gp
+import gempy_viewer as gpv
 from matplotlib import pyplot as plt
+from dotenv import dotenv_values
+from pyro.infer import MCMC, NUTS, Predictive
+import arviz as az
 
 from gempy_probability.plot_posterior import default_red, default_blue
 from vector_geology.bayesian_helpers import calculate_scale_shift, gaussian_kernel
 from vector_geology.model_1_builder import initialize_geo_model, setup_geophysics
-
-# %%
-# Read nc from subsurface
-
-
-# %%
-import os
-from dotenv import dotenv_values
-
 from vector_geology.omf_to_gempy import process_file
-import gempy as gp
-import gempy_viewer as gpv
 from vector_geology.utils import extend_box
+from gempy_engine.core.backend_tensor import BackendTensor
 
-start_time = time.time()  # start timer
+# Start timer
+start_time = time.time()
+
+# Load environment variables and setup paths
 config = dotenv_values()
 path = config.get("PATH_TO_MODEL_1_Subsurface")
+
+# Initialize lists for structural elements and region of interest
 structural_elements = []
 accumulated_roi = []
 global_extent = None
 color_gen = gp.data.ColorsGenerator()
 
-for e, filename in enumerate(os.listdir(path)):
+# Process each .nc file in the specified directory
+for filename in os.listdir(path):
     base, ext = os.path.splitext(filename)
     if ext == '.nc':
         structural_element, global_extent = process_file(os.path.join(path, filename), global_extent, color_gen)
         structural_elements.append(structural_element)
-# %%
-# Element 1 is an intrusion
 
-from gempy_engine.core.backend_tensor import BackendTensor
-
-BackendTensor.change_backend_gempy(engine_backend=gp.data.AvailableBackends.PYTORCH, dtype="float64")
-
-#  %%
-# Setup gempy object
+# Set up GemPy object
 geo_model = initialize_geo_model(
     structural_elements=structural_elements,
     extent=(np.array(global_extent)),
@@ -59,19 +55,19 @@ geo_model = initialize_geo_model(
     load_nuggets=True
 )
 
-# %%
+# Geophysics configuration
 geophysics_input = setup_geophysics(
     env_path="PATH_TO_MODEL_1_BOUGUER",
     geo_model=geo_model
 )
 
-# %% 
+# Interpolation options
 interpolation_options = geo_model.interpolation_options
-
 interpolation_options.kernel_options.range = .7
 interpolation_options.kernel_options.c_o = 3
 interpolation_options.kernel_options.compute_condition_number = True
 
+# Compute model
 sol = gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
@@ -80,25 +76,24 @@ sol = gp.compute_model(
     )
 )
 
+# Visualization in gempy_viewer
 gempy_vista = gpv.plot_3d(
     model=geo_model,
     show=True,
     kwargs_plot_structured_grid={'opacity': 0.8},
     image=True
 )
+
 grav = sol.gravity
 
-# %% Calculate shift and scale
-# Use the function
+# Calculate shift and scale for observed gravity data
 s, c = calculate_scale_shift(
     a=geophysics_input["Bouguer_267_complete"].values,
     b=(grav.detach().numpy())
 )
 adapted_observed_grav = s * geophysics_input["Bouguer_267_complete"] + c
 
-# %%
-# TODO: Scale the gravity data to the same scale as the model
-
+# 2D plot with scatter plot of gravity data
 plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
 sc = plot2d.axes[0].scatter(
     geophysics_input['X'],
@@ -112,21 +107,12 @@ sc = plot2d.axes[0].scatter(
 plt.colorbar(sc, label="mGal")
 plt.show()
 
-# %%
-import torch
-
-length_scale_prior = torch.tensor(1_000.0)  # Hyperparameter for the kernel
-variance_prior = torch.tensor(25.0 ** 2)  # Variance term for the kernel
-# The covariance matrix based on the Gaussian kernel
+# Define hyperparameters for Bayesian model
+length_scale_prior = torch.tensor(1_000.0)
+variance_prior = torch.tensor(25.0 ** 2)
 covariance_matrix = gaussian_kernel(geophysics_input[['X', 'Y']], length_scale_prior, variance_prior)
 
-# %%
-import pyro
-import pyro.distributions as dist
-from pyro.infer import MCMC, NUTS, Predictive
-import torch
-import gempy_engine
-
+# Pyro model for geological data
 prior_tensor = BackendTensor.t.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61]).to(torch.float64)
 
 geo_model.geophysics_input = gp.data.GeophysicsInput(
@@ -134,29 +120,25 @@ geo_model.geophysics_input = gp.data.GeophysicsInput(
     densities=prior_tensor,
 )
 
-
 def model(y_obs_list, interpolation_input):
     """
-    This Pyro model represents the probabilistic aspects of the geological model.
-    It defines a prior distribution for the top layer's location and 
-    computes the thickness of the geological layer as an observed variable.
+    Pyro model representing the probabilistic aspects of the geological model.
     """
-    # Define prior for the top layer's location
+    # Define prior for density
     prior_mean = 2.62
     mu_density = pyro.sample(
         name=r'$\mu_{density}$',
         fn=dist.Normal(prior_mean, torch.tensor(0.5, dtype=torch.float64))
     )
 
-    # Update the model with the new top layer's location
-    # interpolation_input: InterpolationInput = geo_model.interpolation_input
+    # Update geological model
     geo_model.geophysics_input.densities = torch.index_put(
         input=prior_tensor,
         indices=(torch.tensor([3]),),
         values=mu_density
     )
 
-    # Compute the geological model
+    # Compute geological model
     geo_model.solutions = gempy_engine.compute_model(
         interpolation_input=interpolation_input,
         options=geo_model.interpolation_options,
@@ -167,9 +149,6 @@ def model(y_obs_list, interpolation_input):
     simulated_geophysics = geo_model.solutions.gravity
 
     pyro.deterministic(r'$\mu_{gravity}$', simulated_geophysics)
-    # The covariance matrix for the likelihood
-    # This is a simplified example; in practice, you'd need to
-    # carefully consider how to parameterize this matrix
 
     # Observing the data
     pyro.sample(
@@ -178,18 +157,14 @@ def model(y_obs_list, interpolation_input):
         obs=y_obs_list
     )
 
-
+# Prepare observed data for Pyro model
 y_obs_list = torch.tensor(adapted_observed_grav.values).view(1, 17)
 
-# %%
 # Optimize mesh
 interpolation_options.mesh_extraction = False
 interpolation_options.number_octree_levels = 1
 geo_model.grid.set_inactive("topography")
 geo_model.grid.set_inactive("regular")
-
-# %%
-import arviz as az
 
 # Run prior sampling and visualization
 if True:
@@ -199,7 +174,6 @@ if True:
     plt.show()
 
 # Running MCMC using the NUTS algorithm
-
 pyro.primitives.enable_validation(is_validate=True)
 nuts_kernel = NUTS(model)
 mcmc = MCMC(nuts_kernel, num_samples=1000, warmup_steps=300)
@@ -219,13 +193,7 @@ data = az.from_pyro(
 az.plot_trace(data)
 plt.show()
 
-# %%
 # Density Plots of Posterior and Prior
-# ------------------------------------
-# Density plots provide a visual representation of the distribution of the sampled parameters.
-# Comparing the posterior and prior distributions allows us to assess the impact of the observed data.
-
-# Plotting density of posterior and prior distributions
 az.plot_density(
     data=[data, data.prior],
     shade=.9,
@@ -235,7 +203,6 @@ az.plot_density(
 )
 plt.show()
 
-# %%
 az.plot_density(
     data=[data.posterior_predictive, data.prior_predictive],
     shade=.9,

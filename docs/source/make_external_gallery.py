@@ -51,12 +51,6 @@ articles = dict(
         description="A brief introduction to Bayesian inference theory.",
         link="https://gempy-project.github.io/gempy_probability/examples_intro/index.html",
         image="https://gempy-project.github.io/gempy_probability/_images/Model_space2.png",
-    ),
-    gempy=Example(
-        title="Structural Uncertainty",
-        description="Invert structural geometry.",
-        link="https://gempy-project.github.io/gempy_probability/examples_basic_geology/2-thickness_problem_gempy.html",
-        image="https://gempy-project.github.io/gempy_probability/_images/sphx_glr_2-thickness_problem_gempy_002.png"
     )
 )
 
@@ -71,18 +65,11 @@ def make_example_gallery():
         new_fid.write(
             """.. _external_examples:
 
-External Examples
-=================
+Bayesian Inference Theory
+=========================
 
-Got an impressive Bayesian inference workflow or visualization routine? Share it with the community! Contribute your work and help others learn from your expertise. Submit a PR at `visual-bayesic/visual-bayesic <https://github.com/visual-bayesic/visual-bayesic/>`_, and we'd be excited to feature it.
-
-.. caution::
-
-    Please note that these 2-examples link to external websites. If any of these
-    links are broken, please raise an `issue
-    <https://github.com/visual-bayesic/visual-bayesic/issues>`_.
-
-Do you have a sophisticated Bayesian inference workflow or visualization routine you would like to share? If so, please consider contributing your work by submitting a PR at `visual-bayesic/visual-bayesic <https://github.com/visual-bayesic/visual-bayesic/>`_. We welcome contributions and would be delighted to include your work in our collection.
+Here you will find a collection of examples that demonstrate the basics of Bayesian inference theory and how to apply it to geology 
+using Pyro. 
 
 .. grid:: 3
    :gutter: 1
