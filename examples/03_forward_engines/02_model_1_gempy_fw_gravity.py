@@ -1,3 +1,4 @@
+
 """
 Model 1 Forward Gravity
 -----------------------  
@@ -21,20 +22,26 @@ from vector_geology.model_1_builder import initialize_geo_model
 from vector_geology.omf_to_gempy import process_file
 from vector_geology.utils import extend_box
 
-# Start the timer for execution time tracking
+# %%
+# Start the timer to measure the execution time of the script
 start_time = time.time()
 
-# Load configuration from .env file
+# %%
+# Load environment configuration
+# This step reads configurations from a .env file, crucial for setting up file paths.
 config = dotenv_values()
 path = config.get("PATH_TO_MODEL_1_Subsurface")
 
-# Initialize variables
+# %%
+# Initialize structural elements for the geological model
+# These will be used to build the model using GemPy.
 structural_elements = []
-accumulated_roi = []
 global_extent = None
 color_gen = gp.data.ColorsGenerator()
 
-# Process .nc files in the specified directory
+# %%
+# Process .nc files for geological model construction
+# This loop reads and processes each .nc file to extract necessary data for the model.
 for filename in os.listdir(path):
     base, ext = os.path.splitext(filename)
     if ext == '.nc':
@@ -42,7 +49,9 @@ for filename in os.listdir(path):
         structural_element, global_extent = process_file(file_path, global_extent, color_gen)
         structural_elements.append(structural_element)
 
-# Setup GemPy model
+# %%
+# Setup GemPy geological model
+# Here, the model is initialized with the processed data.
 geo_model = initialize_geo_model(
     structural_elements=structural_elements,
     extent=(np.array(global_extent)),
@@ -50,28 +59,38 @@ geo_model = initialize_geo_model(
     load_nuggets=True
 )
 
-# Display the GeoModel object
+# %%
+# Display the initialized GemPy model
+# It's always good practice to verify the model's initialization.
 print(geo_model)
 
-# Read Bouguer gravity data from CSV
+# %%
+# Read Bouguer gravity data from a CSV file
+# This data is used for geophysical calculations later in the script.
 df = pd.read_csv(
     filepath_or_buffer=config.get("PATH_TO_MODEL_1_BOUGUER"),
     sep=',',
     header=0
 )
 
-# Filter data based on X coordinate
+# %%
+# Filter and prepare the gravity data for further processing
+# This step ensures we use the relevant subset of the data.
 df = df[df['X'] < 565000]
 interesting_columns = df[['X', 'Y', 'Bouguer_267_complete']]
 
-# Set up interpolation options for the model
+# %%
+# Set up interpolation options for the GemPy model
+# Configuring interpolation is crucial for accurate geological modeling.
 interpolation_options = geo_model.interpolation_options
 interpolation_options.mesh_extraction = True
 interpolation_options.kernel_options.range = .7
 interpolation_options.kernel_options.c_o = 3
 interpolation_options.kernel_options.compute_condition_number = True
 
-# Plot the 2D representation of the model
+# %%
+# Plot the 2D representation of the geological model with gravity data
+# This visualization helps in understanding the spatial distribution of the data.
 plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
 plot2d.axes[0].scatter(
     interesting_columns['X'],
@@ -83,12 +102,16 @@ plot2d.axes[0].scatter(
 )
 plot2d.fig.show()
 
-# Calculate execution time
+# %%
+# Calculate and display the script execution time so far
+# Monitoring execution time is useful for performance optimization.
 end_time = time.time()
 execution_time = end_time - start_time
 print(f"The function executed in {execution_time} seconds.")
 
-# 3D Visualization
+# %%
+# 3D visualization of the geological model
+# This 3D view provides a comprehensive perspective of the model's structure.
 gempy_vista = gpv.plot_3d(
     model=geo_model,
     show=True,
@@ -96,11 +119,15 @@ gempy_vista = gpv.plot_3d(
     image=True
 )
 
-# Prepare data for geophysical calculations
+# %%
+# Prepare and set up data for geophysical calculations
+# Configuring the data correctly is key for accurate gravity calculations.
 device_location = interesting_columns[['X', 'Y']]
-device_location['Z'] = 0  # stack 0 to the z-axis
+device_location['Z'] = 0  # Add a Z-coordinate
 
-# Set up a centered grid for the calculations
+# %%
+# Set up a centered grid for geophysical calculations
+# This grid will be used for gravity gradient calculations.
 gp.set_centered_grid(
     grid=geo_model.grid,
     centers=device_location,
@@ -108,23 +135,33 @@ gp.set_centered_grid(
     radius=np.array([5000, 5000, 5000])
 )
 
-# Change backend for GemPy
+# %%
+# Change backend for GemPy to support tensor operations
+# This is necessary for integrating GemPy with PyTorch.
 BackendTensor.change_backend_gempy(engine_backend=gp.data.AvailableBackends.PYTORCH, dtype="float64")
 
-# Calculate gravity gradient
+# %%
+# Calculate the gravity gradient using GemPy
+# Gravity gradient data is critical for geophysical modeling and inversion.
 gravity_gradient = gp.calculate_gravity_gradient(geo_model.grid.centered_grid)
 
-# Define densities tensor for the calculation
+# %%
+# Define and set up densities tensor for the gravity calculation
+# Densities are a fundamental part of the gravity modeling process.
 densities_tensor = BackendTensor.t.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61])
 densities_tensor.requires_grad = True
 
-# Set geophysics input for the model
+# %%
+# Set geophysics input for the GemPy model
+# Configuring this input is crucial for the forward gravity calculation.
 geo_model.geophysics_input = gp.data.GeophysicsInput(
     tz=BackendTensor.t.array(gravity_gradient),
     densities=densities_tensor
 )
 
-# Compute the model with geophysical data
+# %%
+# Compute the geological model with geophysical data
+# This computation integrates the geological model with gravity data.
 sol = gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
@@ -135,24 +172,34 @@ sol = gp.compute_model(
 grav = - sol.gravity
 grav[0].backward()
 
-# Output gradient information
+# %%
+# Output gradient information for analysis
+# The gradient data can provide insights into the density distribution.
 print(densities_tensor.grad)
 
-# Scale and shift calculations
+# %%
+# Perform scale and shift calculations on the gravity data
+# These calculations align the model's gravity data with observed values.
 s, c = calculate_scale_shift(
     a=interesting_columns["Bouguer_267_complete"].values,
     b=(grav.detach().numpy())
 )
 
-# Display scale and shift values
+# %%
+# Display the calculated scale and shift values
+# Understanding these values is important for interpreting the results.
 print("Scale (s):", s)
 print("Shift (c):", c)
 
-# Adapt gravity data
+# %%
+# Adapt the gravity data based on scale and shift calculations
+# This step adjusts the model's gravity data to match observed values.
 adapted_grav = s * interesting_columns["Bouguer_267_complete"] + c
 diff = adapted_grav - grav.detach().numpy()
 
+# %%
 # Visualization of adapted gravity data
+# This visualization helps in comparing the model's gravity data with observations.
 plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
 plot2d.axes[0].scatter(
     interesting_columns['X'],
@@ -164,11 +211,15 @@ plot2d.axes[0].scatter(
 )
 plt.show()
 
-# Calculate symmetric vmin and vmax for the colorbar
+# %%
+# Calculate symmetric vmin and vmax for the colorbar in the difference plot
+# This step ensures a balanced color representation of positive and negative differences.
 max_diff = np.max(np.abs(diff))  # Get the maximum absolute value from diff
 vmin, vmax = -max_diff, max_diff  # Set vmin and vmax
 
-# Plotting the difference
+# %%
+# Plotting the difference between adapted and computed gravity data
+# This plot highlights the discrepancies between the model and observed data.
 plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
 sc = plot2d.axes[0].scatter(
     interesting_columns['X'],
