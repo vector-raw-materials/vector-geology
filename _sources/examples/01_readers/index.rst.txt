@@ -1,0 +1,103 @@
+
+
+.. _sphx_glr_examples_01_readers:
+
+Readers and Parsers
+===================
+
+Effective data analysis in geophysics begins with efficient data handling. This section is dedicated to demonstrating the use of specialized libraries to read and parse various data formats commonly encountered in the Vector Geology project. Here's what you can expect:
+
+- **Format Recognition**: Learn how to identify and handle different data formats used in geophysical and remote sensing research.
+
+- **Library Integration**: Understand how to leverage specific libraries to read these formats. We cover a range of tools, emphasizing flexibility and ease of use.
+
+- **Data Conversion**: Discover methods to convert raw data into xarray structures, a powerful tool for handling multidimensional datasets. This step is crucial for streamlining post-processing activities.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF (Open Mining Format) project file in Python, visu...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_01_read_OMF_sites_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_01_readers_01_read_OMF_sites.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading OMF Project Into Python</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF (Open Mining Format) project file and convert it ...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_02_model_1_OMF_to_subsurface_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_01_readers_02_model_1_OMF_to_subsurface.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading Model 1 OMF Project into Subsurface</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF project file and export it for use with Subsurfac...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_03_model_2_OMF_to_subsurface_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_01_readers_03_model_2_OMF_to_subsurface.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading OMF project and exporting it to Subsurface: Example 1</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to read gravity data from the Stonepark project and visualize it. ...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_04_model_1_read_gravity_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_01_readers_04_model_1_read_gravity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Gravity Data Visualization</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/01_readers/01_read_OMF_sites
+   /examples/01_readers/02_model_1_OMF_to_subsurface
+   /examples/01_readers/03_model_2_OMF_to_subsurface
+   /examples/01_readers/04_model_1_read_gravity
+

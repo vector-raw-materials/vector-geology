@@ -1,0 +1,15 @@
+
+:orphan:
+
+.. _sphx_glr_examples_04_probabilistic_modeling_sg_execution_times:
+
+
+Computation times
+=================
+**04:46.444** total execution time for **examples_04_probabilistic_modeling** files:
+
++----------------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_04_probabilistic_modeling_02_model_1_bayesian.py` (``02_model_1_bayesian.py``)               | 04:46.444 | 0.0 MB |
++----------------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_04_probabilistic_modeling_01_thickness_problem_gempy.py` (``01_thickness_problem_gempy.py``) | 00:00.000 | 0.0 MB |
++----------------------------------------------------------------------------------------------------------------------+-----------+--------+

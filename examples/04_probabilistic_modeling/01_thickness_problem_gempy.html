@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2.2 - Including GemPy &#8212; Vector Geology 0.1.dev16+g525c9e2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/style.css?v=f2a985cd" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=f5ef4c94"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Probabilistic Inversion Example: Geological Model" href="02_model_1_bayesian.html" />
+    <link rel="prev" title="Probabilistic Modeling" href="index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-examples-04-probabilistic-modeling-01-thickness-problem-gempy-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="including-gempy">
+<span id="sphx-glr-examples-04-probabilistic-modeling-01-thickness-problem-gempy-py"></span><h1>2.2 - Including GemPy<a class="headerlink" href="#including-gempy" title="Permalink to this heading">¶</a></h1>
+<section id="complex-probabilistic-model">
+<h2>Complex probabilistic model<a class="headerlink" href="#complex-probabilistic-model" title="Permalink to this heading">¶</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">pyro</span>
+<span class="kn">import</span> <span class="nn">pyro.distributions</span> <span class="k">as</span> <span class="nn">dist</span>
+<span class="kn">from</span> <span class="nn">pyro.infer</span> <span class="kn">import</span> <span class="n">MCMC</span><span class="p">,</span> <span class="n">NUTS</span><span class="p">,</span> <span class="n">Predictive</span>
+<span class="kn">from</span> <span class="nn">pyro.infer.autoguide</span> <span class="kn">import</span> <span class="n">init_to_mean</span>
+
+<span class="kn">import</span> <span class="nn">gempy</span> <span class="k">as</span> <span class="nn">gp</span>
+<span class="kn">import</span> <span class="nn">gempy_engine</span>
+<span class="kn">import</span> <span class="nn">gempy_viewer</span> <span class="k">as</span> <span class="nn">gpv</span>
+<span class="kn">from</span> <span class="nn">gempy_engine.core.backend_tensor</span> <span class="kn">import</span> <span class="n">BackendTensor</span>
+<span class="kn">import</span> <span class="nn">arviz</span> <span class="k">as</span> <span class="nn">az</span>
+<span class="kn">from</span> <span class="nn">gempy_probability.plot_posterior</span> <span class="kn">import</span> <span class="n">default_red</span><span class="p">,</span> <span class="n">default_blue</span>
+<span class="c1"># sphinx_gallery_thumbnail_number = -1</span>
+</pre></div>
+</div>
+<p>Set the data path</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">data_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;../&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Define a function for plotting geological settings with wells</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">plot_geo_setting_well</span><span class="p">(</span><span class="n">geo_model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This function plots the geological settings along with the well locations.</span>
+<span class="sd">    It uses gempy_viewer to create 2D plots of the model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define well and device locations</span>
+    <span class="n">device_loc</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([[</span><span class="mf">6e3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3700</span><span class="p">]])</span>
+    <span class="n">well_1</span> <span class="o">=</span> <span class="mf">3.41e3</span>
+    <span class="n">well_2</span> <span class="o">=</span> <span class="mf">3.6e3</span>
+
+    <span class="c1"># Create a 2D plot</span>
+    <span class="n">p2d</span> <span class="o">=</span> <span class="n">gpv</span><span class="o">.</span><span class="n">plot_2d</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">show_topography</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="c1"># Add well and device markers to the plot</span>
+    <span class="n">p2d</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mf">3e3</span><span class="p">],</span> <span class="p">[</span><span class="n">well_1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;#71a4b3&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">p2d</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="mf">9e3</span><span class="p">],</span> <span class="p">[</span><span class="n">well_2</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;#71a4b3&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">p2d</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">device_loc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">device_loc</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;#DA8886&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="c1"># Add vertical lines to represent wells</span>
+    <span class="n">p2d</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mf">3e3</span><span class="p">,</span> <span class="mf">.5e3</span><span class="p">,</span> <span class="n">well_1</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+    <span class="n">p2d</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mf">9e3</span><span class="p">,</span> <span class="mf">.5e3</span><span class="p">,</span> <span class="n">well_2</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Show the plot</span>
+    <span class="n">p2d</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-the-geological-model">
+<h2>Creating the Geological Model<a class="headerlink" href="#creating-the-geological-model" title="Permalink to this heading">¶</a></h2>
+<p>Here we create a geological model using GemPy. The model defines the spatial extent,
+resolution, and geological information derived from orientations and surface points data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geo_model</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">create_geomodel</span><span class="p">(</span>
+    <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;Wells&#39;</span><span class="p">,</span>
+    <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12000</span><span class="p">,</span> <span class="o">-</span><span class="mi">500</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">],</span>
+    <span class="n">resolution</span><span class="o">=</span><span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="n">refinement</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">importer_helper</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">ImporterHelper</span><span class="p">(</span>
+        <span class="n">path_to_orientations</span><span class="o">=</span><span class="n">data_path</span> <span class="o">+</span> <span class="s2">&quot;/data/2-layers/2-layers_orientations.csv&quot;</span><span class="p">,</span>
+        <span class="n">path_to_surface_points</span><span class="o">=</span><span class="n">data_path</span> <span class="o">+</span> <span class="s2">&quot;/data/2-layers/2-layers_surface_points.csv&quot;</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="configuring-the-model">
+<h2>Configuring the Model<a class="headerlink" href="#configuring-the-model" title="Permalink to this heading">¶</a></h2>
+<p>We configure the interpolation options for the geological model.
+These options determine how the model interpolates between data points.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">uni_degree</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">mesh_extraction</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">sigmoid_slope</span> <span class="o">=</span> <span class="mf">1100.</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-up-a-custom-grid">
+<h2>Setting up a Custom Grid<a class="headerlink" href="#setting-up-a-custom-grid" title="Permalink to this heading">¶</a></h2>
+<p>A custom grid is set for the model, defining specific points in space
+where geological formations will be evaluated.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">x_loc</span> <span class="o">=</span> <span class="mi">6000</span>
+<span class="n">y_loc</span> <span class="o">=</span> <span class="mi">0</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">z_loc</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">xyz_coord</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([[</span><span class="n">x_loc</span><span class="p">,</span> <span class="n">y_loc</span><span class="p">,</span> <span class="n">z</span><span class="p">]</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">z_loc</span></a><span class="p">])</span>
+<span class="n">gp</span><span class="o">.</span><span class="n">set_custom_grid</span><span class="p">(</span><span class="n">geo_model</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">xyz_coord</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">xyz_coord</span></a><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Active grids: [&#39;regular&#39; &#39;custom&#39;]
+
+&lt;gempy.core.data.grid_modules.grid_types.CustomGrid object at 0x7fd4e3c53be0&gt;
+</pre></div>
+</div>
+</section>
+<section id="plotting-the-initial-geological-setting">
+<h2>Plotting the Initial Geological Setting<a class="headerlink" href="#plotting-the-initial-geological-setting" title="Permalink to this heading">¶</a></h2>
+<p>Before running any probabilistic analysis, we first visualize the initial geological setting.
+This step ensures that our model is correctly set up with the initial data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot initial geological settings</span>
+<span class="n">plot_geo_setting_well</span><span class="p">(</span><span class="n">geo_model</span><span class="o">=</span><span class="n">geo_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_01_thickness_problem_gempy_001.png" srcset="../../_images/sphx_glr_01_thickness_problem_gempy_001.png" alt="Cell Number: mid Direction: y" class = "sphx-glr-single-img"/></section>
+<section id="interpolating-the-initial-guess">
+<h2>Interpolating the Initial Guess<a class="headerlink" href="#interpolating-the-initial-guess" title="Permalink to this heading">¶</a></h2>
+<p>The model interpolates an initial guess for the geological formations.
+This step is crucial to provide a starting point for further probabilistic analysis.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gp</span><span class="o">.</span><span class="n">compute_model</span><span class="p">(</span>
+    <span class="n">gempy_model</span><span class="o">=</span><span class="n">geo_model</span><span class="p">,</span>
+    <span class="n">engine_config</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">GemPyEngineConfig</span><span class="p">(</span><span class="n">backend</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AvailableBackends</span><span class="o">.</span><span class="n">numpy</span><span class="p">)</span>
+<span class="p">)</span>
+<span class="n">plot_geo_setting_well</span><span class="p">(</span><span class="n">geo_model</span><span class="o">=</span><span class="n">geo_model</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_01_thickness_problem_gempy_002.png" srcset="../../_images/sphx_glr_01_thickness_problem_gempy_002.png" alt="Cell Number: mid Direction: y" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Setting Backend To: AvailableBackends.numpy
+A size: (5, 5)
+CG iterations: 5
+</pre></div>
+</div>
+</section>
+<section id="probabilistic-geomodeling-with-pyro">
+<h2>Probabilistic Geomodeling with Pyro<a class="headerlink" href="#probabilistic-geomodeling-with-pyro" title="Permalink to this heading">¶</a></h2>
+<p>In this section, we introduce a probabilistic approach to geological modeling.
+By using Pyro, a probabilistic programming language, we define a model that integrates
+geological data with uncertainty quantification.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sp_coords_copy</span></a> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_input</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">sp_coords</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="c1"># Change the backend to PyTorch for probabilistic modeling</span>
+<span class="n">BackendTensor</span><span class="o">.</span><span class="n">change_backend_gempy</span><span class="p">(</span><span class="n">engine_backend</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AvailableBackends</span><span class="o">.</span><span class="n">PYTORCH</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Setting Backend To: AvailableBackends.PYTORCH
+</pre></div>
+</div>
+</section>
+<section id="defining-the-probabilistic-model">
+<h2>Defining the Probabilistic Model<a class="headerlink" href="#defining-the-probabilistic-model" title="Permalink to this heading">¶</a></h2>
+<p>The Pyro model represents the probabilistic aspects of the geological model.
+It defines a prior distribution for the top layer’s location and computes the thickness
+of the geological layer as an observed variable.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">y_obs_list</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This Pyro model represents the probabilistic aspects of the geological model.</span>
+<span class="sd">    It defines a prior distribution for the top layer&#39;s location and</span>
+<span class="sd">    computes the thickness of the geological layer as an observed variable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Define prior for the top layer&#39;s location</span>
+    <span class="n">prior_mean</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sp_coords_copy</span></a><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">mu_top</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\mu_</span><span class="si">{top}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">prior_mean</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)))</span>
+
+    <span class="c1"># Update the model with the new top layer&#39;s location</span>
+    <span class="n">interpolation_input</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_input</span>
+    <span class="n">interpolation_input</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">sp_coords</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">index_put</span><span class="p">(</span>
+        <span class="n">interpolation_input</span><span class="o">.</span><span class="n">surface_points</span><span class="o">.</span><span class="n">sp_coords</span><span class="p">,</span>
+        <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">])),</span>
+        <span class="n">mu_top</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Compute the geological model</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">solutions</span> <span class="o">=</span> <span class="n">gempy_engine</span><span class="o">.</span><span class="n">compute_model</span><span class="p">(</span>
+        <span class="n">interpolation_input</span><span class="o">=</span><span class="n">interpolation_input</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="p">,</span>
+        <span class="n">data_descriptor</span><span class="o">=</span><span class="n">geo_model</span><span class="o">.</span><span class="n">input_data_descriptor</span><span class="p">,</span>
+        <span class="n">geophysics_input</span><span class="o">=</span><span class="n">geo_model</span><span class="o">.</span><span class="n">geophysics_input</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Compute and observe the thickness of the geological layer</span>
+    <span class="n">simulated_well</span> <span class="o">=</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">solutions</span><span class="o">.</span><span class="n">octrees_output</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">last_output_center</span><span class="o">.</span><span class="n">custom_grid_values</span>
+    <span class="n">thickness</span> <span class="o">=</span> <span class="n">simulated_well</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="n">pyro</span><span class="o">.</span><span class="n">deterministic</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\mu_</span><span class="si">{thickness}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="n">thickness</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+    <span class="n">y_thickness</span> <span class="o">=</span> <span class="n">pyro</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$y_</span><span class="si">{thickness}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="n">dist</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="n">thickness</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">obs</span><span class="o">=</span><span class="n">y_obs_list</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="running-prior-sampling-and-visualization">
+<h2>Running Prior Sampling and Visualization<a class="headerlink" href="#running-prior-sampling-and-visualization" title="Permalink to this heading">¶</a></h2>
+<p>Prior sampling is an essential step in probabilistic modeling.
+It helps in understanding the distribution of our prior assumptions before observing any data.</p>
+<p>Prepare observation data</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">y_obs_list</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">200</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">190</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Run prior sampling and visualization</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prior</span> <span class="o">=</span> <span class="n">Predictive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">50</span><span class="p">)(</span><span class="n">y_obs_list</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">from_pyro</span><span class="p">(</span><span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">)</span>
+<span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span><span class="p">(</span><a href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="xarray.core.dataset.Dataset" class="sphx-glr-backref-module-xarray-core-dataset sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span><span class="o">.</span><span class="n">prior</span></a><span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_01_thickness_problem_gempy_003.png" srcset="../../_images/sphx_glr_01_thickness_problem_gempy_003.png" alt="$\mu_{top}$, $\mu_{top}$, $\mu_{thickness}$, $\mu_{thickness}$, $y_{thickness}$, $y_{thickness}$" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Final Iteration 5, Residual Norm: 1.4089725943911736e-05
+Final Iteration 5, Residual Norm: 6.317415998961143e-06
+Final Iteration 5, Residual Norm: 1.468542842347646e-07
+Final Iteration 5, Residual Norm: 9.099129314637124e-06
+Final Iteration 5, Residual Norm: 2.667314595389484e-06
+Final Iteration 5, Residual Norm: 1.4855313948945798e-07
+Final Iteration 5, Residual Norm: 5.579229931795512e-05
+Final Iteration 5, Residual Norm: 0.0002460598490319718
+Final Iteration 5, Residual Norm: 4.7170726870053344e-06
+Final Iteration 5, Residual Norm: 2.1329508670549636e-05
+Final Iteration 5, Residual Norm: 0.00036439299934579183
+Final Iteration 5, Residual Norm: 0.00048370251094574413
+Final Iteration 5, Residual Norm: 1.0623705901568265e-06
+Final Iteration 5, Residual Norm: 6.863468575162967e-05
+Final Iteration 5, Residual Norm: 1.0331479933604487e-05
+Final Iteration 5, Residual Norm: 1.049956003777276e-05
+Final Iteration 5, Residual Norm: 0.0003624536197216722
+Final Iteration 5, Residual Norm: 0.0006498274068455044
+Final Iteration 5, Residual Norm: 0.00018471277567577628
+Final Iteration 5, Residual Norm: 0.00040254824513041377
+Final Iteration 5, Residual Norm: 0.0013596079008816946
+Final Iteration 5, Residual Norm: 1.648709638209521e-05
+Final Iteration 5, Residual Norm: 7.735022324916065e-06
+Final Iteration 5, Residual Norm: 0.0001824839154379149
+Final Iteration 5, Residual Norm: 0.0029643142652577897
+Final Iteration 5, Residual Norm: 8.423194596482126e-06
+Final Iteration 5, Residual Norm: 0.0005033355317047751
+Final Iteration 5, Residual Norm: 3.466862162591784e-05
+Final Iteration 5, Residual Norm: 4.100952832656466e-06
+Final Iteration 5, Residual Norm: 5.186807534557172e-06
+Final Iteration 5, Residual Norm: 7.225228101225706e-05
+Final Iteration 5, Residual Norm: 0.00012718195369019127
+Final Iteration 5, Residual Norm: 1.6491035955590957e-05
+Final Iteration 5, Residual Norm: 7.977804546947701e-06
+Final Iteration 5, Residual Norm: 6.816675195364853e-05
+Final Iteration 5, Residual Norm: 2.4168551204555964e-07
+Final Iteration 5, Residual Norm: 3.548664905916464e-08
+Final Iteration 5, Residual Norm: 0.0022503253931455245
+Final Iteration 5, Residual Norm: 0.0036943902745817376
+Final Iteration 5, Residual Norm: 8.690035021310801e-05
+Final Iteration 5, Residual Norm: 7.142135244993335e-08
+Final Iteration 5, Residual Norm: 3.5356345481439774e-06
+Final Iteration 5, Residual Norm: 7.538530566253355e-09
+Final Iteration 5, Residual Norm: 3.4309134085127624e-07
+Final Iteration 5, Residual Norm: 1.948481493782957e-08
+Final Iteration 5, Residual Norm: 0.00014888343414485883
+Final Iteration 5, Residual Norm: 4.704095188284034e-05
+Final Iteration 5, Residual Norm: 0.00011895489197375922
+Final Iteration 5, Residual Norm: 2.789264939712866e-06
+Final Iteration 5, Residual Norm: 1.4900200944495394e-05
+Final Iteration 5, Residual Norm: 3.218010200331566e-06
+Final Iteration 5, Residual Norm: 1.0887753762451048e-06
+/home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/arviz/utils.py:184: NumbaDeprecationWarning: The &#39;nopython&#39; keyword argument was not supplied to the &#39;numba.jit&#39; decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
+  numba_fn = numba.jit(**self.kwargs)(self.function)
+</pre></div>
+</div>
+</section>
+<section id="sampling-from-the-posterior-using-mcmc">
+<h2>Sampling from the Posterior using MCMC<a class="headerlink" href="#sampling-from-the-posterior-using-mcmc" title="Permalink to this heading">¶</a></h2>
+<p>We use Markov Chain Monte Carlo (MCMC) with the NUTS (No-U-Turn Sampler) algorithm
+to sample from the posterior distribution. This gives us an understanding of the
+distribution of our model parameters after considering the observed data.</p>
+<p>Run MCMC using NUTS to sample from the posterior</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Magic sauce</span>
+<span class="kn">from</span> <span class="nn">gempy_engine.core.backend_tensor</span> <span class="kn">import</span> <span class="n">BackendTensor</span>
+<span class="c1"># import gempy_engine.config</span>
+<span class="c1"># config.DEFAULT_PYKEOPS = False</span>
+<span class="n">BackendTensor</span><span class="o">.</span><span class="n">_change_backend</span><span class="p">(</span><span class="n">engine_backend</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AvailableBackends</span><span class="o">.</span><span class="n">PYTORCH</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span><span class="p">,</span> <span class="n">pykeops_enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">pyro</span><span class="o">.</span><span class="n">primitives</span><span class="o">.</span><span class="n">enable_validation</span><span class="p">(</span><span class="n">is_validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">nuts_kernel</span> <span class="o">=</span> <span class="n">NUTS</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mf">0.0085</span><span class="p">,</span> <span class="n">adapt_step_size</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">target_accept_prob</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">max_tree_depth</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">init_strategy</span><span class="o">=</span><span class="n">init_to_mean</span><span class="p">)</span>
+<span class="n">mcmc</span> <span class="o">=</span> <span class="n">MCMC</span><span class="p">(</span><span class="n">nuts_kernel</span><span class="p">,</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">warmup_steps</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">mcmc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y_obs_list</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Setting Backend To: AvailableBackends.PYTORCH
+
+Warmup:   0%|          | 0/250 [00:00, ?it/s]
+Warmup:   0%|          | 1/250 [00:00,  3.12it/s, step size=3.22e-01, acc. prob=0.869]
+Warmup:   2%|1         | 4/250 [00:00, 10.90it/s, step size=2.55e-03, acc. prob=0.472]
+Warmup:   2%|2         | 6/250 [00:01,  4.24it/s, step size=2.14e-03, acc. prob=0.624]
+Warmup:   3%|3         | 8/250 [00:02,  2.77it/s, step size=3.46e-03, acc. prob=0.717]
+Warmup:   4%|3         | 9/250 [00:02,  3.16it/s, step size=2.47e-03, acc. prob=0.727]
+Warmup:   4%|4         | 10/250 [00:03,  2.73it/s, step size=3.36e-03, acc. prob=0.754]
+Warmup:   4%|4         | 11/250 [00:03,  2.81it/s, step size=4.63e-03, acc. prob=0.776]
+Warmup:   5%|4         | 12/250 [00:03,  2.87it/s, step size=6.41e-03, acc. prob=0.795]
+Warmup:   6%|5         | 14/250 [00:04,  3.31it/s, step size=4.38e-03, acc. prob=0.800]
+Warmup:   6%|6         | 15/250 [00:04,  3.08it/s, step size=6.13e-03, acc. prob=0.814]
+Warmup:   6%|6         | 16/250 [00:04,  3.41it/s, step size=8.56e-03, acc. prob=0.825]
+Warmup:   7%|6         | 17/250 [00:04,  4.06it/s, step size=5.01e-03, acc. prob=0.819]
+Warmup:   7%|7         | 18/250 [00:05,  4.26it/s, step size=6.53e-03, acc. prob=0.828]
+Warmup:   8%|8         | 20/250 [00:05,  5.91it/s, step size=4.68e-03, acc. prob=0.828]
+Warmup:   8%|8         | 21/250 [00:05,  5.69it/s, step size=6.44e-03, acc. prob=0.836]
+Warmup:   9%|8         | 22/250 [00:05,  5.65it/s, step size=5.43e-03, acc. prob=0.836]
+Warmup:   9%|9         | 23/250 [00:05,  5.48it/s, step size=7.42e-03, acc. prob=0.843]
+Warmup:  10%|9         | 24/250 [00:06,  5.35it/s, step size=6.77e-03, acc. prob=0.843]
+Warmup:  10%|#         | 25/250 [00:06,  5.31it/s, step size=9.25e-03, acc. prob=0.850]
+Warmup:  11%|#         | 27/250 [00:06,  5.89it/s, step size=6.68e-03, acc. prob=0.848]
+Warmup:  12%|#1        | 29/250 [00:06,  7.31it/s, step size=1.16e-02, acc. prob=0.858]
+Warmup:  12%|#2        | 31/250 [00:06,  9.21it/s, step size=8.17e-03, acc. prob=0.856]
+Warmup:  13%|#3        | 33/250 [00:07,  9.11it/s, step size=1.46e-02, acc. prob=0.864]
+Warmup:  14%|#4        | 35/250 [00:07,  6.52it/s, step size=1.59e-03, acc. prob=0.842]
+Warmup:  14%|#4        | 36/250 [00:08,  3.73it/s, step size=2.15e-03, acc. prob=0.846]
+Warmup:  15%|#4        | 37/250 [00:09,  2.67it/s, step size=2.90e-03, acc. prob=0.850]
+Warmup:  16%|#5        | 39/250 [00:09,  3.41it/s, step size=1.61e-03, acc. prob=0.846]
+Warmup:  16%|#6        | 41/250 [00:09,  4.51it/s, step size=4.38e-04, acc. prob=0.835]
+Warmup:  17%|#6        | 42/250 [00:09,  4.47it/s, step size=4.32e-04, acc. prob=0.836]
+Warmup:  17%|#7        | 43/250 [00:11,  2.21it/s, step size=5.49e-04, acc. prob=0.840]
+Warmup:  18%|#7        | 44/250 [00:13,  1.01it/s, step size=5.81e+00, acc. prob=0.843]
+Warmup:  19%|#8        | 47/250 [00:13,  1.97it/s, step size=9.76e-02, acc. prob=0.796]
+Warmup:  20%|#9        | 49/250 [00:14,  2.58it/s, step size=4.33e-02, acc. prob=0.781]
+Warmup:  20%|##        | 50/250 [00:14,  2.29it/s, step size=4.33e-02, acc. prob=0.786]
+Warmup:  20%|##        | 51/250 [00:16,  1.26it/s, step size=4.33e-02, acc. prob=1.000]
+Sample:  21%|##        | 52/250 [00:20,  1.45s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  21%|##1       | 53/250 [00:21,  1.33s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  22%|##1       | 54/250 [00:23,  1.45s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  22%|##2       | 55/250 [00:24,  1.39s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  22%|##2       | 56/250 [00:25,  1.35s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  23%|##2       | 57/250 [00:27,  1.35s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  23%|##3       | 58/250 [00:27,  1.08s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  24%|##3       | 59/250 [00:29,  1.28s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  24%|##4       | 60/250 [00:29,  1.03s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  24%|##4       | 61/250 [00:30,  1.07s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  25%|##4       | 62/250 [00:31,  1.04s/it, step size=4.33e-02, acc. prob=1.000]
+Sample:  25%|##5       | 63/250 [00:32,  1.27it/s, step size=4.33e-02, acc. prob=1.000]
+Sample:  26%|##5       | 64/250 [00:32,  1.23it/s, step size=4.33e-02, acc. prob=1.000]
+Sample:  26%|##6       | 65/250 [00:33,  1.38it/s, step size=4.33e-02, acc. prob=1.000]
+Sample:  26%|##6       | 66/250 [00:33,  1.50it/s, step size=4.33e-02, acc. prob=1.000]
+Sample:  27%|##6       | 67/250 [00:34,  1.40it/s, step size=4.33e-02, acc. prob=0.998]
+Sample:  27%|##7       | 68/250 [00:36,  1.04s/it, step size=4.33e-02, acc. prob=0.998]
+Sample:  28%|##7       | 69/250 [00:37,  1.17it/s, step size=4.33e-02, acc. prob=0.998]
+Sample:  28%|##8       | 70/250 [00:37,  1.41it/s, step size=4.33e-02, acc. prob=0.998]
+Sample:  28%|##8       | 71/250 [00:39,  1.02s/it, step size=4.33e-02, acc. prob=0.998]
+Sample:  29%|##8       | 72/250 [00:40,  1.18s/it, step size=4.33e-02, acc. prob=0.997]
+Sample:  29%|##9       | 73/250 [00:42,  1.34s/it, step size=4.33e-02, acc. prob=0.996]
+Sample:  30%|##9       | 74/250 [00:42,  1.01it/s, step size=4.33e-02, acc. prob=0.996]
+Sample:  30%|###       | 75/250 [00:43,  1.06s/it, step size=4.33e-02, acc. prob=0.996]
+Sample:  30%|###       | 76/250 [00:44,  1.08it/s, step size=4.33e-02, acc. prob=0.996]
+Sample:  31%|###       | 77/250 [00:45,  1.04s/it, step size=4.33e-02, acc. prob=0.995]
+Sample:  31%|###1      | 78/250 [00:47,  1.20s/it, step size=4.33e-02, acc. prob=0.995]
+Sample:  32%|###1      | 79/250 [00:49,  1.51s/it, step size=4.33e-02, acc. prob=0.995]
+Sample:  32%|###2      | 80/250 [00:49,  1.17s/it, step size=4.33e-02, acc. prob=0.995]
+Sample:  32%|###2      | 81/250 [00:51,  1.41s/it, step size=4.33e-02, acc. prob=0.995]
+Sample:  33%|###2      | 82/250 [00:52,  1.29s/it, step size=4.33e-02, acc. prob=0.994]
+Sample:  33%|###3      | 83/250 [00:54,  1.36s/it, step size=4.33e-02, acc. prob=0.994]
+Sample:  34%|###3      | 84/250 [00:54,  1.11s/it, step size=4.33e-02, acc. prob=0.994]
+Sample:  34%|###4      | 85/250 [00:55,  1.15it/s, step size=4.33e-02, acc. prob=0.994]
+Sample:  34%|###4      | 86/250 [00:55,  1.27it/s, step size=4.33e-02, acc. prob=0.994]
+Sample:  35%|###5      | 88/250 [00:56,  1.61it/s, step size=4.33e-02, acc. prob=0.994]
+Sample:  36%|###5      | 89/250 [00:57,  1.60it/s, step size=4.33e-02, acc. prob=0.995]
+Sample:  36%|###6      | 90/250 [00:58,  1.38it/s, step size=4.33e-02, acc. prob=0.995]
+Sample:  36%|###6      | 91/250 [00:58,  1.73it/s, step size=4.33e-02, acc. prob=0.995]
+Sample:  37%|###6      | 92/250 [00:59,  1.27it/s, step size=4.33e-02, acc. prob=0.994]
+Sample:  37%|###7      | 93/250 [01:01,  1.15s/it, step size=4.33e-02, acc. prob=0.995]
+Sample:  38%|###7      | 94/250 [01:03,  1.27s/it, step size=4.33e-02, acc. prob=0.994]
+Sample:  38%|###8      | 95/250 [01:03,  1.01s/it, step size=4.33e-02, acc. prob=0.993]
+Sample:  38%|###8      | 96/250 [01:05,  1.10s/it, step size=4.33e-02, acc. prob=0.993]
+Sample:  39%|###8      | 97/250 [01:06,  1.05s/it, step size=4.33e-02, acc. prob=0.993]
+Sample:  39%|###9      | 98/250 [01:06,  1.11it/s, step size=4.33e-02, acc. prob=0.993]
+Sample:  40%|###9      | 99/250 [01:08,  1.12s/it, step size=4.33e-02, acc. prob=0.993]
+Sample:  40%|####      | 100/250 [01:09,  1.17s/it, step size=4.33e-02, acc. prob=0.993]
+Sample:  40%|####      | 101/250 [01:10,  1.24s/it, step size=4.33e-02, acc. prob=0.993]
+Sample:  41%|####      | 102/250 [01:11,  1.13s/it, step size=4.33e-02, acc. prob=0.993]
+Sample:  41%|####1     | 103/250 [01:12,  1.10it/s, step size=4.33e-02, acc. prob=0.992]
+Sample:  42%|####1     | 104/250 [01:13,  1.14it/s, step size=4.33e-02, acc. prob=0.991]
+Sample:  42%|####2     | 105/250 [01:14,  1.02s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  42%|####2     | 106/250 [01:16,  1.24s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  43%|####2     | 107/250 [01:17,  1.37s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  43%|####3     | 108/250 [01:19,  1.37s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  44%|####3     | 109/250 [01:20,  1.33s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  44%|####4     | 110/250 [01:20,  1.01it/s, step size=4.33e-02, acc. prob=0.991]
+Sample:  44%|####4     | 111/250 [01:21,  1.01it/s, step size=4.33e-02, acc. prob=0.991]
+Sample:  45%|####4     | 112/250 [01:22,  1.08it/s, step size=4.33e-02, acc. prob=0.991]
+Sample:  45%|####5     | 113/250 [01:23,  1.05s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  46%|####5     | 114/250 [01:26,  1.48s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  46%|####6     | 115/250 [01:29,  1.90s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  46%|####6     | 116/250 [01:31,  2.02s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  47%|####6     | 117/250 [01:32,  1.62s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  47%|####7     | 118/250 [01:32,  1.30s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  48%|####7     | 119/250 [01:33,  1.07s/it, step size=4.33e-02, acc. prob=0.991]
+Sample:  48%|####8     | 120/250 [01:33,  1.18it/s, step size=4.33e-02, acc. prob=0.990]
+Sample:  48%|####8     | 121/250 [01:33,  1.40it/s, step size=4.33e-02, acc. prob=0.990]
+Sample:  49%|####8     | 122/250 [01:34,  1.27it/s, step size=4.33e-02, acc. prob=0.989]
+Sample:  49%|####9     | 123/250 [01:35,  1.38it/s, step size=4.33e-02, acc. prob=0.989]
+Sample:  50%|####9     | 124/250 [01:36,  1.29it/s, step size=4.33e-02, acc. prob=0.989]
+Sample:  50%|#####     | 125/250 [01:37,  1.25it/s, step size=4.33e-02, acc. prob=0.989]
+Sample:  50%|#####     | 126/250 [01:37,  1.54it/s, step size=4.33e-02, acc. prob=0.988]
+Sample:  51%|#####     | 127/250 [01:37,  1.96it/s, step size=4.33e-02, acc. prob=0.988]
+Sample:  51%|#####1    | 128/250 [01:39,  1.14it/s, step size=4.33e-02, acc. prob=0.988]
+Sample:  52%|#####1    | 129/250 [01:42,  1.40s/it, step size=4.33e-02, acc. prob=0.989]
+Sample:  52%|#####2    | 130/250 [01:42,  1.03s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  52%|#####2    | 131/250 [01:42,  1.27it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  53%|#####2    | 132/250 [01:42,  1.69it/s, step size=4.33e-02, acc. prob=0.983]
+Sample:  53%|#####3    | 133/250 [01:44,  1.05it/s, step size=4.33e-02, acc. prob=0.983]
+Sample:  54%|#####3    | 134/250 [01:46,  1.21s/it, step size=4.33e-02, acc. prob=0.983]
+Sample:  54%|#####4    | 135/250 [01:46,  1.06s/it, step size=4.33e-02, acc. prob=0.983]
+Sample:  54%|#####4    | 136/250 [01:49,  1.51s/it, step size=4.33e-02, acc. prob=0.983]
+Sample:  55%|#####4    | 137/250 [01:51,  1.66s/it, step size=4.33e-02, acc. prob=0.983]
+Sample:  55%|#####5    | 138/250 [01:52,  1.60s/it, step size=4.33e-02, acc. prob=0.983]
+Sample:  56%|#####5    | 139/250 [01:55,  1.85s/it, step size=4.33e-02, acc. prob=0.983]
+Sample:  56%|#####6    | 140/250 [01:56,  1.59s/it, step size=4.33e-02, acc. prob=0.984]
+Sample:  56%|#####6    | 141/250 [01:58,  1.83s/it, step size=4.33e-02, acc. prob=0.984]
+Sample:  57%|#####6    | 142/250 [02:00,  1.82s/it, step size=4.33e-02, acc. prob=0.984]
+Sample:  57%|#####7    | 143/250 [02:00,  1.39s/it, step size=4.33e-02, acc. prob=0.984]
+Sample:  58%|#####7    | 144/250 [02:01,  1.07s/it, step size=4.33e-02, acc. prob=0.984]
+Sample:  58%|#####8    | 145/250 [02:02,  1.06s/it, step size=4.33e-02, acc. prob=0.984]
+Sample:  58%|#####8    | 146/250 [02:02,  1.22it/s, step size=4.33e-02, acc. prob=0.984]
+Sample:  59%|#####8    | 147/250 [02:02,  1.44it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  59%|#####9    | 148/250 [02:03,  1.68it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  60%|#####9    | 149/250 [02:03,  1.64it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  60%|######    | 150/250 [02:05,  1.16it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  60%|######    | 151/250 [02:07,  1.12s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  61%|######    | 152/250 [02:08,  1.08s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  61%|######1   | 153/250 [02:09,  1.16s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  62%|######1   | 154/250 [02:10,  1.20s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  62%|######2   | 155/250 [02:12,  1.36s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  62%|######2   | 156/250 [02:13,  1.17s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  63%|######2   | 157/250 [02:14,  1.26s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  63%|######3   | 158/250 [02:16,  1.56s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  64%|######3   | 159/250 [02:18,  1.45s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  64%|######4   | 160/250 [02:19,  1.55s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  64%|######4   | 161/250 [02:20,  1.34s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  65%|######4   | 162/250 [02:21,  1.14s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  65%|######5   | 163/250 [02:22,  1.03s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  66%|######5   | 164/250 [02:23,  1.10s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  66%|######6   | 165/250 [02:23,  1.07it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  66%|######6   | 166/250 [02:24,  1.10it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  67%|######6   | 167/250 [02:26,  1.02s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  67%|######7   | 168/250 [02:27,  1.26s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  68%|######7   | 169/250 [02:28,  1.06s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  68%|######8   | 170/250 [02:29,  1.09it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  68%|######8   | 171/250 [02:30,  1.19s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  69%|######8   | 172/250 [02:31,  1.06s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  69%|######9   | 173/250 [02:33,  1.32s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  70%|######9   | 174/250 [02:34,  1.32s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  70%|#######   | 175/250 [02:37,  1.72s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  70%|#######   | 176/250 [02:39,  1.91s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  71%|#######   | 177/250 [02:40,  1.53s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  71%|#######1  | 178/250 [02:41,  1.23s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  72%|#######1  | 179/250 [02:41,  1.09it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  72%|#######2  | 180/250 [02:42,  1.05s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  72%|#######2  | 181/250 [02:44,  1.20s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  73%|#######2  | 182/250 [02:44,  1.05s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  73%|#######3  | 183/250 [02:46,  1.30s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  74%|#######3  | 184/250 [02:48,  1.27s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  74%|#######4  | 185/250 [02:48,  1.15s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  74%|#######4  | 186/250 [02:49,  1.06s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  75%|#######4  | 187/250 [02:50,  1.11it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  75%|#######5  | 188/250 [02:51,  1.08it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  76%|#######5  | 189/250 [02:51,  1.29it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  76%|#######6  | 190/250 [02:53,  1.06it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  76%|#######6  | 191/250 [02:54,  1.04it/s, step size=4.33e-02, acc. prob=0.985]
+Sample:  77%|#######6  | 192/250 [02:55,  1.17s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  77%|#######7  | 193/250 [02:56,  1.18s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  78%|#######7  | 194/250 [02:57,  1.11s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  78%|#######8  | 195/250 [02:58,  1.10s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  78%|#######8  | 196/250 [03:00,  1.11s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  79%|#######8  | 197/250 [03:01,  1.23s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  79%|#######9  | 198/250 [03:03,  1.31s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  80%|#######9  | 199/250 [03:05,  1.70s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  80%|########  | 200/250 [03:06,  1.39s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  80%|########  | 201/250 [03:06,  1.17s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  81%|########  | 202/250 [03:09,  1.70s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  81%|########1 | 203/250 [03:11,  1.60s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  82%|########1 | 204/250 [03:13,  1.69s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  82%|########2 | 205/250 [03:15,  1.76s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  82%|########2 | 206/250 [03:16,  1.79s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  83%|########2 | 207/250 [03:17,  1.51s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  83%|########3 | 208/250 [03:18,  1.40s/it, step size=4.33e-02, acc. prob=0.986]
+Sample:  84%|########3 | 209/250 [03:19,  1.01s/it, step size=4.33e-02, acc. prob=0.985]
+Sample:  84%|########4 | 211/250 [03:19,  1.75it/s, step size=4.33e-02, acc. prob=0.977]
+Sample:  85%|########4 | 212/250 [03:19,  2.15it/s, step size=4.33e-02, acc. prob=0.975]
+Sample:  85%|########5 | 213/250 [03:21,  1.12it/s, step size=4.33e-02, acc. prob=0.976]
+Sample:  86%|########5 | 214/250 [03:24,  1.36s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  86%|########6 | 215/250 [03:26,  1.63s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  86%|########6 | 216/250 [03:28,  1.68s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  87%|########6 | 217/250 [03:28,  1.39s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  87%|########7 | 218/250 [03:29,  1.23s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  88%|########7 | 219/250 [03:30,  1.03s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  88%|########8 | 220/250 [03:32,  1.47s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  88%|########8 | 221/250 [03:34,  1.52s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  89%|########8 | 222/250 [03:35,  1.33s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  89%|########9 | 223/250 [03:36,  1.33s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  90%|########9 | 224/250 [03:37,  1.29s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  90%|######### | 225/250 [03:38,  1.24s/it, step size=4.33e-02, acc. prob=0.976]
+Sample:  91%|######### | 227/250 [03:39,  1.44it/s, step size=4.33e-02, acc. prob=0.976]
+Sample:  91%|#########1| 228/250 [03:39,  1.33it/s, step size=4.33e-02, acc. prob=0.977]
+Sample:  92%|#########1| 229/250 [03:41,  1.16it/s, step size=4.33e-02, acc. prob=0.977]
+Sample:  92%|#########2| 230/250 [03:42,  1.08it/s, step size=4.33e-02, acc. prob=0.977]
+Sample:  92%|#########2| 231/250 [03:43,  1.06it/s, step size=4.33e-02, acc. prob=0.977]
+Sample:  93%|#########2| 232/250 [03:44,  1.09s/it, step size=4.33e-02, acc. prob=0.977]
+Sample:  93%|#########3| 233/250 [03:46,  1.30s/it, step size=4.33e-02, acc. prob=0.977]
+Sample:  94%|#########3| 234/250 [03:47,  1.35s/it, step size=4.33e-02, acc. prob=0.977]
+Sample:  94%|#########3| 235/250 [03:50,  1.75s/it, step size=4.33e-02, acc. prob=0.977]
+Sample:  94%|#########4| 236/250 [03:52,  1.77s/it, step size=4.33e-02, acc. prob=0.978]
+Sample:  95%|#########4| 237/250 [03:53,  1.45s/it, step size=4.33e-02, acc. prob=0.977]
+Sample:  95%|#########5| 238/250 [03:54,  1.42s/it, step size=4.33e-02, acc. prob=0.978]
+Sample:  96%|#########5| 239/250 [03:56,  1.45s/it, step size=4.33e-02, acc. prob=0.978]
+Sample:  96%|#########6| 240/250 [03:57,  1.43s/it, step size=4.33e-02, acc. prob=0.978]
+Sample:  96%|#########6| 241/250 [03:57,  1.09s/it, step size=4.33e-02, acc. prob=0.978]
+Sample:  97%|#########6| 242/250 [03:59,  1.30s/it, step size=4.33e-02, acc. prob=0.978]
+Sample:  97%|#########7| 243/250 [04:00,  1.25s/it, step size=4.33e-02, acc. prob=0.978]
+Sample:  98%|#########7| 244/250 [04:00,  1.03it/s, step size=4.33e-02, acc. prob=0.978]
+Sample:  98%|#########8| 245/250 [04:01,  1.06it/s, step size=4.33e-02, acc. prob=0.978]
+Sample:  98%|#########8| 246/250 [04:02,  1.21it/s, step size=4.33e-02, acc. prob=0.978]
+Sample:  99%|#########8| 247/250 [04:02,  1.44it/s, step size=4.33e-02, acc. prob=0.979]
+Sample:  99%|#########9| 248/250 [04:04,  1.09it/s, step size=4.33e-02, acc. prob=0.979]
+Sample: 100%|#########9| 249/250 [04:04,  1.19it/s, step size=4.33e-02, acc. prob=0.979]
+Sample: 100%|##########| 250/250 [04:06,  1.00it/s, step size=4.33e-02, acc. prob=0.979]
+Sample: 100%|##########| 250/250 [04:06,  1.02it/s, step size=4.33e-02, acc. prob=0.979]
+</pre></div>
+</div>
+</section>
+<section id="posterior-predictive-checks">
+<h2>Posterior Predictive Checks<a class="headerlink" href="#posterior-predictive-checks" title="Permalink to this heading">¶</a></h2>
+<p>After obtaining the posterior samples, we perform posterior predictive checks.
+This step is crucial to evaluate the performance and validity of our probabilistic model.</p>
+<p>Sample from posterior predictive and visualize</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">posterior_samples</span> <span class="o">=</span> <span class="n">mcmc</span><span class="o">.</span><span class="n">get_samples</span><span class="p">()</span>
+<span class="n">posterior_predictive</span> <span class="o">=</span> <span class="n">Predictive</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">posterior_samples</span><span class="p">)(</span><span class="n">y_obs_list</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">az</span><span class="o">.</span><span class="n">from_pyro</span><span class="p">(</span><span class="n">posterior</span><span class="o">=</span><span class="n">mcmc</span><span class="p">,</span> <span class="n">prior</span><span class="o">=</span><span class="n">prior</span><span class="p">,</span> <span class="n">posterior_predictive</span><span class="o">=</span><span class="n">posterior_predictive</span><span class="p">)</span>
+<span class="n">az</span><span class="o">.</span><span class="n">plot_trace</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_01_thickness_problem_gempy_004.png" srcset="../../_images/sphx_glr_01_thickness_problem_gempy_004.png" alt="$\mu_{top}$, $\mu_{top}$" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/arviz/data/io_pyro.py:157: UserWarning: Could not get vectorized trace, log_likelihood group will be omitted. Check your model vectorization or set log_likelihood=False
+  warnings.warn(
+</pre></div>
+</div>
+</section>
+<section id="density-plot-of-posterior-predictive">
+<h2>Density Plot of Posterior Predictive<a class="headerlink" href="#density-plot-of-posterior-predictive" title="Permalink to this heading">¶</a></h2>
+<p>A density plot provides a visual representation of the distribution of the
+posterior predictive checks. It helps in comparing the prior and posterior distributions
+and in assessing the impact of our observed data on the model.</p>
+<p>Plot density of posterior predictive and prior predictive</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">az</span><span class="o">.</span><span class="n">plot_density</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="p">[</span><a href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="xarray.core.dataset.Dataset" class="sphx-glr-backref-module-xarray-core-dataset sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span><span class="o">.</span><span class="n">posterior_predictive</span></a><span class="p">,</span> <a href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="xarray.core.dataset.Dataset" class="sphx-glr-backref-module-xarray-core-dataset sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">data</span><span class="o">.</span><span class="n">prior_predictive</span></a><span class="p">],</span>
+    <span class="n">shade</span><span class="o">=</span><span class="mf">.9</span><span class="p">,</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s1">&#39;$\mu_</span><span class="si">{thickness}</span><span class="s1">$&#39;</span><span class="p">],</span>
+    <span class="n">data_labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Posterior Predictive&quot;</span><span class="p">,</span> <span class="s2">&quot;Prior Predictive&quot;</span><span class="p">],</span>
+    <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="n">default_red</span><span class="p">,</span> <span class="n">default_blue</span><span class="p">],</span>
+<span class="p">)</span>
+<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+
+<span class="c1"># sphinx_gallery_thumbnail_number = 2</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_01_thickness_problem_gempy_005.png" srcset="../../_images/sphx_glr_01_thickness_problem_gempy_005.png" alt="$\mu_{thickness}$" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 4 minutes  11.687 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-04-probabilistic-modeling-01-thickness-problem-gempy-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/a51ee1dc5ae51d9e0b87a1974006e940/01_thickness_problem_gempy.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">01_thickness_problem_gempy.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/c6e7636b7672db18e241e4f58389664c/01_thickness_problem_gempy.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">01_thickness_problem_gempy.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/vector-logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">Vector Geology</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Vector Geology Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../external/external_examples.html">Bayesian Inference Theory</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_readers/index.html">Readers and Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_structural_modeling/index.html">Structural Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_forward_engines/index.html">Forward GeoPhysics Engines and Inversion</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Probabilistic Modeling</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">2.2 - Including GemPy</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#complex-probabilistic-model">Complex probabilistic model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-the-geological-model">Creating the Geological Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuring-the-model">Configuring the Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#setting-up-a-custom-grid">Setting up a Custom Grid</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#plotting-the-initial-geological-setting">Plotting the Initial Geological Setting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#interpolating-the-initial-guess">Interpolating the Initial Guess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#probabilistic-geomodeling-with-pyro">Probabilistic Geomodeling with Pyro</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-the-probabilistic-model">Defining the Probabilistic Model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-prior-sampling-and-visualization">Running Prior Sampling and Visualization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#sampling-from-the-posterior-using-mcmc">Sampling from the Posterior using MCMC</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#posterior-predictive-checks">Posterior Predictive Checks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#density-plot-of-posterior-predictive">Density Plot of Posterior Predictive</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_1_bayesian.html">Probabilistic Inversion Example: Geological Model</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintenance.html">Maintenance</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023-2023, Vector Geology Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/examples/04_probabilistic_modeling/01_thickness_problem_gempy.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

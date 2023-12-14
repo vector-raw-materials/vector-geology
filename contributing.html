@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Maintenance" href="maintenance.html" />
-    <link rel="prev" title="Manual" href="manual.html" />
+    <link rel="prev" title="Bayesian Inference Theory" href="external/external_examples.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
@@ -42,13 +42,63 @@
             
   <section id="contributing">
 <h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this heading">¶</a></h1>
-<p>The package <code class="docutils literal notranslate"><span class="pre">vector-geology</span></code> is a community effort, and contributions of any kind
-(code, documentation, bug reports, examples) are very welcomed; please get in
-touch!</p>
-<div class="admonition-todo admonition" id="id1">
-<p class="admonition-title">Todo</p>
-<p>Write!</p>
+<p>We welcome and encourage everyone to contribute to vector-geology! Contributions can be questions, bug reports, feature requests, and new code. Here is how to get started.</p>
+<section id="issues">
+<h2>Issues<a class="headerlink" href="#issues" title="Permalink to this heading">¶</a></h2>
+<section id="questions">
+<h3>Questions<a class="headerlink" href="#questions" title="Permalink to this heading">¶</a></h3>
+<p>For questions about vector-geology (e.g., its applications, functionality, and usage), please search the existing issues for related questions. If your question has not already been asked, then make a new issue.</p>
+</section>
+<section id="reporting-bugs">
+<h3>Reporting Bugs<a class="headerlink" href="#reporting-bugs" title="Permalink to this heading">¶</a></h3>
+<p>Please report bugs on the issue page  and label the issue as a bug. The template asks essential questions for you to answer so that we can understand, reproduce, and fix the bug. Be verbose! Whenever possible, provide tracebacks and/or error messages, screenshots, and sample code or other files.</p>
+</section>
+<section id="feature-requests">
+<h3>Feature Requests<a class="headerlink" href="#feature-requests" title="Permalink to this heading">¶</a></h3>
+<p>We encourage users to submit ideas for improvements to the vector-geology project. For this please create an issue on the <a href="#id1"><span class="problematic" id="id2">`</span></a>issue page with the <em>Feature Request</em> template and label. Please make sure to use a descriptive title and to provide ample background information to help us implement that functionality in the future.</p>
+</section>
+</section>
+<section id="contributing-new-code">
+<h2>Contributing New Code<a class="headerlink" href="#contributing-new-code" title="Permalink to this heading">¶</a></h2>
+<p>Any code contributions are welcome, whether fixing a typo or bug, adding new post-processing/plotting functionality, improving core functionality, or anything that you think should be in the repository.</p>
+<p>Contributions should address an open issue (either a bug or a feature request). If you have found a new bug or have an idea or a new feature, then please open the issue for discussion and link to that issue in your pull request.</p>
+<section id="python-code-guidelines">
+<h3>Python Code Guidelines<a class="headerlink" href="#python-code-guidelines" title="Permalink to this heading">¶</a></h3>
+<p>We aim to follow particular Python coding guidelines to improve the sustainability and positive impact of this community project:</p>
+<ul class="simple">
+<li><p>Follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0020/">The Zen of Python</a>, most importantly “readability counts” when writing Python code.</p></li>
+<li><p>Adhere to the <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">Style Guide for Python Code (PEP8)</a>.</p></li>
+<li><p>Write thorough and effective documentation: Make a docstring for each module, function, class, and method, all following <a class="reference external" href="https://www.python.org/dev/peps/pep-0257/">PEP 257</a> for high-level guidelines and <a class="reference external" href="http://google.github.io/styleguide/pyguide.html">Google Python Style Guidelines</a> for Syntax.</p></li>
+</ul>
+<p>Example function documentation:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">arg1</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">arg2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A concise one-line summary of the function.</span>
+
+<span class="sd">    Additional information and description of the function, if necessary. This</span>
+<span class="sd">    can be as long and verbose as you think is necessary for other users and</span>
+<span class="sd">    developers to understand your functionality.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        arg1 (int): Description of the first argument.</span>
+<span class="sd">        arg2 (float): Description of the second argument. Please use hanging</span>
+<span class="sd">            indentation for multi-line argument descriptions.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        (int) Description of the return value(s)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="mi">42</span>
+</pre></div>
 </div>
+<ul class="simple">
+<li><p>The code should explain the <em>what</em> and <em>how</em>. Add inline comments to explain the <em>why</em>. If an inline comment seems to be needed, consider first making the code more readable. For all comments, follow <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP 8</a>.</p></li>
+<li><p>Test every line of code. Untested code is dead code.</p></li>
+</ul>
+</section>
+<section id="licensing">
+<h3>Licensing<a class="headerlink" href="#licensing" title="Permalink to this heading">¶</a></h3>
+<p>All contributed code will be licensed under <a class="reference external" href="https://github.com/vector-raw-materials/vector-geology/blob/main/LICENSE">a EUPL-1.2 license</a>. If you did not write the code yourself, it is your responsibility to ensure that the existing license is compatible and included in the contributed files. In general, we discourage contributing third-party code.</p>
+</section>
+</section>
 </section>
 
 
@@ -73,22 +123,23 @@ touch!</p>
 <h3>Navigation</h3>
 <p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Contents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="external/external_examples.html">External Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Vector Geology Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="external/external_examples.html">Bayesian Inference Theory</a></li>
 </ul>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/examples/index.html">Geological Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/01_readers/index.html">Readers and Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/02_structural_modeling/index.html">Structural Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/03_forward_engines/index.html">Forward GeoPhysics Engines and Inversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/04_probabilistic_modeling/index.html">Probabilistic Modeling</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="manual.html">Manual</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#issues">Issues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#contributing-new-code">Contributing New Code</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Contents</a></li>
-<li class="toctree-l1"><a class="reference internal" href="external/external_examples.html">External Examples</a></li>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="maintenance.html">Maintenance</a></li>
 </ul>
 
 

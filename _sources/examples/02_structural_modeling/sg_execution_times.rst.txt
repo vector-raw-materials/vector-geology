@@ -1,0 +1,15 @@
+
+:orphan:
+
+.. _sphx_glr_examples_02_structural_modeling_sg_execution_times:
+
+
+Computation times
+=================
+**00:03.922** total execution time for **examples_02_structural_modeling** files:
+
++-------------------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_02_structural_modeling_01_model_1_gempy_step_by_step.py` (``01_model_1_gempy_step_by_step.py``) | 00:03.922 | 0.0 MB |
++-------------------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_02_structural_modeling_02_model_1_gempy.py` (``02_model_1_gempy.py``)                           | 00:00.000 | 0.0 MB |
++-------------------------------------------------------------------------------------------------------------------------+-----------+--------+

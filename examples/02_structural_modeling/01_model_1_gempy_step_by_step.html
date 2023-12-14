@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Constructing Structural Geological Model &#8212; Vector Geology 0.1.dev16+g525c9e2 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/style.css?v=f2a985cd" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=f5ef4c94"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Construct Model 1 with Helper Functions" href="02_model_1_gempy.html" />
+    <link rel="prev" title="Structural Modeling" href="index.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-examples-02-structural-modeling-01-model-1-gempy-step-by-step-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="constructing-structural-geological-model">
+<span id="sphx-glr-examples-02-structural-modeling-01-model-1-gempy-step-by-step-py"></span><h1>Constructing Structural Geological Model<a class="headerlink" href="#constructing-structural-geological-model" title="Permalink to this heading">¶</a></h1>
+<p>This example illustrates how to construct a 3D geological model of a deposit using GemPy.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Import necessary libraries</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+<span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">dotenv_values</span>
+<span class="kn">from</span> <span class="nn">vector_geology.omf_to_gempy</span> <span class="kn">import</span> <span class="n">process_file</span>
+<span class="kn">import</span> <span class="nn">gempy</span> <span class="k">as</span> <span class="nn">gp</span>
+<span class="kn">import</span> <span class="nn">gempy_viewer</span> <span class="k">as</span> <span class="nn">gpv</span>
+<span class="kn">from</span> <span class="nn">vector_geology.model_building_functions</span> <span class="kn">import</span> <span class="n">optimize_nuggets_for_group</span>
+<span class="kn">from</span> <span class="nn">gempy_engine.core.data.kernel_classes.kernel_functions</span> <span class="kn">import</span> <span class="n">AvailableKernelFunctions</span>
+
+<span class="c1"># Start timer to track execution time</span>
+<span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/leguark/subsurface/subsurface/reader/__init__.py:14: UserWarning: Welly or Striplog not installed. No well reader possible.
+  warnings.warn(&quot;Welly or Striplog not installed. No well reader possible.&quot;)
+</pre></div>
+</div>
+<p>Load the data necessary for model construction. This involves processing data from nc files
+and organizing it for use in the geological model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">dotenv_values</span><span class="p">()</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PATH_TO_MODEL_1_Subsurface&quot;</span><span class="p">)</span>
+<span class="n">structural_elements</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">global_extent</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">color_gen</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">ColorsGenerator</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="n">base</span><span class="p">,</span> <span class="n">ext</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.nc&#39;</span><span class="p">:</span>
+        <span class="n">structural_element</span><span class="p">,</span> <span class="n">global_extent</span> <span class="o">=</span> <span class="n">process_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">),</span> <span class="n">global_extent</span><span class="p">,</span> <span class="n">color_gen</span><span class="p">)</span>
+        <span class="n">structural_elements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">structural_element</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="setting-up-gempy-model">
+<h1>Setting Up GemPy Model<a class="headerlink" href="#setting-up-gempy-model" title="Permalink to this heading">¶</a></h1>
+<p>Configure the GemPy model object, including defining structural groups and configuring their properties.
+This is a crucial step in setting up the structural framework of the geological model.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define structural groups and their relationships</span>
+<span class="n">structural_group_red</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StructuralGroup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Red&quot;</span><span class="p">,</span>
+    <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="n">structural_elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">]],</span>
+    <span class="n">structural_relation</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StackRelationType</span><span class="o">.</span><span class="n">ERODE</span>
+<span class="p">)</span>
+<span class="n">structural_group_green</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StructuralGroup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Green&quot;</span><span class="p">,</span>
+    <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="n">structural_elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">5</span><span class="p">]],</span>
+    <span class="n">structural_relation</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StackRelationType</span><span class="o">.</span><span class="n">ERODE</span>
+<span class="p">)</span>
+<span class="n">structural_group_blue</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StructuralGroup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Blue&quot;</span><span class="p">,</span>
+    <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="n">structural_elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]],</span>
+    <span class="n">structural_relation</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StackRelationType</span><span class="o">.</span><span class="n">ERODE</span>
+<span class="p">)</span>
+<span class="n">structural_group_intrusion</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StructuralGroup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Intrusion&quot;</span><span class="p">,</span>
+    <span class="n">elements</span><span class="o">=</span><span class="p">[</span><span class="n">structural_elements</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+    <span class="n">structural_relation</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StackRelationType</span><span class="o">.</span><span class="n">ERODE</span>
+<span class="p">)</span>
+
+<span class="c1"># Combine structural groups into a frame</span>
+<span class="n">structural_groups</span> <span class="o">=</span> <span class="p">[</span><span class="n">structural_group_intrusion</span><span class="p">,</span> <span class="n">structural_group_green</span><span class="p">,</span> <span class="n">structural_group_blue</span><span class="p">,</span> <span class="n">structural_group_red</span><span class="p">]</span>
+<span class="n">structural_frame</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StructuralFrame</span><span class="p">(</span>
+    <span class="n">structural_groups</span><span class="o">=</span><span class="n">structural_groups</span><span class="p">[</span><span class="mi">2</span><span class="p">:],</span>
+    <span class="n">color_gen</span><span class="o">=</span><span class="n">color_gen</span>
+<span class="p">)</span>
+
+<span class="c1"># Create the GeoModel object</span>
+<span class="n">geo_model</span><span class="p">:</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">GeoModel</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">create_geomodel</span><span class="p">(</span>
+    <span class="n">project_name</span><span class="o">=</span><span class="s1">&#39;Tutorial_ch1_1_Basics&#39;</span><span class="p">,</span>
+    <span class="n">extent</span><span class="o">=</span><span class="n">global_extent</span><span class="p">,</span>
+    <span class="n">resolution</span><span class="o">=</span><span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+    <span class="n">refinement</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+    <span class="n">structural_frame</span><span class="o">=</span><span class="n">structural_frame</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Incorporate topography into the model using a dataset in nc format. This adds realism to the model
+by including surface variations.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span>
+
+<a href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="xarray.core.dataset.Dataset" class="sphx-glr-backref-module-xarray-core-dataset sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">dataset</span></a><span class="p">:</span> <a href="https://docs.xarray.dev/en/stable/generated/xarray.Dataset.html#xarray.Dataset" title="xarray.core.dataset.Dataset" class="sphx-glr-backref-module-xarray-core-dataset sphx-glr-backref-type-py-class"><span class="n">xr</span><span class="o">.</span><span class="n">Dataset</span></a> <span class="o">=</span> <a href="https://docs.xarray.dev/en/stable/generated/xarray.open_dataset.html#xarray.open_dataset" title="xarray.open_dataset" class="sphx-glr-backref-module-xarray sphx-glr-backref-type-py-function"><span class="n">xr</span><span class="o">.</span><span class="n">open_dataset</span></a><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;Topography.nc&quot;</span><span class="p">))</span>
+<span class="n">gp</span><span class="o">.</span><span class="n">set_topography_from_arrays</span><span class="p">(</span>
+    <span class="n">grid</span><span class="o">=</span><span class="n">geo_model</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span>
+    <span class="n">xyz_vertices</span><span class="o">=</span><a href="https://docs.xarray.dev/en/stable/generated/xarray.DataArray.values.html#xarray.DataArray.values" title="xarray.DataArray.values" class="sphx-glr-backref-module-xarray sphx-glr-backref-type-py-property"><span class="n">dataset</span><span class="o">.</span><span class="n">vertex</span><span class="o">.</span><span class="n">values</span></a>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Active grids: [&#39;regular&#39; &#39;topography&#39;]
+
+&lt;gempy.core.data.grid_modules.topography.Topography object at 0x7f1609c83e20&gt;
+</pre></div>
+</div>
+</section>
+<section id="optimizing-nuggets">
+<h1>Optimizing Nuggets<a class="headerlink" href="#optimizing-nuggets" title="Permalink to this heading">¶</a></h1>
+<p>Nuggets add a small random noise to the data to account for discrepancies in complex geometries.
+Here, we optimize the nugget value to balance between overfitting and underfitting the data.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">TRIGGER_OPTIMIZE_NUGGETS</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">APPLY_OPTIMIZED_NUGGETS</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">if</span> <span class="n">TRIGGER_OPTIMIZE_NUGGETS</span><span class="p">:</span>
+
+    <span class="c1"># Optimization process for different structural groups</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">kernel_options</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="mf">0.7</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">kernel_options</span><span class="o">.</span><span class="n">c_o</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">optimize_nuggets_for_group</span><span class="p">(</span>
+        <span class="n">geo_model</span><span class="o">=</span><span class="n">geo_model</span><span class="p">,</span>
+        <span class="n">structural_group</span><span class="o">=</span><span class="n">structural_group_red</span><span class="p">,</span>
+        <span class="n">plot_evaluation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">plot_result</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">kernel_options</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">kernel_options</span><span class="o">.</span><span class="n">c_o</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">optimize_nuggets_for_group</span><span class="p">(</span>
+        <span class="n">geo_model</span><span class="o">=</span><span class="n">geo_model</span><span class="p">,</span>
+        <span class="n">structural_group</span><span class="o">=</span><span class="n">structural_group_blue</span><span class="p">,</span>
+        <span class="n">plot_evaluation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">plot_result</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
+    <span class="n">optimize_nuggets_for_group</span><span class="p">(</span>
+        <span class="n">geo_model</span><span class="o">=</span><span class="n">geo_model</span><span class="p">,</span>
+        <span class="n">structural_group</span><span class="o">=</span><span class="n">structural_group_green</span><span class="p">,</span>
+        <span class="n">plot_evaluation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="n">plot_result</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+<span class="k">if</span> <span class="n">APPLY_OPTIMIZED_NUGGETS</span><span class="p">:</span>
+    <span class="c1"># Apply optimized nuggets to the model</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loaded_nuggets_red</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.load.html#numpy.load" title="numpy.load" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s2">&quot;../temp/nuggets_Red.npy&quot;</span><span class="p">)</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loaded_nuggets_green</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.load.html#numpy.load" title="numpy.load" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s2">&quot;../temp/nuggets_Green.npy&quot;</span><span class="p">)</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loaded_nuggets_blue</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.load.html#numpy.load" title="numpy.load" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">load</span></a><span class="p">(</span><span class="s2">&quot;../temp/nuggets_Blue.npy&quot;</span><span class="p">)</span>
+    <span class="n">gp</span><span class="o">.</span><span class="n">modify_surface_points</span><span class="p">(</span>
+        <span class="n">geo_model</span><span class="p">,</span>
+        <span class="nb">slice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">elements_names</span><span class="o">=</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">structural_frame</span><span class="o">.</span><span class="n">get_group_by_name</span><span class="p">(</span><span class="s1">&#39;Red&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">elements</span><span class="p">],</span>
+        <span class="n">nugget</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loaded_nuggets_red</span></a>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="kc">True</span><span class="p">:</span>  <span class="c1"># Conditional application of nuggets</span>
+        <span class="n">gp</span><span class="o">.</span><span class="n">modify_surface_points</span><span class="p">(</span>
+            <span class="n">geo_model</span><span class="p">,</span>
+            <span class="nb">slice</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">elements_names</span><span class="o">=</span><span class="p">[</span><span class="n">element</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">element</span> <span class="ow">in</span> <span class="n">geo_model</span><span class="o">.</span><span class="n">structural_frame</span><span class="o">.</span><span class="n">get_group_by_name</span><span class="p">(</span><span class="s1">&#39;Blue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">elements</span><span class="p">],</span>
+            <span class="n">nugget</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">loaded_nuggets_blue</span></a>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<p>Compute the geological model. This involves setting interpolation options and executing the computation
+to generate the 3D geological structure.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">mesh_extraction</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">kernel_options</span><span class="o">.</span><span class="n">range</span> <span class="o">=</span> <span class="mf">.7</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">kernel_options</span><span class="o">.</span><span class="n">c_o</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">kernel_options</span><span class="o">.</span><span class="n">compute_condition_number</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">interpolation_options</span><span class="o">.</span><span class="n">kernel_options</span><span class="o">.</span><span class="n">kernel_function</span> <span class="o">=</span> <span class="n">AvailableKernelFunctions</span><span class="o">.</span><span class="n">cubic</span>
+
+<span class="c1"># Update color and transformation settings for visual distinction</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">structural_frame</span><span class="o">.</span><span class="n">get_element_by_name</span><span class="p">(</span><span class="s2">&quot;KKR&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#A46283&quot;</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">structural_frame</span><span class="o">.</span><span class="n">get_element_by_name</span><span class="p">(</span><span class="s2">&quot;LGR&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#6394A4&quot;</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">structural_frame</span><span class="o">.</span><span class="n">get_element_by_name</span><span class="p">(</span><span class="s2">&quot;WAL&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#72A473&quot;</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">structural_frame</span><span class="o">.</span><span class="n">get_element_by_name</span><span class="p">(</span><span class="s2">&quot;ABL&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="s2">&quot;#1D3943&quot;</span>
+<span class="n">geo_model</span><span class="o">.</span><span class="n">structural_frame</span><span class="o">.</span><span class="n">basement_color</span> <span class="o">=</span> <span class="s2">&quot;#8B4220&quot;</span>
+
+<span class="n">geo_model</span><span class="o">.</span><span class="n">update_transform</span><span class="p">()</span>
+
+<span class="c1"># Execute the model computation</span>
+<span class="n">gp</span><span class="o">.</span><span class="n">compute_model</span><span class="p">(</span>
+    <span class="n">geo_model</span><span class="p">,</span>
+    <span class="n">engine_config</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">GemPyEngineConfig</span><span class="p">(</span>
+        <span class="n">backend</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">AvailableBackends</span><span class="o">.</span><span class="n">PYTORCH</span><span class="p">,</span>
+        <span class="n">dtype</span><span class="o">=</span><span class="s2">&quot;float64&quot;</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Setting Backend To: AvailableBackends.PYTORCH
+/home/leguark/gempy/gempy/core/data/geo_model.py:183: UserWarning: You are using refinement and passing a regular grid. The resolution of the regular grid will be overwritten
+  warnings.warn(
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<b>Solutions:</b> 6 Octree Levels, 5 DualContouringMeshes
+</div>
+<br />
+<br /><p>Visualize the constructed geological model in both 2D and 3D formats to assess the structure and layout.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># 2D visualization of the model</span>
+<span class="n">gpv</span><span class="o">.</span><span class="n">plot_2d</span><span class="p">(</span><span class="n">geo_model</span><span class="p">,</span> <span class="n">show_scalar</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_01_model_1_gempy_step_by_step_001.png" srcset="../../_images/sphx_glr_01_model_1_gempy_step_by_step_001.png" alt="Cell Number: mid Direction: y" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f164b5813c0&gt;
+</pre></div>
+</div>
+<p>3D visualization in GemPy viewer</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">gempy_vista</span> <span class="o">=</span> <span class="n">gpv</span><span class="o">.</span><span class="n">plot_3d</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">geo_model</span><span class="p">,</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">kwargs_plot_structured_grid</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;opacity&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_01_model_1_gempy_step_by_step_002.png" srcset="../../_images/sphx_glr_01_model_1_gempy_step_by_step_002.png" alt="01 model 1 gempy step by step" class = "sphx-glr-single-img"/><p>Measure the total time taken to execute the script, providing insights into performance.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">execution_time</span> <span class="o">=</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The function executed in </span><span class="si">{</span><span class="n">execution_time</span><span class="si">}</span><span class="s2"> seconds.&quot;</span><span class="p">)</span>
+
+<span class="c1"># sphinx_gallery_thumbnail_number = -1</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>The function executed in 3.7581591606140137 seconds.
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.922 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-02-structural-modeling-01-model-1-gempy-step-by-step-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/9a11f8f0374b9be93df13a38a958da8a/01_model_1_gempy_step_by_step.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">01_model_1_gempy_step_by_step.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/81038bb04125592c3c65856ab7d33bba/01_model_1_gempy_step_by_step.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">01_model_1_gempy_step_by_step.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/vector-logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">Vector Geology</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Vector Geology Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../external/external_examples.html">Bayesian Inference Theory</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_readers/index.html">Readers and Parsers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Structural Modeling</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Constructing Structural Geological Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#setting-up-gempy-model">Setting Up GemPy Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optimizing-nuggets">Optimizing Nuggets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_1_gempy.html">Construct Model 1 with Helper Functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../03_forward_engines/index.html">Forward GeoPhysics Engines and Inversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_probabilistic_modeling/index.html">Probabilistic Modeling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintenance.html">Maintenance</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023-2023, Vector Geology Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/examples/02_structural_modeling/01_model_1_gempy_step_by_step.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,8 +1,8 @@
 .. _subsurface-manual:
 
-########################
+############################
 vector-geology Documentation
-########################
+############################
 
 :Release: |version|
 :Date: |today|
@@ -15,8 +15,8 @@ vector-geology Documentation
   :start-after: sphinx-inclusion-marker
 
 
-Explore Our Comprehensive Guides
---------------------------------
+Explore Our Guides
+------------------
 .. toctree::
    :maxdepth: 2
    :caption: Galleries
@@ -25,7 +25,6 @@ Explore Our Comprehensive Guides
    external/external_examples
 
 .. include:: examples/index.rst
-
 .. include:: external/external_examples.rst  
 
 
@@ -40,7 +39,7 @@ Optional requirements
 ---------------------
 
 There are many optional requirements, depending on the data format you want to
-read/write. Currently, the ``requierements_opt.txt`` reads like:
+read/write. Currently, the ``requirements_opt.txt`` reads like:
 
 .. include:: ../../requirements_opt.txt
    :literal:
@@ -51,28 +50,18 @@ read/write. Currently, the ``requierements_opt.txt`` reads like:
    :hidden:
    :caption: User Guide
 
-   manual
-   changelog
    contributing
    maintenance
 
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: Galleries
 
-   examples/index
-   external/external_examples
+Acknowledgements
+----------------
 
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: API Reference
+This project has received funding from the European Union‘s Horizon Europe research and innovation programme under grant agreement No  101058483
 
-   code-geological-formats
-   code-interfaces
-   code-reader
-   code-structs
-   code-utils
-   code-viz
-   code-writer
+Funded by the European Union. Views and opinions expressed are however those of the author(s) only and do not necessarily reflect those of the European Union or Horizon Europe research and innovation programme
+
+.. image:: https://raw.githubusercontent.com/vector-raw-materials/vector-geology/main/docs/source/_static/logos/eu_logo.png
+    :width: 50
+    :align: center
+    :alt: EU logo

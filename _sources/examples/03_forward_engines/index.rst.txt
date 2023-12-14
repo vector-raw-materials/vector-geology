@@ -1,0 +1,71 @@
+
+
+.. _sphx_glr_examples_03_forward_engines:
+
+Forward GeoPhysics Engines and Inversion
+========================================
+
+Our tutorials are crafted to guide you through the process of applying geophysical forward modeling and inversion techniques, using advanced tools like `gempy` and `simpeg`. Here’s what you can expect:
+
+- **Geophysical Forward Modeling**: Learn how to transform structural models into geophysical models. These tutorials will show you how to use `gempy` to simulate geophysical responses based on your structural models. Whether you are a beginner or looking to refine your modeling skills, these guides offer comprehensive insights.
+
+- **Classical Inversion Techniques**: Dive into the world of geophysical inversion using the powerful `simpeg` package. We'll demonstrate how to apply classical inversion methods to geophysical data, turning observations into meaningful geological insights.
+
+- **Current Implementations**: As of now, we have explored two areas:
+
+  - **Bouguer Gravity**: Understand the principles and application of Bouguer gravity in geophysical modeling.
+
+  - **Gravity Gradiometry**: Explore the use of gravity gradiometry in deriving detailed information about subsurface structures.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="We use the PGI module within SimPEG to invert gravity gradiometry data on a Tree Mesh. This tut...">
+
+.. only:: html
+
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_01_gravity_gradiometry_inversion_pgi_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_03_forward_engines_01_gravity_gradiometry_inversion_pgi.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Inversion of Gravity Gradiometry Data on a Tree Mesh</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This script demonstrates the calculation of forward gravity for model 1. It utilizes libraries ...">
+
+.. only:: html
+
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_02_model_1_gempy_fw_gravity_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_03_forward_engines_02_model_1_gempy_fw_gravity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Model 1 Forward Gravity</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/03_forward_engines/01_gravity_gradiometry_inversion_pgi
+   /examples/03_forward_engines/02_model_1_gempy_fw_gravity
+

@@ -1,10 +1,46 @@
 :orphan:
 
-Contents
-========
+Vector Geology Examples
+-----------------------
 
-Here you will find a selection of examples showing what can you do and how
-you can do it in Vector.
+Welcome to the Vector Geology Examples section. This space is dedicated to showcasing the diverse capabilities of the 
+Vector platform. Here, we illustrate not only what you can achieve with Vector but also guide you on how to implement 
+these techniques effectively. Our examples are categorized into distinct areas:
+
+- **Readers and Parsers**: Understand how to interpret and utilize various data formats.
+- **Structural Modeling**: Explore methodologies for constructing geological models.
+- **Geophysical Forward Engines**: Dive into the simulation of geophysical processes.
+- **Probabilistic Modeling**: Grasp the nuances of probabilistic approaches in geology.
+
+Each tutorial is designed to provide a practical understanding of Vector's functionalities. While our goal is not to 
+cover every feature exhaustively, we aim to offer a comprehensive overview, demonstrating the potential applications 
+and methodologies. As each geological setting may require unique approaches, we encourage you to delve into the 
+repository's documentation and codebase to uncover the most suitable tools and techniques for your specific needs.
+
+🌱 **A Living Gallery**: We actively encourage contributions and suggestions. If you have an application, a novel use case, or improvements to existing examples, we welcome your input. This collaborative approach ensures that the gallery not only stays current with the latest developments but also resonates with the needs and discoveries of our users.
+
+So, whether you're here to learn, explore, or contribute, the Vector Geology Examples gallery is your starting point for a journey into the depths of geophysical data processing and analysis.
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    </div>
+
+Readers and Parsers
+===================
+
+Effective data analysis in geophysics begins with efficient data handling. This section is dedicated to demonstrating the use of specialized libraries to read and parse various data formats commonly encountered in the Vector Geology project. Here's what you can expect:
+
+- **Format Recognition**: Learn how to identify and handle different data formats used in geophysical and remote sensing research.
+
+- **Library Integration**: Understand how to leverage specific libraries to read these formats. We cover a range of tools, emphasizing flexibility and ease of use.
+
+- **Data Conversion**: Discover methods to convert raw data into xarray structures, a powerful tool for handling multidimensional datasets. This step is crucial for streamlining post-processing activities.
 
 
 
@@ -15,13 +51,89 @@ you can do it in Vector.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF (Open Mining Format) project file in Python, visu...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_01_read_OMF_sites_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_01_readers_01_read_OMF_sites.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading OMF Project Into Python</div>
     </div>
 
-Geological Models
------------------
 
-Here you will find a selection of examples showing what can you do and how
-you can do it in Vector.
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF (Open Mining Format) project file and convert it ...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_02_model_1_OMF_to_subsurface_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_01_readers_02_model_1_OMF_to_subsurface.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading Model 1 OMF Project into Subsurface</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF project file and export it for use with Subsurfac...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_03_model_2_OMF_to_subsurface_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_01_readers_03_model_2_OMF_to_subsurface.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading OMF project and exporting it to Subsurface: Example 1</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to read gravity data from the Stonepark project and visualize it. ...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_04_model_1_read_gravity_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_01_readers_04_model_1_read_gravity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Gravity Data Visualization</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+Structural Modeling
+===================
+
+
+Delve into the world of 3D subsurface modeling with our Structural Modeling tutorials. In this section, we focus on harnessing the capabilities of `gempy`, a powerful tool developed by a partner within the Vector consortium. Here’s what these tutorials offer:
+
+- **3D Subsurface Modeling**: Learn the intricacies of constructing detailed 3D geological models. We guide you through the process of transforming raw geophysical data into a comprehensive three-dimensional representation of the subsurface.
+
+- **Using gempy**: Discover how to effectively use `gempy` for your modeling needs. Whether you are new to this tool or looking to refine your skills, our tutorials are designed to cater to a range of expertise levels.
+
+- **From Data to Insights**: Our goal is to empower you with the knowledge to not just create models, but also to extract meaningful insights from them. These tutorials bridge the gap between raw data and the decision-making processes in geology.
+
+Prepare to enhance your understanding and skills in geological modeling with a focus on practical, real-world application. By the end of this section, you will be equipped to construct and interpret complex structural models, a crucial skill in the field of geophysical research.
 
 
 
@@ -32,69 +144,153 @@ you can do it in Vector.
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF project file in COLLINSTOWN.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to construct a 3D geological model of a deposit using GemPy.">
 
 .. only:: html
 
-  .. image:: /examples/examples/images/thumb/sphx_glr_collinstown_OMF_to_subsurface_thumb.png
+  .. image:: /examples/02_structural_modeling/images/thumb/sphx_glr_01_model_1_gempy_step_by_step_thumb.png
     :alt:
 
-  :ref:`sphx_glr_examples_examples_collinstown_OMF_to_subsurface.py`
+  :ref:`sphx_glr_examples_02_structural_modeling_01_model_1_gempy_step_by_step.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Reading COLLINSTOWN OMF project</div>
+      <div class="sphx-glr-thumbnail-title">Constructing Structural Geological Model</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF project file in COLLINSTOWN.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to construct a 3D geological model of the Model 1 deposit using G...">
 
 .. only:: html
 
-  .. image:: /examples/examples/images/thumb/sphx_glr_read_OMF_sites_thumb.png
+  .. image:: /examples/02_structural_modeling/images/thumb/sphx_glr_02_model_1_gempy_thumb.png
     :alt:
 
-  :ref:`sphx_glr_examples_examples_read_OMF_sites.py`
+  :ref:`sphx_glr_examples_02_structural_modeling_02_model_1_gempy.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Reading COLLINSTOWN OMF project</div>
+      <div class="sphx-glr-thumbnail-title">Construct Model 1 with Helper Functions</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF project file in COLLINSTOWN.">
+    </div>
 
-.. only:: html
+Forward GeoPhysics Engines and Inversion
+========================================
 
-  .. image:: /examples/examples/images/thumb/sphx_glr_stonepark_OMF_to_subsurface_thumb.png
-    :alt:
+Our tutorials are crafted to guide you through the process of applying geophysical forward modeling and inversion techniques, using advanced tools like `gempy` and `simpeg`. Here’s what you can expect:
 
-  :ref:`sphx_glr_examples_examples_stonepark_OMF_to_subsurface.py`
+- **Geophysical Forward Modeling**: Learn how to transform structural models into geophysical models. These tutorials will show you how to use `gempy` to simulate geophysical responses based on your structural models. Whether you are a beginner or looking to refine your modeling skills, these guides offer comprehensive insights.
+
+- **Classical Inversion Techniques**: Dive into the world of geophysical inversion using the powerful `simpeg` package. We'll demonstrate how to apply classical inversion methods to geophysical data, turning observations into meaningful geological insights.
+
+- **Current Implementations**: As of now, we have explored two areas:
+
+  - **Bouguer Gravity**: Understand the principles and application of Bouguer gravity in geophysical modeling.
+
+  - **Gravity Gradiometry**: Explore the use of gravity gradiometry in deriving detailed information about subsurface structures.
+
+
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Reading Stonepark OMF project</div>
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="We use the PGI module within SimPEG to invert gravity gradiometry data on a Tree Mesh. This tut...">
+
+.. only:: html
+
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_01_gravity_gradiometry_inversion_pgi_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_03_forward_engines_01_gravity_gradiometry_inversion_pgi.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Inversion of Gravity Gradiometry Data on a Tree Mesh</div>
     </div>
 
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip=" Construct a 3D geological model of the Stonepark deposit using GemPy.">
+    <div class="sphx-glr-thumbcontainer" tooltip="This script demonstrates the calculation of forward gravity for model 1. It utilizes libraries ...">
 
 .. only:: html
 
-  .. image:: /examples/examples/images/thumb/sphx_glr_stonepark_gempy_thumb.png
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_02_model_1_gempy_fw_gravity_thumb.png
     :alt:
 
-  :ref:`sphx_glr_examples_examples_stonepark_gempy.py`
+  :ref:`sphx_glr_examples_03_forward_engines_02_model_1_gempy_fw_gravity.py`
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Stonepark Geological Model</div>
+      <div class="sphx-glr-thumbnail-title">Model 1 Forward Gravity</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+Probabilistic Modeling
+======================
+
+In the dynamic and often uncertain realm of subsurface exploration, probabilistic modeling emerges as a key tool. This section delves into the application of Bayesian Statistics and probabilistic approaches to address the inherent uncertainties in subsurface data. Here’s what you’ll learn:
+
+- **Embracing Uncertainty**: Gain an understanding of how to quantify and incorporate uncertainty in geological models. We focus on aleatoric uncertainty, which represents the inherent variability in subsurface data.
+
+- **Bayesian Methods with Pyro**: Discover how to apply Bayesian statistical methods using Pyro, a powerful probabilistic programming framework. These tutorials will guide you through the process of encoding uncertainty in your models, offering a robust way to handle complex geological data.
+
+- **Integrating Structural Uncertainty**: Learn to integrate structural uncertainty into your models using GemPy. This approach enhances the realism and reliability of your geological interpretations.
+
+- **Probabilistic Inversions**: Explore how geophysical data can be used as observational constraints in probabilistic inversions. This technique allows for a more comprehensive understanding of subsurface structures by incorporating both geophysical measurements and geological knowledge.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Complex probabilistic model ---------------------------">
+
+.. only:: html
+
+  .. image:: /examples/04_probabilistic_modeling/images/thumb/sphx_glr_01_thickness_problem_gempy_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_04_probabilistic_modeling_01_thickness_problem_gempy.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2 - Including GemPy</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates a probabilistic inversion of a geological model using Bayesian method...">
+
+.. only:: html
+
+  .. image:: /examples/04_probabilistic_modeling/images/thumb/sphx_glr_02_model_1_bayesian_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_04_probabilistic_modeling_02_model_1_bayesian.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Probabilistic Inversion Example: Geological Model</div>
     </div>
 
 
@@ -108,7 +304,10 @@ you can do it in Vector.
    :includehidden:
 
 
-   /examples/examples/index.rst
+   /examples/01_readers/index.rst
+   /examples/02_structural_modeling/index.rst
+   /examples/03_forward_engines/index.rst
+   /examples/04_probabilistic_modeling/index.rst
 
 
 

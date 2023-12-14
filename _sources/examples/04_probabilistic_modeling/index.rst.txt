@@ -1,0 +1,69 @@
+
+
+.. _sphx_glr_examples_04_probabilistic_modeling:
+
+Probabilistic Modeling
+======================
+
+In the dynamic and often uncertain realm of subsurface exploration, probabilistic modeling emerges as a key tool. This section delves into the application of Bayesian Statistics and probabilistic approaches to address the inherent uncertainties in subsurface data. Here’s what you’ll learn:
+
+- **Embracing Uncertainty**: Gain an understanding of how to quantify and incorporate uncertainty in geological models. We focus on aleatoric uncertainty, which represents the inherent variability in subsurface data.
+
+- **Bayesian Methods with Pyro**: Discover how to apply Bayesian statistical methods using Pyro, a powerful probabilistic programming framework. These tutorials will guide you through the process of encoding uncertainty in your models, offering a robust way to handle complex geological data.
+
+- **Integrating Structural Uncertainty**: Learn to integrate structural uncertainty into your models using GemPy. This approach enhances the realism and reliability of your geological interpretations.
+
+- **Probabilistic Inversions**: Explore how geophysical data can be used as observational constraints in probabilistic inversions. This technique allows for a more comprehensive understanding of subsurface structures by incorporating both geophysical measurements and geological knowledge.
+
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Complex probabilistic model ---------------------------">
+
+.. only:: html
+
+  .. image:: /examples/04_probabilistic_modeling/images/thumb/sphx_glr_01_thickness_problem_gempy_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_04_probabilistic_modeling_01_thickness_problem_gempy.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2 - Including GemPy</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates a probabilistic inversion of a geological model using Bayesian method...">
+
+.. only:: html
+
+  .. image:: /examples/04_probabilistic_modeling/images/thumb/sphx_glr_02_model_1_bayesian_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_04_probabilistic_modeling_02_model_1_bayesian.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Probabilistic Inversion Example: Geological Model</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /examples/04_probabilistic_modeling/01_thickness_problem_gempy
+   /examples/04_probabilistic_modeling/02_model_1_bayesian
+
