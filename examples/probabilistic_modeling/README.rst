@@ -1,4 +1,0 @@
-Probabilistic Modeling
-----------------------
-
-Foo bar 

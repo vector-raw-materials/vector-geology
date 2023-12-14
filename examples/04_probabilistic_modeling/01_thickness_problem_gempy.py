@@ -65,7 +65,8 @@ def plot_geo_setting_well(geo_model):
 geo_model = gp.create_geomodel(
     project_name='Wells',
     extent=[0, 12000, -500, 500, 0, 4000],
-    refinement=3,
+    resolution=[100, 2, 100],
+    refinement=1,
     importer_helper=gp.data.ImporterHelper(
         path_to_orientations=data_path + "/data/2-layers/2-layers_orientations.csv",
         path_to_surface_points=data_path + "/data/2-layers/2-layers_surface_points.csv"

@@ -1,51 +1,42 @@
 """
-Construct Model 1 with helper functions
+Construct Model 1 with Helper Functions
 ---------------------------------------
 
-
-Construct a 3D geological model of the model 1 deposit using GemPy and a bunch of custom APIs to reduce the amount 
-of necessary code.
-
+This example demonstrates how to construct a 3D geological model of the Model 1 deposit using GemPy. 
+It leverages custom APIs to streamline the modeling process.
 
 """
 
 import time
-
-import xarray as xr
-
-from vector_geology.model_1_builder import initialize_geo_model
-
-# %%
-# Read nc from subsurface
-
-
-# %%
 import os
+import xarray as xr
 from dotenv import dotenv_values
-
-from vector_geology.omf_to_gempy import process_file
 import gempy as gp
 import gempy_viewer as gpv
 
-start_time = time.time()  # start timer
+from vector_geology.model_1_builder import initialize_geo_model
+from vector_geology.omf_to_gempy import process_file
+
+# Start the timer
+start_time = time.time()
+
+# Load environment variables and path configurations
 config = dotenv_values()
 path = config.get("PATH_TO_MODEL_1_Subsurface")
+
+# Initialize lists to store data
 structural_elements = []
-accumulated_roi = []
 global_extent = None
 color_gen = gp.data.ColorsGenerator()
 
-for e, filename in enumerate(os.listdir(path)):
+# Process each .nc file in the specified directory
+for filename in os.listdir(path):
     base, ext = os.path.splitext(filename)
     if ext == '.nc':
         structural_element, global_extent = process_file(os.path.join(path, filename), global_extent, color_gen)
         structural_elements.append(structural_element)
-# %%
-# Element 1 is an intrusion
 
-#  %%
-# Setup gempy object
-
+# Initialize the GemPy model
 geo_model = initialize_geo_model(
     structural_elements=structural_elements,
     extent=global_extent,
@@ -53,25 +44,24 @@ geo_model = initialize_geo_model(
     load_nuggets=True
 )
 
-# %%
+# Display the initialized model
+print(geo_model)
 
-geo_model
-
-# %% 
+# Modify the interpolation options
 interpolation_options = geo_model.interpolation_options
-
 interpolation_options.mesh_extraction = True
-interpolation_options.kernel_options.range = .7
+interpolation_options.kernel_options.range = 0.7
 interpolation_options.kernel_options.c_o = 3
 interpolation_options.kernel_options.compute_condition_number = True
 
-# %% 
+# Modify surface points
 gp.modify_surface_points(
     geo_model,
     slice=0,
-    X = geo_model.surface_points.data[0][0] + 130,
+    X=geo_model.surface_points.data[0][0] + 130,
 )
 
+# Compute the model
 before_compute_time = time.time()
 gp.compute_model(
     geo_model,
@@ -81,17 +71,21 @@ gp.compute_model(
     ),
 )
 
+# Plot 2D model visualization
 gpv.plot_2d(geo_model, show_scalar=False)
 
+# Calculate execution times
 end_time = time.time()
 prep_time = before_compute_time - start_time
 compute_time = end_time - before_compute_time
 execution_time = end_time - start_time
 
-print(f"The function executed in {prep_time} seconds.")
-print(f"The function executed in {compute_time} seconds.")
-print(f"The function executed in {execution_time} seconds.")
+# Print execution times
+print(f"Preparation time: {prep_time} seconds.")
+print(f"Computation time: {compute_time} seconds.")
+print(f"Total execution time: {execution_time} seconds.")
 
+# 3D visualization with gempy_viewer
 gempy_vista = gpv.plot_3d(
     model=geo_model,
     show=True,

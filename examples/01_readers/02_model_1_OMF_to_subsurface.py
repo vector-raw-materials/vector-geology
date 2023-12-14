@@ -1,48 +1,45 @@
+
 """
-Reading Model 1 OMF project into Subsurface
+Reading Model 1 OMF Project into Subsurface
 ===========================================
 
-This tutorial demonstrates how to read an OMF project file and export it in subsurface.
-
+This tutorial demonstrates how to read an OMF (Open Mining Format) project file and convert it into a Subsurface format for enhanced analysis and visualization.
 """
-
 # %%
-# Required Libraries:
-# ~~~~~~~~~~~~~~~~~~~
-#
-# Import the required libraries. 
+# Importing Required Libraries
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Begin by importing the necessary libraries for this tutorial.
 
 import pandas as pd
 import pyvista
 import xarray
 
 import subsurface
-from subsurface import TriSurf
-from subsurface.visualization import to_pyvista_mesh, init_plotter
+from subsurface import TriSurf, LineSet
+from subsurface.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
 from vector_geology.utils import load_omf
 
 # %%
-# Load OMF Project:
-# ~~~~~~~~~~~~~~~~~
-#
-# Load the OMF project using a fixture.
+# Loading the OMF Project
+# ~~~~~~~~~~~~~~~~~~~~~~~
+# Load the OMF project file using a custom function.
 
 omf = load_omf("PATH_TO_MODEL_1")
 
 # %%
-# Read OMF with PyVista:
-# ~~~~~~~~~~~~~~~~~~~~~~
-#
-# Visualize the OMF project with PyVista.
+# Visualizing the OMF Project with PyVista
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Next, we use PyVista for an initial visualization of the OMF project.
 
+# Replace `False` with a condition or toggle to enable plotting.
 if False:
     omf.plot(multi_colors=True, show_edges=True, notebook=False)
 
 # %%
-# Convert OMF to Unstructured Single Block:
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#
-# Convert the loaded OMF project into an unstructured single block for further analysis.
+# Visualizing Unstructured Data with Subsurface and PyVista
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Use Subsurface and PyVista to visualize the unstructured data.
+
 
 meshes_far = []
 
