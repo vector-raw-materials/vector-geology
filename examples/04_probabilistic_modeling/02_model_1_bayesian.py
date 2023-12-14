@@ -25,6 +25,7 @@ from vector_geology.bayesian_helpers import calculate_scale_shift, gaussian_kern
 from vector_geology.model_1_builder import initialize_geo_model, setup_geophysics
 from vector_geology.omf_to_gempy import process_file
 from vector_geology.utils import extend_box
+import gempy_engine
 from gempy_engine.core.backend_tensor import BackendTensor
 
 # Start timer
