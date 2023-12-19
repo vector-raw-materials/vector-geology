@@ -16,7 +16,15 @@ The design of this toolbox emphasizes flexibility and extensibility, catering to
 
 ## Toolbox Overview
 
-To data, the toolbox is divided into four main sections: readers and parsers, structural modeling, forward geopysics and inversion; and probabilistic modeling.
+To data, the toolbox is divided into four main sections: readers and parsers, structural modeling, forward geophysics and inversion; and probabilistic modeling.
+
+### Readers and Parsers
+
+### Structural Modeling
+
+### Forward Geophysics and Inversion
+
+### Probabilistic Modeling
 
 TODO: Explain a bit the whole concept
 
@@ -24,7 +32,10 @@ TODO: Explain a bit the whole concept
 
 ## Work Description
 
-### Vector Geology
+The work done for this deliverable is framed within Task 4.1: [TODO: Add exact name]. The bulk of work for ths task is being divided into 
+multiple code bases and repositories. The main repositories are:
+
+### Vector Geology (Deliverable [TODO: Add deliverable number])
 - [ ] Use of simpeg
 
 [TODO: Thursday]
@@ -62,11 +73,10 @@ Furthermore, we can link external sphinx gallery examples in order to integrate 
 -
   GemPy is a Python-based open-source library for 3D geological modeling. It is designed to facilitate the construction of complex geological models, including the generation of 3D grids, the interpolation of geological contacts and faults, and the simulation of geological processes. GemPy was developed mostly as a PhD student project and was in need of a quite major overhaul to make it robust and reliable in production environments. The Vector project provided the opportunity to do this and hence a lot of the work necessary to produce this deliverable has been done by refactoring and updating the GemPy code base. The main changes are:
 
-- [ ] TODO: **What is gempy exactly** Add small comment about gempy interpolation Gaussian Process and Kriging differences. Add concept of surface points and orientations
+- [ ] [TODO]: **What is gempy exactly** Add small comment about gempy interpolation Gaussian Process and Kriging differences. Add concept of surface points and orientations
 
 
-#### Updating GemPy
-
+Now we will go through the main changes in the GemPy code base:
 
 ##### Tensor Backends
 
@@ -86,13 +96,10 @@ The original GemPy code base was designed in a stateful, object-oriented way. Th
 - TODO: Add more?
 
 
-##### Nugget effect optimization
+##### Activation function
 
-Nugget effect is a parameter that defines how much variance have a given parameter on an interpolation. In practice this value controls how "exact" (this is obviously this is an oximoron, in not mathematical terms would be better expressed as how close) the final interpolation has to honor each parameter. These parameters can be defined independently (TODO: Cite Jan's paper) but always the question has been how tune the nugget effects automatically. Here, levearing PyTorch framewor for optimization, ADAM (TODO: Add reference) we have optimized the nugget effects with respect the conditional number of the covariance matrix of the Gaussian Process. This process have been used in some of the examples yielding good results. In practice, areas of the model where the data was specially uncompatible with the rest of parameters were satisfactrily identified and the nugget effect was increased in those areas. This is a very promising approach that we are still exploring. (TODO: Link to the example).
+[TODO:]
 
-This procedure is essential for probabilistic inversion since we need the model to behave as close to linear as possible. This is specially important for the inversion of geophysical data since the forward modeling is linear and hence the inversion is much more stable if the model is also linear. By minimizing the condition number tof the covariance matrix we are able to increase the local linearity of the model.
-
--------------------------------------------------------------
 ##### Nugget Effect Optimization
 
 The nugget effect is a critical parameter in geostatistics, influencing the variance of a given parameter during interpolation. In simpler terms, it determines how closely the interpolation honors each data point. This section explores the optimization of the nugget effect, leveraging advanced computational techniques.
@@ -151,10 +158,7 @@ Each model within GemPy Probability is tailored to specific scientific inquiries
 
 [TODO: Thursday]
 
-## Outlook
-[TODO: Friday]
-
-## Conclusion
+## Outlook and Conclusion
 [TODO: Friday]
 
 ## References
