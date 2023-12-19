@@ -20,12 +20,39 @@ To data, the toolbox is divided into four main sections: readers and parsers, st
 
 TODO: Explain a bit the whole concept
 
+([TODO: Tomorrow])
+
 ## Work Description
 
 ### Vector Geology
 - [ ] Use of simpeg
--
+
+[TODO: Thursday]
+
+Vector Geology is a collaborative platform integrating a suite of geophysical and remote sensing data processing tools developed by the `Vector consortium <https://vectorproject.eu//>`_ . This repository serves as the central hub for accessing, understanding, and utilizing a range of software packages designed for geological exploration and research. Its key features include:
+
+* **Integrated Toolsets**: Collection of diverse code packages developed and maintained by Vector consortium members, offering a wide range of functionalities for geophysical data processing.
+
+* **Comprehensive Tutorials**: Step-by-step guides demonstrating typical workflows, from data input to advanced inversion techniques.
+
+* **Extensible Framework**: Designed to accommodate a variety of datasets and scientific inquiries, with the flexibility to adapt and expand to meet specific project needs.
+
+* **Collaborative Development**: Opportunities for users to contribute, enhancing the repository with their expertise and feedback.
+
+In the context of geophysical inversion, here we are including several workflows defined by different partners of the Vector consortium. These workflows are meant to be used as a starting point for the inversion of geophysical data. They are not meant to be used as a black box but rather as a starting point for the inversion of geophysical data. To date this workflows include examples done with `simpeg` and `gempy`. 
+
+`simpeg` is a mature library for geolphysical inversion (TODO: cite) developed primarily by the `UBC geophysical inversion group < and hence here we show the integration of this library with the rest of the Vector tools and the use of this library for the inversion of geophysical data.
+
+In the case of `gempy`since it is primarily developed by parters in the consoritum, we have included more details about the intrinsics of the library and how it can be used for the inversion of geophysical data. Furthermore, the integration with other vector libraries is a bit more advanced.
+
 #### Documentation
+
+For the documentation of the Vector Geology repository we have used `sphinx` and `sphinx-gallery`. Sphinx is a documentation generator that allows to write documentation in reStructuredText (reST) and generate HTML, PDF, EPUB, etc. files. Sphinx-gallery is a Sphinx extension that allows to automatically generate an example gallery from a project's documentation. The examples are written in Python and can be run directly from the documentation. The documentation is hosted on `readthedocs <https://vector-geology.readthedocs.io/en/latest/>`_.
+
+By generating the documentation from the code, we ensure that the documentation is up to date and make it easier to update the examples and tutorials as the partners generate content. 
+
+Furthermore, we can link external sphinx gallery examples in order to integrate the documentation of the different libraries. For example, we have linked the `gempy_probability` examples [TODO: Add link]. This flexibility is important in this type of projects since we cannot centralize all the developments of so many partners in a single repository.
+
 
 ### GemPy
 - [ ] Torch
@@ -65,33 +92,69 @@ Nugget effect is a parameter that defines how much variance have a given paramet
 
 This procedure is essential for probabilistic inversion since we need the model to behave as close to linear as possible. This is specially important for the inversion of geophysical data since the forward modeling is linear and hence the inversion is much more stable if the model is also linear. By minimizing the condition number tof the covariance matrix we are able to increase the local linearity of the model.
 
-##### Optimized dependency management
+-------------------------------------------------------------
+##### Nugget Effect Optimization
 
-As a complex libreary with a large range of uses, GemPy has always been tapping on many of the libraries on the open-source geoscientific packages and data science. As powerful the ecosystem is, depending on a large area of the ecosystem makes the package very fragile to any change in any of the multiple libraries used. To fight this, and to make gempy more robust and future proof, we have split the main library into multiple packages that require a subset of the functionality. Therefore, the gempy project entails:
+The nugget effect is a critical parameter in geostatistics, influencing the variance of a given parameter during interpolation. In simpler terms, it determines how closely the interpolation honors each data point. This section explores the optimization of the nugget effect, leveraging advanced computational techniques.
 
-  - `gempy` [here](): The main package. It is meant to be used as a wrapper of the other packages and to provide a clean and easy to use API. It also includes the documentation and the tutorials.
-   
-  - `gempy_engine` [here](https://github.com/gempy-project/gempy_engine): The core of the library. Includes the interpolation, boolean operations to handle geological discontinuities and the geophysical forward modeling.
-   
-  - `gempy_probability` [here](https://github.com/gempy-project/gempy_probability): A set of tools to do probabilistic modeling with gempy. For now only using Pyro. This includes the inversion of geophysical data and the generation of stochastic geological models.
-   
-  - `gempy_viewer` [here](https://github.com/gempy-project/gempy_viewer): A set of tools to visualize the geological models and the results of the forward modeling.
+Nugget effect parameters can be set independently ([TODO: Cite Jan's paper]), but the challenge lies in their automatic adjustment. Utilizing the PyTorch framework and ADAM optimization ([TODO: Add reference]), we have developed a method to fine-tune these parameters dynamically. This approach is based on optimizing the conditional number of the covariance matrix in a Gaussian Process.
 
-  - `gempy_plugins`[here](https://github.com/gempy-project/gempy_plugins): A set of plugins to extend the functionality of gempy. Each of this plugin is meant to be independent of the others and can be used in any combination.
+Our experiments have demonstrated promising results. Specifically, the optimized nugget effect has effectively identified and adjusted for areas in the model where data were notably inconsistent with other parameters. This was particularly evident in regions with unusually high noisy values, where the nugget effect was increased to accommodate the discrepancies.
+
+The application of this optimized nugget effect has been integral in probabilistic inversions where the linearity of the problem is crucial. For instance, in [Project Name or Example], we observed [specific improvements or results]. 
+
+In summary, the optimization of the nugget effect represents a substantial advancement in geostatistical analysis. By harnessing cutting-edge computational techniques, we are paving the way for more accurate and efficient data interpretation in various geophysical contexts.
+
+
+##### Optimized Dependency Management
+
+GemPy, as a comprehensive and versatile library, has long relied on a wide array of open-source geoscientific and data science libraries. While this ecosystem is robust, dependency on numerous libraries can render GemPy vulnerable to changes in any of these dependencies. To address this, we have adopted a strategic approach to make GemPy more resilient and future-proof.
+
+The key to our strategy is the modularization of GemPy. We have divided the main library into distinct packages, each catering to specific functionalities. This not only simplifies dependency management but also enhances the overall stability of the system. The modular structure includes:
+
+- `gempy`: The primary package [here](). It functions as a wrapper for other packages, offering a user-friendly API, comprehensive documentation, and tutorials.
+
+- `gempy_engine`: The core library [here](https://github.com/gempy-project/gempy_engine). It encompasses critical components like interpolation, handling geological discontinuities through boolean operations, and geophysical forward modeling.
+ 
+- `gempy_probability` [here](https://github.com/gempy-project/gempy_probability): A set of tools to do probabilistic modeling with gempy. For now only using Pyro. This includes the inversion of geophysical data and the generation of stochastic geological models.
+
+- `gempy_viewer` [here](https://github.com/gempy-project/gempy_viewer): A set of tools to visualize the geological models and the results of the forward modeling.
+
+- `gempy_plugins`[here](https://github.com/gempy-project/gempy_plugins): A set of plugins to extend the functionality of gempy. Each of this plugin is meant to be independent of the others and can be used in any combination.
+
+
+This modular approach offers several advantages:
+
+1. **Stability and Reliability**: By reducing the dependency on external libraries, we enhance the stability and predictability of GemPy.
+
+2. **Scalability and Flexibility**: Users can choose specific modules based on their needs, making the system more scalable and adaptable to various applications.
+
+3. **Easier Maintenance and Updates**: Managing smaller, focused packages is more efficient, facilitating quicker updates and maintenance.
+
+In conclusion, the optimized dependency management in GemPy represents a significant step towards a more robust, adaptable, and user-friendly geoscientific toolkit. These enhancements align with our commitment to providing cutting-edge tools to the scientific community.
+
 
 ### GemPy Probability
 
-As mentioned above, GemPy Probability is a package meant to work in tandem with the rest of the gempy project packages to do probabilistic modeling (TODO: Add somewhere link). The core of the package is wrapping gempy functionality with Pyro, a probabilistic programming language based on PyTorch. This allows us to do probabilistic modeling with a very easy to use API and with very powerful tools for optimization and inference.
+GemPy Probability is an integral part of the GemPy project, designed to facilitate probabilistic modeling in geosciences ([TODO: Add link]). At its core, this package integrates GemPy's functionalities with Pyro, a probabilistic programming language built on PyTorch. This combination offers a user-friendly API and robust tools for optimization and inference, making probabilistic modeling more accessible and powerful.
 
-Once we are in a probabilistic programming framework, most of the parameters involved in a gempy model can be priors, i.e. random variables from where we want to learn the posterior distribution given a set of training data or observation.
+By leveraging Pyro's capabilities, GemPy Probability allows for sophisticated probabilistic modeling. This framework transforms most parameters within a GemPy model into priors – essentially, random variables. Our goal is to learn the posterior distribution of these variables based on given training data or observations.
 
-This powerful framework enables to use any type of geophysical data we can simulate as observation data to learn the posterior distribution of the selected random variables. Naturally, choosing which parameters we want to invert and how is a quite involved step by itself and requires quite a lot of domain and Baysian knowledge. Here, we present a few examples of different probabilistic networks but in the end each model will have to be tailored for a specific scientific question and area.
+This probabilistic approach is particularly beneficial in geophysical data analysis. It enables the use of various types of geophysical data as observational inputs to learn about the posterior distribution of selected random variables. This method is invaluable in understanding and predicting geological phenomena with greater accuracy.
+
+Implementing this framework requires substantial knowledge in both the geosciences and Bayesian statistics. Selecting which parameters to invert and determining the inversion process are complex tasks that demand expertise in these domains. To aid in this process, we provide several examples of different probabilistic networks.
+
+Each model within GemPy Probability is tailored to specific scientific inquiries and geographical areas. These models are not one-size-fits-all solutions but are instead customized to address unique challenges and questions in the field of geoscience.
 
 
 ### Subsurface
 
+[TODO: Thursday]
+
 ## Outlook
+[TODO: Friday]
 
 ## Conclusion
+[TODO: Friday]
 
 ## References
