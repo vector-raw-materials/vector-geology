@@ -24,7 +24,7 @@ In the intricate field of geophysics and remote sensing, the journey of effectiv
 
 Accompanying these technical aspects are interactive tutorials, which provide a hands-on experience through real-world scenarios. While our commitment to intellectual property rights necessitates the use of anonymized datasets in these tutorials, this does not diminish their educational value. As of now, the materials and datasets are exclusively available to the Vector consortium, but there is a vision for the future where these resources become widely accessible. 
 
-### Overview of the Structural Modeling Section in the Toolbox
+### Structural Modeling
 
 Structural modeling is an important aspect for many of the methods used for geophysical and other remote sensing processing. The Structural Modeling section of our toolbox is designed for professionals engaged in the intricate task of 3D subsurface modeling, offering a comprehensive suite of tutorials and tools focused on practical applications and in-depth understanding.
 
@@ -52,8 +52,6 @@ It's designed not only as a learning platform but also as a stepping stone for f
 
 ### Probabilistic Modeling
 
-#### Embracing Uncertainty in Subsurface Exploration
-
 In subsurface exploration, uncertainty is a constant. The Probabilistic Modeling section of our toolbox confronts this challenge head-on, employing advanced Bayesian Statistics and probabilistic methodologies. This segment of the toolbox is dedicated to quantifying and integrating the inherent variability, or aleatoric uncertainty, present in subsurface data.
 
 Central to this section is the application of Bayesian statistical methods, facilitated by Pyro, a cutting-edge probabilistic programming framework. This powerful tool enables users to encode and manage uncertainty within their geological models effectively. Our tutorials guide users through this process, ensuring a thorough understanding of handling complex geological data within a probabilistic framework. Further enhancing the toolbox's capabilities, we introduce the integration of structural uncertainty into modeling processes via GemPy. This strategy not only elevates the realism of geological interpretations but also bolsters their reliability. By weaving structural uncertainty into the fabric of our models, we open new avenues for understanding and interpreting subsurface structures.
@@ -66,17 +64,8 @@ The work done for this deliverable is framed within Task 4.1: [TODO: Add exact n
 multiple code bases and repositories. The main repositories are:
 
 ### Vector Geology [New Package] (Deliverable [TODO: Add deliverable number])
-- [ ] Use of simpeg
-
-[TODO: Thursday]
 
 Vector Geology is a collaborative platform integrating a suite of geophysical and remote sensing data processing tools developed by the `Vector consortium <https://vectorproject.eu//>`_ . This repository serves as the central hub for accessing, understanding, and utilizing a range of software packages designed for geological exploration and research. Its key features include:
-
-alt:
-
-Vector Geology represents a collective effort, pooling expertise from the Vector consortium to create a unified platform for geophysical and remote sensing data processing. Central to this repository is an integrated suite of code packages, fostering a collaborative approach to geological exploration.
-
---------------------
 
 * **Integrated Toolsets**: Collection of diverse code packages developed and maintained by Vector consortium members, offering a wide range of functionalities for geophysical data processing.
 
@@ -86,30 +75,12 @@ Vector Geology represents a collective effort, pooling expertise from the Vector
 
 * **Collaborative Development**: Opportunities for users to contribute, enhancing the repository with their expertise and feedback.
 
-alt:
-
-* **Diverse Toolsets**: A curated collection of code packages from consortium members, offering functionalities ranging from basic data processing to advanced inversion techniques.
-
-* **Comprehensive Tutorials**: Detailed, step-by-step workflows guide users through various processes, emphasizing practical application and in-depth understanding.
-
-* **Flexible Framework**: Designed to handle a variety of data types and scientific queries, the toolbox can be tailored to specific project requirements.
-
-* **Collaborative Development**: Users are encouraged to contribute, enhancing the platform with their unique insights and experiences.
-
 
 In the context of geophysical inversion, here we are including several workflows defined by different partners of the Vector consortium. These workflows are meant to be used as a starting point for the inversion of geophysical data. They are not meant to be used as a black box but rather as a starting point for the inversion of geophysical data. To date this workflows include examples done with `simpeg` and `gempy`. 
 
 `simpeg` is a mature library for geolphysical inversion (TODO: cite) developed primarily by the `UBC geophysical inversion group < and hence here we show the integration of this library with the rest of the Vector tools and the use of this library for the inversion of geophysical data.
 
 In the case of `gempy`since it is primarily developed by parters in the consoritum, we have included more details about the intrinsics of the library and how it can be used for the inversion of geophysical data. Furthermore, the integration with other vector libraries is a bit more advanced.
-
-alt: 
-
-The repository includes a range of predefined workflows for geophysical data inversion, developed by Vector consortium partners. These workflows are intended as a starting point, encouraging users to adapt and expand them according to their project needs. Currently, workflows include examples using `simpeg` and `gempy`.
-
-* `simpeg`: A well-established library for geophysical inversion, developed by the UBC Geophysical Inversion Group. This section details the integration of `simpeg` with other Vector tools and its application in data inversion.
-
-* `gempy`: With its development led by consortium partners, `gempy` receives an in-depth exploration, covering its internal mechanisms and its role in geophysical data inversion. The integration with other Vector libraries is also highlighted.
 
 
 #### Documentation
@@ -120,19 +91,9 @@ By generating the documentation from the code, we ensure that the documentation 
 
 Furthermore, we can link external sphinx gallery examples in order to integrate the documentation of the different libraries. For example, we have linked the `gempy_probability` examples [TODO: Add link]. This flexibility is important in this type of projects since we cannot centralize all the developments of so many partners in a single repository.
 
-alt:
-
-To document the Vector Geology repository, we employ `sphinx` and `sphinx-gallery`. Sphinx enables the generation of various documentation formats from reStructuredText (reST), while Sphinx-gallery creates an example gallery directly from project documentation. The documentation is hosted on [Read the Docs](https://vector-geology.readthedocs.io/en/latest/).
-
-This approach ensures that our documentation remains current and facilitates the easy updating of examples and tutorials. Additionally, we can integrate external Sphinx gallery examples, such as `gempy_probability` [TODO: Add link], providing comprehensive, interconnected documentation that reflects the collaborative nature of this project.
-
 
 ### GemPy [Development]
-- [ ] Torch
-    - [ ] Automatic differentiation. Activation function
-- [ ] Pykeops
-- [ ] Adam optimization
--
+
   GemPy is a Python-based open-source library for 3D geological modeling. It is designed to facilitate the construction of complex geological models, including the generation of 3D grids, the interpolation of geological contacts and faults, and the simulation of geological processes. GemPy was developed mostly as a PhD student project and was in need of a quite major overhaul to make it robust and reliable in production environments. The Vector project provided the opportunity to do this and hence a lot of the work necessary to produce this deliverable has been done by refactoring and updating the GemPy code base. The main changes are:
 
 - [ ] [TODO]: **What is gempy exactly** Add small comment about gempy interpolation Gaussian Process and Kriging differences. Add concept of surface points and orientations
@@ -140,14 +101,14 @@ This approach ensures that our documentation remains current and facilitates the
 
 Now we will go through the main changes in the GemPy code base:
 
-##### Tensor Backends
+#### Tensor Backends
 
 Something that happened over the life of the GemPy project has been the rise of deep learning and the development of a number of tensor backends for Python. These backends provide a way to do automatic differentiation and hence to do gradient-based optimization. Amidst this, the original Tensor library used by GemPy got deprecated. In order to combat this rapidly changing enviroment, we rearchitect GemPy to relatively easily being able to choose between different tensor backends. Currently, we support numpy, PyTorch and Pykeops. 
 
 The use of PyTorch makes much easier to design complex probabilistic models - including probabilistic inversions - with an easy to use API and with very remarkable error messages while being able to get the gradients of the operations and even run the code on GPUS. Pykeops, on the other hand, is capable to do reductions operations with a very minimal memory footprint. Memory usage has been a major issue of Gaussian Process - i.e. the numerical algorithm used for the interpolation - and using PyKeops has allowed us to use GemPy with much larger number of parameters.
 
 
-##### Stateless, Procedural design
+#### Stateless, Procedural design
 
 The original GemPy code base was designed in a stateful, object-oriented way. This made it difficult to use in a production environment, where it is often necessary to run the same code multiple times with different parameters. The new GemPy code base is designed in a stateless, procedural way. This make the functional graph much mode clear and easier to extend. Altouhg we are in the early stages  of this new architecture, we have already been able to implement a number of minor but nevertheless useful new features, including:
 
@@ -158,11 +119,11 @@ The original GemPy code base was designed in a stateful, object-oriented way. Th
 - TODO: Add more?
 
 
-##### Activation function
+#### Activation function
 
 [TODO:]
 
-##### Nugget Effect Optimization
+#### Nugget Effect Optimization
 
 The nugget effect is a critical parameter in geostatistics, influencing the variance of a given parameter during interpolation. In simpler terms, it determines how closely the interpolation honors each data point. This section explores the optimization of the nugget effect, leveraging advanced computational techniques.
 
@@ -175,7 +136,7 @@ The application of this optimized nugget effect has been integral in probabilist
 In summary, the optimization of the nugget effect represents a substantial advancement in geostatistical analysis. By harnessing cutting-edge computational techniques, we are paving the way for more accurate and efficient data interpretation in various geophysical contexts.
 
 
-##### Optimized Dependency Management
+#### Optimized Dependency Management
 
 GemPy, as a comprehensive and versatile library, has long relied on a wide array of open-source geoscientific and data science libraries. While this ecosystem is robust, dependency on numerous libraries can render GemPy vulnerable to changes in any of these dependencies. To address this, we have adopted a strategic approach to make GemPy more resilient and future-proof.
 
@@ -232,6 +193,36 @@ This module represents a key component in our endeavor to streamline the handlin
 During the project we expanded the capabilities of the Subsurface module to be able to handle the data provided by the Vector partners. 
 
 ## Outlook and Conclusion
-[TODO: Thursday]
+
+In this deliverable we have presented the current state of the Vector Geology toolbox. As the fist stage of this toolbox, the main focus has been on geophysics. In practice, a lot of the work has been foundational for the main goal of task 4.1 which is to provide a centralize place to integrate much of the different development of Work package 4. To this end, we have been created a new open-source repository - Vector Geology - including all the logic for authomatic documentation.
+
+This deliverable has showcased the development and current state of the Vector Geology toolbox, marking a significant milestone in our journey. The initial phase of the toolbox has been centered on geophysics, laying the groundwork for Task 4.1's primary objective: to establish a centralized integration point for the diverse developments within Work Package 4. A pivotal achievement in this phase is the creation of the new open-source repository, Vector Geology, which includes extensive logic for automatic documentation.
+
+*Ongoing open-source development*
+
+The groundwork for this project dates back to the beginning of the last decade, rooted in the global open-source community's ongoing efforts to innovate geoscientific tools. Many of this tools developed by european partners in similar type of projects. The ambition of this endeavor is vast, extending beyond the scope of a single three-year project. Nonetheless, initiatives like Vector are instrumental in sustaining and advancing these codebases, moving us towards a more robust and reliable open-source ecosystem for geosciences, particularly in the exploration of critical raw materials.
+
+*Future work*
+
+In the upcoming months, our focus will be on further developing Vector Geology and its associated libraries as new data from Work Package 2 becomes available. This progress will be detailed in the forthcoming deliverable [TODO: Add deliverable title for Open-source Toolbox]. With the final datasets taking shape, our aim is to construct extensive probabilistic networks that incorporate as much of this data as possible. A special focus will be on integrating Hyperspectral datasets, a topic, to our knowledge, yet unexplored in such networks.
+
+
+*Datasets*
+
+Midway through the project, we await additional datasets and are in the process of defining subsequent steps. The current lack of final data and inherent uncertainties in scientific projects have posed challenges in setting requirements for the toolbox. However, this scenario also presented an opportunity to strive for generality in our approach, enhancing the toolbox's applicability for the broader community and future endeavors.
+
+*Conclusion*
+
+Reflecting on our progress to date, the Vector Geology toolbox represents a significant step forward in geoscientific collaboration and development. This project, while primarily aimed at meeting immediate needs within the consortium, also contributes to the broader field of geoscience by establishing a versatile foundation for ongoing and future research. Looking ahead, we are optimistic about the toolbox's potential to enhance the open-source geoscientific community. Our continued efforts are focused on deepening the understanding of the subsurface, a vital aspect of geoscientific exploration and research.
 
 ## References
+
+
+
+
+
+
+
+
+
+
