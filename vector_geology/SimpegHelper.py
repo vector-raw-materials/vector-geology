@@ -7,7 +7,8 @@ from SimPEG.utils import plot2Ddata
 
 def pf_rs(
         pf_data, 
-        del_new
+        del_new,
+        bounds = None
         ):
     """
     Resamples gravity and magnetic data (.xyz) to a new sampling interval.
@@ -36,12 +37,19 @@ def pf_rs(
     grav = pf_data[:,3:]
 
     # New Grid Parameters (These new additions allow for non-sorted arrays)
-    max_x=np.max(x_loc)
-    min_x=np.min(x_loc)
+    if bounds == None:
+        max_x=np.max(x_loc)
+        min_x=np.min(x_loc)
+        max_y=np.max(y_loc)
+        min_y=np.min(y_loc)
+    else:
+        max_x = bounds[1]
+        min_x = bounds[0]
+        max_y = bounds[3]
+        min_y = bounds[2]
+    
+    
     nx_new = int((max_x-min_x)/del_new) + 1 # New number of cells in x
-
-    max_y=np.max(y_loc)
-    min_y=np.min(y_loc)
     ny_new = int((max_y-min_y)/del_new) + 1 # New number of cells in y
 
     x_new = np.linspace(min_x, max_x, nx_new)
@@ -226,6 +234,11 @@ def plot_model_slice(
     elif which_prop == 'Sus':
         title = r"\textbf{Inverted }$\boldsymbol{\Delta\chi}$\textbf{ Model}" + "\n" + r"Slice at {0} = {1} m".format(normal,formatted_loc_plot)
         cbar_unit = r"$\bf{SI}$"
+    elif which_prop == 'QGM':
+        # title = r"\textbf{Inverted }$\boldsymbol{\Delta\rho}$\textbf{ Model}" + "\n" + r"Slice at {0} = {1} m".format(normal,formatted_loc_plot)
+        title = r"Quasi-Geological Model" + "\n" + r"Slice at {0} = {1} m".format(normal,formatted_loc_plot)
+        # cbar_unit = r"$\bf{g.cm^{-3}}$"
+        cbar_unit = r"Rock Unit"
     else:
         print(f"Error: Invalid model property '{which_prop}'.")
         return
@@ -275,7 +288,8 @@ def plot_model_slice(
 def plot_2D_data(
         data, 
         clim, 
-        which_data="Grav", 
+        which_data="Grav",
+        comp="xx", 
         cmap="inferno",
         path_to_output='.',
         name='Data'
@@ -288,7 +302,7 @@ def plot_2D_data(
     data : np.ndarray
         Format should be (x, y, z, dat).
     which_data : str
-        Checks to see if the data is Bouguer Anomaly or TMI. Must be one of, "Topo", "Grav", "Mag", "gMisfit".
+        Checks to see if the data is Bouguer Anomaly or TMI. Must be one of, "Topo", "Grav", "Mag", "gMisfit", "FTG".
     cmap : str or Colormap
         Name of the colormap or a colormap instance.
 
@@ -328,6 +342,9 @@ def plot_2D_data(
     elif which_data == "Mag":
         title = 'Total Magnetic Intensity'
         cbar_unit = 'nT'
+    elif which_data == "FTG":
+        title = r'FTG ($G_{' + comp + '}$)'
+        cbar_unit = 'eotvos'
     else:
         print("Error: Invalid data_type")
         return
