@@ -99,6 +99,7 @@ Furthermore, we can link external sphinx gallery examples in order to integrate 
 - [ ] [TODO]: **What is gempy exactly** Add small comment about gempy interpolation Gaussian Process and Kriging differences. Add concept of surface points and orientations
 
 
+
 Now we will go through the main changes in the GemPy code base:
 
 #### Tensor Backends
