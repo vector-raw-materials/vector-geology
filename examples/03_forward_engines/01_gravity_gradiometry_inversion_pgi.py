@@ -15,13 +15,18 @@ We use the PGI module within SimPEG to invert gravity gradiometry data on a Tree
 # %%
 # ## Import Modules
 
-import discretize as ds
+import os
+import shutil
+
 import SimPEG.potential_fields as pf
+import discretize as ds
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
 from SimPEG import (
-    maps,
     data,
     utils,
-    simulation,
     inverse_problem,
     inversion,
     optimization,
@@ -29,25 +34,11 @@ from SimPEG import (
     data_misfit,
     directives,
 )
-from SimPEG.utils import io_utils
-import numpy as np
-import pandas as pd
-import scipy.interpolate as interp
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import math as math
-
-from dotenv import dotenv_values
-from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-
-from discretize.utils import mkvc, refine_tree_xyz, active_from_xyz
-from discretize import TensorMesh, TreeMesh
-from SimPEG.utils import plot2Ddata, model_builder, surface2ind_topo
 from SimPEG import maps
-from SimPEG.potential_fields import magnetics as mag
 from SimPEG.potential_fields import gravity as grav
-import os
-import shutil
+from discretize.utils import active_from_xyz
+from dotenv import dotenv_values
+
 from vector_geology import SimpegHelper as SH
 
 #from get_cpt import get_cmap

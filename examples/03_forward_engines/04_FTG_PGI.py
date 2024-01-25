@@ -1,5 +1,6 @@
-#!/usr/bin/env python
-# coding: utf-8
+"""
+Inversion of Full Tensor Gravity Gradiometry Data
+-------------------------------------------------
 
 # # Inversion of Full Tensor Gravity Gradiometry Data
 # 
@@ -13,21 +14,19 @@
 # 
 # This has been built and modified based on the original example notebook in SimPEG's documentation (please check [here](https://docs.simpeg.xyz/content/tutorials/14-pgi/index.html)). Please check the [SimPEG docs](https://docs.simpeg.xyz/index.html) for additional information on SimPEG.
 
-# In[1]:
+"""
 
-
-# Import the general modules
-import numpy as np
-import pandas as pd
-import matplotlib as mpl
-import matplotlib.pyplot as plt
-import math as math
 import os
 import shutil
 
+import SimPEG.potential_fields as pf
 # Import the SimPEG functions
 import discretize as ds
-import SimPEG.potential_fields as pf
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+# Import the general modules
+import numpy as np
+import pandas as pd
 from SimPEG import (
     maps,
     data,
@@ -39,29 +38,26 @@ from SimPEG import (
     data_misfit,
     directives,
 )
-
+from SimPEG.potential_fields import gravity as grav
 # Import the discretize module
 from discretize.utils import active_from_xyz
-from SimPEG.potential_fields import gravity as grav
 
 # Import SimpegHelper for plotting and resampling data
 from vector_geology import SimpegHelper as SH
 
 # Plot beautification
 formatter = mpl.ticker.ScalarFormatter(useMathText=True)
-formatter.set_scientific(True) 
-formatter.set_powerlimits((0,0)) 
+formatter.set_scientific(True)
+formatter.set_powerlimits((0, 0))
 
 mpl.rc("axes", titlesize=14, labelsize=12)
 mpl.rc("xtick", labelsize=12)
 mpl.rc("ytick", labelsize=12)
 
-
+# %%
 # ### Step 1: Create Directories for storing model iterations and outputs
 # 
 # Since PGI is an iterative approach, the notebook has options to save the model at every iteration, since overfitting can be prevented by changing the stopping criterion, which can be inferred by viewing the model iterations.
-
-# In[2]:
 
 
 # Name of the model
@@ -85,7 +81,7 @@ if os.path.exists(path_to_output):
 # Create the output directory
 os.makedirs(path_to_output)
 
-
+# %%
 # ### Step 2: Load the FTG-G Data
 # 
 # Full Tensor Gradiometry data is a 2-Tensor, with the general structure as follows:
@@ -106,7 +102,7 @@ os.makedirs(path_to_output)
 # Read the csv file into a pandas dataframe and then convert it to a numpy array.
 FTG_Data = pd.read_csv('temp/VECTOR_FTG_PGI/Ireland_FTG_Gridded_Final.csv', delimiter=",").to_numpy()
 
-
+# %%
 # ### Step 3: Resample the data onto a regular grid.
 # 
 # While not mandatory, it aids in mesh generation (since the data is used to define the mesh bounds). The ``SimpegHelper.pf_rs()`` will take in potential field data and resample it onto a new regular grid.
@@ -114,6 +110,7 @@ FTG_Data = pd.read_csv('temp/VECTOR_FTG_PGI/Ireland_FTG_Gridded_Final.csv', deli
 # In[4]:
 
 
+# %%
 # New sampling interval (ground units)
 inc = 150
 
@@ -132,7 +129,7 @@ grav_vec = grav_vec * np.array([-1.0, -1.0, 1.0, 1.0, -1.0])[None, :]
 # Extract the topography from the data
 inv_topo = grav_new[:, [0, 1, 2]]
 
-
+# %%
 # ### Visualize the data
 # 
 # The ``SimpegHelper.plot_2D_data()`` function will plot the datasets using ``matplotlib``.
@@ -140,12 +137,13 @@ inv_topo = grav_new[:, [0, 1, 2]]
 # In[5]:
 
 
+# %%
 # Plot FTG Data
 SH.plot_2D_data(np.c_[grav_new[:, [0, 1, 2]], grav_vec[:, 0]], [np.nanmin(grav_vec[:, 0]), np.nanmax(grav_vec[:, 0])], cmap="jet", which_data="FTG", comp="xx", path_to_output=path_to_output, name=name)
 # Plot Topo Data
 SH.plot_2D_data(np.c_[grav_new[:, [0, 1, 2]], inv_topo[:, -1]], [np.nanmin(inv_topo[:, -1]), np.nanmax(inv_topo[:, -1])], cmap="terrain", which_data="Topo", comp="xx", path_to_output=path_to_output, name=name)
 
-
+# %%
 # ### Step 4: Create a TensorMesh object to invert the data
 # 
 # Using the ``discretize.TensorMesh`` utility, create a 3D Tensor Mesh to invert the gravity gradiometry data. A Tensor Mesh is a cartesian mesh, with the optional ability to have expanding or contracting cell sizes. In this specific case we make a Tensor Meshh object such that outside the core block, every successive cell will have a cell size as follows:
@@ -159,6 +157,7 @@ SH.plot_2D_data(np.c_[grav_new[:, [0, 1, 2]], inv_topo[:, -1]], [np.nanmin(inv_t
 # In[6]:
 
 
+# %%
 # Choose the cell size in the three cartesian directions
 dx = inc
 dy = inc
@@ -175,7 +174,7 @@ inv_hy = dy * np.ones(ny_new)
 inv_hz = [(dz, nz_pad, -fact), (dz, nz_core), (dz, nz_pad, fact)]
 
 # Create the inverse tensor mesh
-inv_mesh = ds.TensorMesh([inv_hx, inv_hy, inv_hz], x0=[np.min(inv_topo[:,0]), np.min(inv_topo[:,1]), "C"])
+inv_mesh = ds.TensorMesh([inv_hx, inv_hy, inv_hz], x0=[np.min(inv_topo[:, 0]), np.min(inv_topo[:, 1]), "C"])
 
 # Drape the topography over the mesh
 actv = active_from_xyz(inv_mesh, inv_topo)
@@ -186,7 +185,7 @@ nactv = int(actv.sum())
 # Checking the mesh extent and cell sizes
 inv_mesh
 
-
+# %%
 # ### Visualize the mesh
 # 
 # The ``discretize.TensorMesh.plot_slice()`` utility will plot a slice of the Tensor Mesh object generated above.
@@ -194,6 +193,7 @@ inv_mesh
 # In[7]:
 
 
+# %%
 # Create a background model.
 bg = np.ones(nactv)
 mod = actvMap * bg
@@ -212,7 +212,7 @@ ax.set_aspect('equal')
 plt.savefig(path_to_output + "/" + name + "_TreeMeshSlice.pdf", bbox_inches="tight")
 plt.show()
 
-
+# %%
 # ### Step 5: Set up the gravity inverse problem
 # 
 # The first requirement for a successful inversion is a working forward model. SimPEG's ``pf.gravity`` module is used to generate a forward model based on the mesh and the receiver locations, and is set to compute the components of Gravity gradients in the order of the input data. The code uses maps to keep things clean. More details about SimPEG maps and models can be found [here](https://docs.simpeg.xyz/content/tutorials/01-models_mapping/index.html).
@@ -220,6 +220,7 @@ plt.show()
 # In[8]:
 
 
+# %%
 # Create wires for the density model
 wires = maps.Wires(("density", nactv))
 
@@ -247,9 +248,9 @@ gravity_survey = pf.gravity.survey.Survey(gravity_source_field)
 
 # Set up the gravity simulation problem
 gravity_problem = grav.simulation.Simulation3DIntegral(
-    inv_mesh, 
-    survey=gravity_survey, 
-    rhoMap=wires.density, 
+    inv_mesh,
+    survey=gravity_survey,
+    rhoMap=wires.density,
     ind_active=actv
 )
 
@@ -259,7 +260,7 @@ gravity_data = data.Data(gravity_survey, dobs=grav_vec.flatten(), noise_floor=5,
 # Define the misfits associated with the gravity data
 gravity_misfit = data_misfit.L2DataMisfit(data=gravity_data, simulation=gravity_problem)
 
-
+# %%
 # ### Step 6: Setting up the Gaussian Mixture Model (GMM) Prior
 # 
 # In PGI, the petrophysical data is used as a constraint in the form of a [Gaussian Mixture Model](https://scikit-learn.org/stable/modules/mixture.html). A GMM is a multimodal probabilistic distribution which is just a weighted sum of multiple gaussian distributions. Given the number of rock units ($n$), the petrophysical distribution can be displayed as an $n$-modal GMM. If you have no petrophysical information available, you can initialize the GMM as below. If you do have a petrophysical dataset, you can fit the GMM to said dataset using the ``gmmref.fit()`` method.
@@ -267,6 +268,7 @@ gravity_misfit = data_misfit.L2DataMisfit(data=gravity_data, simulation=gravity_
 # In[9]:
 
 
+# %%
 # Number of rock units and number of physical properties
 num_rock_units = 5
 num_physical_props = 1
@@ -318,12 +320,13 @@ gmmref.compute_clusters_precisions()
 # NOTE: This determines the size of each peak of the n-modal GMM
 gmmref.weights_ = np.ones((nactv, 1)) * np.c_[0.125, 0.125, 0.5, 0.125, 0.125]
 
-
+# %%
 # ### Plot the 1D-GMM
 
 # In[10]:
 
 
+# %%
 fig = plt.figure(figsize=(6, 6))
 ax = gmmref.plot_pdf(flag2d=False, plotting_precision=1000, padding=0.2)
 ax[0].set_xlabel(r"Density Contrast (g/cc)")
@@ -331,11 +334,11 @@ ax[0].set_ylabel(r"Probability Density Values")
 ax[0].get_legend().remove()
 ax[0].set_title(r"Initial DelRho Distribution")
 ax[0].ticklabel_format(axis="both", style="scientific", scilimits=(0, 0))
-ax[0].set_aspect(1/20)
+ax[0].set_aspect(1 / 20)
 plt.savefig(path_to_output + "/" + name + "_Init_GMM.pdf", bbox_inches="tight")
 plt.show()
 
-
+# %%
 # ### Step 7: Setting the hyper-parameters and the sensitivity weights
 # 
 # Every PGI is a set of three Maximum-A-Posteriori ([MAP](https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation)) problems, being solved iteratively. The solver tries to minimize the L2 error of an objective function containing both the FTG Data and the petrophysical GMM. In this section we tune the necessary hyper-parameters, as well as initialise the necessary weights for every voxel (as the contribution of every voxel is dependent on it's depth from the surface). The regularization smallness ($\alpha_s$) and smoothness ($\alpha_i,\ i = x, y, z$) are initialised here. Please check [here](https://giftoolscookbook.readthedocs.io/en/latest/content/fundamentals/index.html) for the physical meaning of these parameters and the fundamentals of a Tikhonov regularized inversion.
@@ -346,13 +349,17 @@ plt.show()
 # In[11]:
 
 
+# %%
 # Initial Model
 initial_model = np.r_[background_density * np.ones(actvMap.nP)]
 
+# %%
 # Sensitivity weighting
 # Compute the sensitivity weights for each cell based on the gravity problem's sensitivity matrix (G)
 # This is done by computing the square root of the sum of the squared elements of G for each cell,
 # and then normalizing by the cell volumes and the maximum weight value.
+
+# %%
 sensitivity_weights_gravity = np.sum(gravity_problem.G ** 2.0, axis=0) ** 0.5 / (inv_mesh.cell_volumes[actv])
 sensitivity_weights_gravity = sensitivity_weights_gravity / np.nanmax(sensitivity_weights_gravity)
 
@@ -381,7 +388,7 @@ regularization_term = regularization.PGI(
     weights_list=[sensitivity_weights_gravity]
 )
 
-
+# %%
 # ### Step 8: Initialize the directives
 # 
 # The directives include a set of instructions on the bounds, the update factors and other hyperparameters for the inversion solver.
@@ -389,6 +396,7 @@ regularization_term = regularization.PGI(
 # In[12]:
 
 
+# %%
 # Estimate smoothness multipliers
 alphas_directive = directives.AlphasSmoothEstimate_ByEig(verbose=True)
 
@@ -410,10 +418,10 @@ mref_in_smooth = directives.PGI_AddMrefInSmooth(wait_till_stable=True, verbose=T
 # Update smallness parameters, keeping GMM fixed (L2 Approx of PGI)
 update_smallness_directive = directives.PGI_UpdateParameters(
     update_gmm=True,
-    kappa = 0,
-    nu = 0.5,
-    zeta = 0
-    )
+    kappa=0,
+    nu=0.5,
+    zeta=0
+)
 
 # Update preconditioner
 update_preconditioner = directives.UpdatePreconditioner()
@@ -453,28 +461,30 @@ inversion_algo = inversion.BaseInversion(
     ],
 )
 
-
+# %%
 # ### Run the inversion! 
 
 # In[13]:
 
 
+# %%
 # Run the inversion
 inverted_model = inversion_algo.run(initial_model)
 
-
+# %%
 # ### Visualize the 3D Model
 
 # In[14]:
 
 
+# %%
 set = 1
 save_plots = True
 
 # Indices of the depth sections
-ind_plot_x = int(len(inv_mesh.cell_centers_x)/6) + 25
-ind_plot_y = int(len(inv_mesh.cell_centers_y)/2)
-ind_plot_z = int(len(inv_mesh.cell_centers_z)/2) - 15
+ind_plot_x = int(len(inv_mesh.cell_centers_x) / 6) + 25
+ind_plot_y = int(len(inv_mesh.cell_centers_y) / 2)
+ind_plot_z = int(len(inv_mesh.cell_centers_z) / 2) - 15
 
 ind_plot = [ind_plot_x, ind_plot_y, ind_plot_z]
 
@@ -497,7 +507,7 @@ normal = "Y"
 model_to_plot = inverted_density_model
 SH.plot_model_slice(inv_mesh, actv, model_to_plot, normal, ind_plot, [-1.0, 1.0], set, sec_loc=True, gdlines=True, which_prop="Den", cmap="Spectral", save_plt=save_plots, path_to_output=path_to_output, name=name)
 
-
+# %%
 # ### Visualize the Quasi-Geological model
 # 
 # The quasi-geological model (as given by [Li et al., 2019](https://doi.org/10.1190/tle38010060.1)), is a way of visualizing an inverted model by using the learned GMM as a classifier for all of the voxels in the model. Therefore, instead of density values, a Quasi-Geological model shows the different rock units as separated by the GMM classifier.
@@ -505,6 +515,7 @@ SH.plot_model_slice(inv_mesh, actv, model_to_plot, normal, ind_plot, [-1.0, 1.0]
 # In[15]:
 
 
+# %%
 # Plot Density Contrast Model (Z)
 normal = "Z"
 model_to_plot = quasi_geology_model
@@ -520,14 +531,15 @@ normal = "Y"
 model_to_plot = quasi_geology_model
 SH.plot_model_slice(inv_mesh, actv, model_to_plot, normal, ind_plot, [0, 4], set, sec_loc=True, gdlines=True, which_prop="QGM", cmap="jet", save_plt=save_plots, path_to_output=path_to_output, name=name)
 
-
+# %%
 # ### Plot the updated 1D-GMM
 
 # In[16]:
 
 
+# %%
 # Plot the learned GMM
-fig = plt.figure(figsize=(6,6))
+fig = plt.figure(figsize=(6, 6))
 ax = regularization_term.objfcts[0].gmm.plot_pdf(flag2d=False, plotting_precision=500, padding=0.4)
 ax[0].hist(inverted_density_model[actv], density=True, bins=1000)
 ax[0].set_xlabel(r"Density contrast (g/cc)")
@@ -537,4 +549,3 @@ ax[0].set_title(r"Learned DelRho Distribution")
 ax[0].ticklabel_format(axis="both", style="scientific", scilimits=(0, 0))
 plt.savefig(path_to_output + "/" + name + "_Learned_GMM.pdf", bbox_inches="tight")
 plt.show()
-
