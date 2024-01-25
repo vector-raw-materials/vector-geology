@@ -2,17 +2,17 @@
 Inversion of Full Tensor Gravity Gradiometry Data
 -------------------------------------------------
 
-# # Inversion of Full Tensor Gravity Gradiometry Data
-# 
-# This notebook showcases the use of Petrophysically and Geologically guided Inversion (PGI), given by [Astic and Oldenburg (2019)](https://doi.org/10.1093/gji/ggz389), to invert a sub-surface density model from Full-Tensor Gravity Gradiometry (FTG-G) data measured over the Irish Midlands. This notebook covers the following points:
-# 
-# - Loading the necessary modules and data
-# - Generating a mesh
-# - Initializing the Gaussian Mixture Model
-# - Tuning the hyper-parameters
-# - Plotting the results
-# 
-# This has been built and modified based on the original example notebook in SimPEG's documentation (please check [here](https://docs.simpeg.xyz/content/tutorials/14-pgi/index.html)). Please check the [SimPEG docs](https://docs.simpeg.xyz/index.html) for additional information on SimPEG.
+# Inversion of Full Tensor Gravity Gradiometry Data
+
+This notebook showcases the use of Petrophysically and Geologically guided Inversion (PGI), given by [Astic and Oldenburg (2019)](https://doi.org/10.1093/gji/ggz389), to invert a sub-surface density model from Full-Tensor Gravity Gradiometry (FTG-G) data measured over the Irish Midlands. This notebook covers the following points:
+
+- Loading the necessary modules and data
+- Generating a mesh
+- Initializing the Gaussian Mixture Model
+- Tuning the hyper-parameters
+- Plotting the results
+
+This has been built and modified based on the original example notebook in SimPEG's documentation (please check [here](https://docs.simpeg.xyz/content/tutorials/14-pgi/index.html)). Please check the [SimPEG docs](https://docs.simpeg.xyz/index.html) for additional information on SimPEG.
 
 """
 
