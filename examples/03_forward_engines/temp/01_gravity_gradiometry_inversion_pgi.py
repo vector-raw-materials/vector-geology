@@ -17,6 +17,7 @@ We use the PGI module within SimPEG to invert gravity gradiometry data on a Tree
 
 import os
 import shutil
+from dotenv import dotenv_values
 
 import SimPEG.potential_fields as pf
 import discretize as ds
@@ -37,7 +38,6 @@ from SimPEG import (
 from SimPEG import maps
 from SimPEG.potential_fields import gravity as grav
 from discretize.utils import active_from_xyz
-from dotenv import dotenv_values
 
 from vector_geology import SimpegHelper as SH
 

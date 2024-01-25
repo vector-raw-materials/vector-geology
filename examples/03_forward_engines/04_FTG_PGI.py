@@ -18,6 +18,7 @@ This has been built and modified based on the original example notebook in SimPE
 
 import os
 import shutil
+from dotenv import dotenv_values
 
 import SimPEG.potential_fields as pf
 # Import the SimPEG functions
@@ -100,7 +101,10 @@ os.makedirs(path_to_output)
 
 
 # Read the csv file into a pandas dataframe and then convert it to a numpy array.
-FTG_Data = pd.read_csv('temp/VECTOR_FTG_PGI/Ireland_FTG_Gridded_Final.csv', delimiter=",").to_numpy()
+config = dotenv_values()
+file_path = config.get("PATH_TO_GRADIOMETRY")
+
+FTG_Data = pd.read_csv(file_path, delimiter=",").to_numpy()
 
 # %%
 # ### Step 3: Resample the data onto a regular grid.

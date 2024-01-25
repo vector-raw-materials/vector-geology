@@ -9,6 +9,7 @@ This notebook showcases the prediction of P-Wave velocities from hyperspectral d
 
 
 # %%
+from dotenv import dotenv_values
 # Import the necessary modules
 import numpy as np
 import sklearn
@@ -31,8 +32,15 @@ from vector_geology.Packages import hycore  # !(To date, Jan 2024) These package
 # %%
 # Load the train and test sheds
 # TODO: Change the path to use the .env file
-train_shed = hycore.loadShed("./Data/KSL133_Sonic.shed")
-test_shed = hycore.loadShed("./Data/KSL_Sonic.shed")
+
+
+config = dotenv_values()
+path_to_train = config.get("PATH_TO_HSI_TRAINING")
+path_to_test = config.get("PATH_TO_HSI_TESTING")
+
+
+train_shed = hycore.loadShed(path_to_train)
+test_shed = hycore.loadShed(path_to_test)
 
 # Load the train spectral libraries and p-wave velocities
 train_fx50 = train_shed.results.FX50Lib
