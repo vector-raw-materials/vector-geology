@@ -258,7 +258,9 @@ gravity_misfit = data_misfit.L2DataMisfit(
 # ---------------------------------------------------------
 # 
 # In PGI, the petrophysical data is used as a constraint in the form of a `Gaussian Mixture Model <https://scikit-learn.org/stable/modules/mixture.html>`_ (GMM).
-# A GMM is a multimodal probabilistic distribution which is just a weighted sum of multiple gaussian distributions. Given the number of rock units ($n$), the petrophysical distribution can be displayed as an $n$-modal GMM. If you have no petrophysical information available, you can initialize the GMM as below. If you do have a petrophysical dataset, you can fit the GMM to said dataset using the ``gmmref.fit()`` method.
+# A GMM is a multimodal probabilistic distribution which is just a weighted sum of multiple gaussian distributions. Given the number of rock units (:math:`n`),
+# the petrophysical distribution can be displayed as an $n$-modal GMM. If you have no petrophysical information available, you can initialize the GMM as below. 
+# If you do have a petrophysical dataset, you can fit the GMM to said dataset using the ``gmmref.fit()`` method.
 
 
 # %%
@@ -335,21 +337,22 @@ plt.savefig(
 )
 plt.show()
 
-# %%
+
+#%%
 # Step 9: Setting the Hyper-parameters and the Sensitivity Weights
 # -----------------------------------------------------------------
 # 
-# Every PGI is a set of three Maximum-A-Posteriori ( `MAP <https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation>` )
+# Every PGI is a set of three Maximum-A-Posteriori (`MAP <https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation>`_)
 # problems, being solved iteratively. The solver tries to minimize the L2 error of an objective function containing both
 # the FTG Data and the petrophysical GMM. In this section we tune the necessary hyper-parameters, as well as initialise 
-# the necessary weights for every voxel (as the contribution of every voxel is dependent on it's depth from the surface). 
-# The regularization smallness (:math:`$\alpha_s$`) and smoothness ($\alpha_i,\ i = x, y, z$) are initialised here. Please check 
-# `here <https://giftoolscookbook.readthedocs.io/en/latest/content/fundamentals/index.html>`
+# the necessary weights for every voxel (as the contribution of every voxel is dependent on its depth from the surface). 
+# The regularization smallness (:math:`\alpha_s`) and smoothness (:math:`\alpha_i,\ i = x, y, z`) are initialised here. Please check 
+# `here <https://giftoolscookbook.readthedocs.io/en/latest/content/fundamentals/index.html>`_
 # for the physical meaning of these parameters and the fundamentals of a Tikhonov regularized inversion.
 # 
 # NOTE: The smoothness parameters (`alpha_i`) are static and hence need to be fine-tuned 
 # through trial and error.
-# 
+#
 
 initial_model = np.r_[background_density * np.ones(actvMap.nP)]
 
