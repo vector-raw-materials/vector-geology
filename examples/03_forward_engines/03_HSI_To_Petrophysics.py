@@ -57,10 +57,19 @@ test_vp = test_shed.results.Vp
 # The `hklearn` package, designed to handle hyperspectral data, is used to organize spectral libraries into a structure called Stack. A Stack can manage multiple spectral libraries and integrate data from multiple sensors. We perform hull corrections on the spectra to enhance features of interest.
 
 # Create Stack objects and apply hull correction to the spectra
-hsi_train = hklearn.Stack(['FENIX', 'FX50', 'LWIR'], [train_fenix, train_fx50, train_lwir]).hc(ranges={'FENIX': (450., 2500.), 'FX50': (10, -10), 'LWIR': (10, -10)},
-                                                                                               hull={'FENIX': 'upper', 'FX50': 'lower', 'LWIR': 'lower'})
-hsi_test = hklearn.Stack(['FENIX', 'FX50', 'LWIR'], [test_fenix, test_fx50, test_lwir]).hc(ranges={'FENIX': (450., 2500.), 'FX50': (10, -10), 'LWIR': (10, -10)},
-                                                                                           hull={'FENIX': 'upper', 'FX50': 'lower', 'LWIR': 'lower'})
+hsi_train = hklearn.Stack(
+    names=['FENIX', 'FX50', 'LWIR'],
+    data=[train_fenix, train_fx50, train_lwir]).hc(
+    ranges={'FENIX': (450., 2500.), 'FX50': (10, -10), 'LWIR': (10, -10)},
+    hull={'FENIX': 'upper', 'FX50': 'lower', 'LWIR': 'lower'}
+)
+
+hsi_test = hklearn.Stack(
+    names=['FENIX', 'FX50', 'LWIR'],
+    data=[test_fenix, test_fx50, test_lwir]).hc(
+    ranges={'FENIX': (450., 2500.), 'FX50': (10, -10), 'LWIR': (10, -10)},
+    hull={'FENIX': 'upper', 'FX50': 'lower', 'LWIR': 'lower'}
+)
 
 # %%
 # Scaling the Dependent Variable (Y)
@@ -93,8 +102,15 @@ hsi_test.set_y(test_vp[:, None, None])
 # Different machine learning models are initialized and trained. In this example, we use a simple linear regression (`LinearRegression`) and a Multilayer Perceptron (`MLPRegressor`) from scikit-learn. A dictionary with the parameters for optimization is also initialized.
 
 # Initialize models
-models = dict(Linear=LinearRegression(),
-              MLP=MLPRegressor(hidden_layer_sizes=(180,), max_iter=1000, solver='sgd', learning_rate='adaptive'))
+models = dict(
+    Linear=LinearRegression(),
+    MLP=MLPRegressor(
+        hidden_layer_sizes=(180,),
+        max_iter=1000,
+        solver='sgd',
+        learning_rate='adaptive'
+    )
+)
 
 # Define parameter ranges for each model
 params = dict(Linear={'fit_intercept': [True, False]},
@@ -103,7 +119,6 @@ params = dict(Linear={'fit_intercept': [True, False]},
 # Train the models
 for name, model in tqdm(models.items(), 'Fitting models', leave=True):
     hsi_train.fit_model(name, model, xtransform=True, ytransform=y_scaler, grid_search_cv=params[name], n_jobs=-1)
-
 
 # %%
 # Scoring and Evaluating Models

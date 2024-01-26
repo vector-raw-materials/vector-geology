@@ -1,5 +1,5 @@
-Forward GeoPhysics Engines and Inversion
-========================================
+GeoPhysics and Inversion
+========================
 
 Our tutorials are crafted to guide you through the process of applying geophysical forward modeling and inversion techniques, using advanced tools like `gempy` and `simpeg`. Here’s what you can expect:
 

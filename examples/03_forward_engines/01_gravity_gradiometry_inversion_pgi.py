@@ -87,10 +87,15 @@ FTG_Data = pd.read_csv(file_path, delimiter=",").to_numpy()
 # Step 3: Resample Data onto a Regular Grid
 # -----------------------------------------
 # 
-# Resampling the data onto a regular grid aids in mesh generation and visualization. The `SimpegHelper.pf_rs()` function resamples potential field data onto a new regular grid.
+# Resampling the data onto a regular grid aids in mesh generation and visualization. The `SimpegHelper.pf_rs()` function 
+# resamples potential field data onto a new regular grid.
 
 inc = 150  # New sampling interval (ground units)
-grav_new, nx_new, ny_new = SH.pf_rs(FTG_Data, inc, bounds=[156000, 168000, 143000, 148500])
+grav_new, nx_new, ny_new = SH.pf_rs(
+    FTG_Data,
+    inc,
+    bounds=[156000, 168000, 143000, 148500]
+)
 
 # NOTE: This step is necessary for real data since the convention followed by
 # the SimPEG forward operator is the opposite of the general convention
@@ -103,8 +108,24 @@ inv_topo = grav_new[:, [0, 1, 2]]  # Extracting topography
 # 
 # The `SimpegHelper.plot_2D_data()` function is used to visualize the datasets with `matplotlib`.
 
-SH.plot_2D_data(np.c_[grav_new[:, [0, 1, 2]], grav_vec[:, 0]], [np.nanmin(grav_vec[:, 0]), np.nanmax(grav_vec[:, 0])], cmap="jet", which_data="FTG", comp="xx", path_to_output=path_to_output, name=name)
-SH.plot_2D_data(np.c_[grav_new[:, [0, 1, 2]], inv_topo[:, -1]], [np.nanmin(inv_topo[:, -1]), np.nanmax(inv_topo[:, -1])], cmap="terrain", which_data="Topo", comp="xx", path_to_output=path_to_output, name=name)
+SH.plot_2D_data(
+    data=np.c_[grav_new[:, [0, 1, 2]], grav_vec[:, 0]],
+    clim=[np.nanmin(grav_vec[:, 0]), np.nanmax(grav_vec[:, 0])],
+    cmap="jet",
+    which_data="FTG",
+    comp="xx",
+    path_to_output=path_to_output,
+    name=name
+)
+SH.plot_2D_data(
+    data=np.c_[grav_new[:, [0, 1, 2]], inv_topo[:, -1]],
+    clim=[np.nanmin(inv_topo[:, -1]), np.nanmax(inv_topo[:, -1])],
+    cmap="terrain",
+    which_data="Topo",
+    comp="xx",
+    path_to_output=path_to_output,
+    name=name
+)
 
 # %%
 # Step 5: Create a TensorMesh Object for Inversion
@@ -117,7 +138,7 @@ SH.plot_2D_data(np.c_[grav_new[:, [0, 1, 2]], inv_topo[:, -1]], [np.nanmin(inv_t
 #    z_{n+1} = r z_{n}
 # 
 # 
-# Where $r$ is a multiplicative factor (:math:`<1`:math: for contracting, :math:`>1`:math: for expanding cells). x and y 
+# Where $r$ is a multiplicative factor (<1 for contracting, >1 for expanding cells). x and y 
 # increments can be altered as well, but we choose not to, as the data are not spatially clustered (i.e., the entire 
 # region is an area of interest).
 
@@ -130,7 +151,9 @@ inv_hy = dy * np.ones(ny_new)
 inv_hz = [(dz, nz_pad, -fact), (dz, nz_core), (dz, nz_pad, fact)]
 
 # Create the inverse tensor mesh
-inv_mesh = ds.TensorMesh([inv_hx, inv_hy, inv_hz], x0=[np.min(inv_topo[:, 0]), np.min(inv_topo[:, 1]), "C"])
+inv_mesh = ds.TensorMesh(
+    h=[inv_hx, inv_hy, inv_hz],
+    x0=[np.min(inv_topo[:, 0]), np.min(inv_topo[:, 1]), "C"])
 
 # Drape the topography over the mesh
 actv = active_from_xyz(inv_mesh, inv_topo)
@@ -163,7 +186,10 @@ ax.set_xlim([158000, 159000])
 ax.set_ylim([-500, 100])
 ax.ticklabel_format(axis="both")
 ax.set_aspect('equal')
-plt.savefig(path_to_output + "/" + name + "_TreeMeshSlice.pdf", bbox_inches="tight")
+plt.savefig(
+    path_to_output + "/" + name + "_TreeMeshSlice.pdf",
+    bbox_inches="tight"
+)
 plt.show()
 
 # %%
@@ -191,11 +217,16 @@ gravity_components = ["gxx", "gyy", "gxz", "gyz", "gxy"]
 gravity_receiver_locations = inv_topo + 120.
 
 # Create a gravity receiver list
-gravity_receivers = pf.gravity.receivers.Point(gravity_receiver_locations, components=gravity_components)
+gravity_receivers = pf.gravity.receivers.Point(
+    locations=gravity_receiver_locations,
+    components=gravity_components
+)
 gravity_receiver_list = [gravity_receivers]
 
 # Create a gravity source field
-gravity_source_field = pf.gravity.sources.SourceField(receiver_list=gravity_receiver_list)
+gravity_source_field = pf.gravity.sources.SourceField(
+    receiver_list=gravity_receiver_list
+)
 
 # Define the gravity survey
 gravity_survey = pf.gravity.survey.Survey(gravity_source_field)
@@ -209,10 +240,18 @@ gravity_problem = grav.simulation.Simulation3DIntegral(
 )
 
 # Create a gravity data object, with the relative errors and a standard noise floor
-gravity_data = data.Data(gravity_survey, dobs=grav_vec.flatten(), noise_floor=5, relative_error=0.1)
+gravity_data = data.Data(
+    survey=gravity_survey,
+    dobs=grav_vec.flatten(),
+    noise_floor=5,
+    relative_error=0.1
+)
 
 # Define the misfits associated with the gravity data
-gravity_misfit = data_misfit.L2DataMisfit(data=gravity_data, simulation=gravity_problem)
+gravity_misfit = data_misfit.L2DataMisfit(
+    data=gravity_data,
+    simulation=gravity_problem
+)
 
 # %%
 # Step 8: Setting up the Gaussian Mixture Model (GMM) Prior
@@ -238,7 +277,8 @@ gmmref = utils.WeightedGaussianMixture(
 # Set the background density
 background_density = 0.0
 
-# Initialize the GMM fit with random samples, mesh size, and number of physical properties
+# Initialize the GMM fit with random samples, mesh size, 
+# and number of physical properties
 gmmref.fit(np.random.randn(nactv, num_physical_props))
 
 # Set the mean values of physical property contrasts for each rock unit
@@ -255,8 +295,9 @@ gmmref.means_ = np.c_[
 density_variance = 8e-5
 
 # Set the covariances of physical properties for each rock unit
-# NOTE: Since we don't have petrophysical information for this example, we keep the covariances
-# same for every unit. The GMM will update itself during the inversion.
+# NOTE: Since we don't have petrophysical information for this example, 
+# we keep the covariances # same for every unit. The GMM will update 
+# itself during the inversion.
 gmmref.covariances_ = np.array(
     [
         [[density_variance]],
@@ -288,18 +329,25 @@ ax[0].get_legend().remove()
 ax[0].set_title(r"Initial DelRho Distribution")
 ax[0].ticklabel_format(axis="both", style="scientific", scilimits=(0, 0))
 ax[0].set_aspect(1 / 20)
-plt.savefig(path_to_output + "/" + name + "_Init_GMM.pdf", bbox_inches="tight")
+plt.savefig(
+    path_to_output + "/" + name + "_Init_GMM.pdf",
+    bbox_inches="tight"
+)
 plt.show()
 
 # %%
 # Step 9: Setting the Hyper-parameters and the Sensitivity Weights
 # -----------------------------------------------------------------
 # 
-# Every PGI is a set of three Maximum-A-Posteriori (`MAP <https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation>`
-#  problems, being solved iteratively. The solver tries to minimize the L2 error of an objective function containing both
-#  the FTG Data and the petrophysical GMM. In this section we tune the necessary hyper-parameters, as well as initialise the necessary weights for every voxel (as the contribution of every voxel is dependent on it's depth from the surface). The regularization smallness ($\alpha_s$) and smoothness ($\alpha_i,\ i = x, y, z$) are initialised here. Please check [here](https://giftoolscookbook.readthedocs.io/en/latest/content/fundamentals/index.html) for the physical meaning of these parameters and the fundamentals of a Tikhonov regularized inversion.
+# Every PGI is a set of three Maximum-A-Posteriori ( `MAP <https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation>` )
+# problems, being solved iteratively. The solver tries to minimize the L2 error of an objective function containing both
+# the FTG Data and the petrophysical GMM. In this section we tune the necessary hyper-parameters, as well as initialise 
+# the necessary weights for every voxel (as the contribution of every voxel is dependent on it's depth from the surface). 
+# The regularization smallness (:math:`$\alpha_s$`) and smoothness ($\alpha_i,\ i = x, y, z$) are initialised here. Please check 
+# `here <https://giftoolscookbook.readthedocs.io/en/latest/content/fundamentals/index.html>`
+# for the physical meaning of these parameters and the fundamentals of a Tikhonov regularized inversion.
 # 
-# <strong> NOTE </strong> : The smoothness parameters (:math:`\alpha_i`:math:) are static and hence need to be fine-tuned 
+# NOTE: The smoothness parameters (`alpha_i`) are static and hence need to be fine-tuned 
 # through trial and error.
 # 
 
@@ -364,7 +412,10 @@ beta_schedule = directives.PGI_BetaAlphaSchedule(
 target_misfits = directives.MultiTargetMisfits(verbose=True)
 
 # Add reference model once stable
-mref_in_smooth = directives.PGI_AddMrefInSmooth(wait_till_stable=True, verbose=True)
+mref_in_smooth = directives.PGI_AddMrefInSmooth(
+    wait_till_stable=True,
+    verbose=True
+)
 
 # Update smallness parameters, keeping GMM fixed (L2 Approx of PGI)
 update_smallness_directive = directives.PGI_UpdateParameters(
@@ -378,10 +429,16 @@ update_smallness_directive = directives.PGI_UpdateParameters(
 update_preconditioner = directives.UpdatePreconditioner()
 
 # Save iteration results
-save_iteration_directive = directives.SaveOutputEveryIteration(name=name, directory=path_to_output)
+save_iteration_directive = directives.SaveOutputEveryIteration(
+    name=name,
+    directory=path_to_output
+)
 
 # Save model iterations
-save_model_directive = directives.SaveModelEveryIteration(name=name, directory=path_to_mod_iterations)
+save_model_directive = directives.SaveModelEveryIteration(
+    name=name,
+    directory=path_to_mod_iterations
+)
 
 # Optimization options for the inversion
 lower_bound = np.r_[-1.0 * np.ones(actvMap.nP)]
@@ -412,6 +469,7 @@ inversion_algo = inversion.BaseInversion(
     ],
 )
 
+# %%
 # Step 11: Run the Inversion! 
 # ---------------------------
 # 
@@ -442,7 +500,21 @@ quasi_geology_model = actvMap * regularization_term.objfcts[0].compute_quasi_geo
 # Plot Density Contrast Model (Z)
 normal = "Z"
 model_to_plot = inverted_density_model
-SH.plot_model_slice(inv_mesh, actv, model_to_plot, normal, ind_plot, [-1.0, 1.0], set, sec_loc=True, gdlines=True, which_prop="Den", cmap="Spectral", save_plt=save_plots, path_to_output=path_to_output, name=name)
+SH.plot_model_slice(
+    mesh=inv_mesh, 
+    ind_active=actv,
+    model=model_to_plot,
+    normal= normal,
+    ind_plot_arr=ind_plot, 
+    clim=[-1.0, 1.0],
+    set=set, sec_loc=True,
+    gdlines=True,
+    which_prop="Den",
+    cmap="Spectral",
+    save_plt=save_plots,
+    path_to_output=path_to_output,
+    name=name
+)
 
 # Plot Inverted Model Slices (Y)
 normal = "X"
