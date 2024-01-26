@@ -6,10 +6,12 @@
 
 Computation times
 =================
-**09:03.455** total execution time for **examples_03_forward_engines** files:
+**10:14.392** total execution time for **examples_03_forward_engines** files:
 
 +-----------------------------------------------------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_examples_03_forward_engines_01_gravity_gradiometry_inversion_pgi.py` (``01_gravity_gradiometry_inversion_pgi.py``) | 09:03.455 | 0.0 MB |
+| :ref:`sphx_glr_examples_03_forward_engines_01_gravity_gradiometry_inversion_pgi.py` (``01_gravity_gradiometry_inversion_pgi.py``) | 10:14.392 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr_examples_03_forward_engines_02_model_1_gempy_fw_gravity.py` (``02_model_1_gempy_fw_gravity.py``)                   | 00:00.000 | 0.0 MB |
++-----------------------------------------------------------------------------------------------------------------------------------+-----------+--------+
+| :ref:`sphx_glr_examples_03_forward_engines_03_HSI_To_Petrophysics.py` (``03_HSI_To_Petrophysics.py``)                             | 00:00.000 | 0.0 MB |
 +-----------------------------------------------------------------------------------------------------------------------------------+-----------+--------+

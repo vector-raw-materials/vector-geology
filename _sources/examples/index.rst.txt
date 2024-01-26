@@ -180,8 +180,8 @@ Prepare to enhance your understanding and skills in geological modeling with a f
 
     </div>
 
-Forward GeoPhysics Engines and Inversion
-========================================
+GeoPhysics and Inversion
+========================
 
 Our tutorials are crafted to guide you through the process of applying geophysical forward modeling and inversion techniques, using advanced tools like `gempy` and `simpeg`. Here’s what you can expect:
 
@@ -204,7 +204,7 @@ Our tutorials are crafted to guide you through the process of applying geophysic
 
 .. raw:: html
 
-    <div class="sphx-glr-thumbcontainer" tooltip="We use the PGI module within SimPEG to invert gravity gradiometry data on a Tree Mesh. This tut...">
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the inversion of sub-surface density models from Full-Tensor Gravity G...">
 
 .. only:: html
 
@@ -215,7 +215,7 @@ Our tutorials are crafted to guide you through the process of applying geophysic
 
 .. raw:: html
 
-      <div class="sphx-glr-thumbnail-title">Inversion of Gravity Gradiometry Data on a Tree Mesh</div>
+      <div class="sphx-glr-thumbnail-title">Inversion of Full Tensor Gravity Gradiometry Data</div>
     </div>
 
 
@@ -233,6 +233,23 @@ Our tutorials are crafted to guide you through the process of applying geophysic
 .. raw:: html
 
       <div class="sphx-glr-thumbnail-title">Model 1 Forward Gravity</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the prediction of P-Wave velocities from hyperspectral data using mac...">
+
+.. only:: html
+
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_03_HSI_To_Petrophysics_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_03_forward_engines_03_HSI_To_Petrophysics.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Predicting P-Wave Velocity from Hyperspectral Data</div>
     </div>
 
 

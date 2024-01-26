@@ -46,7 +46,7 @@
 <dd class="field-odd"><p>0.1.dev16+g525c9e2</p>
 </dd>
 <dt class="field-even">Date<span class="colon">:</span></dt>
-<dd class="field-even"><p>14 December 2023</p>
+<dd class="field-even"><p>26 January 2024</p>
 </dd>
 <dt class="field-odd">Source<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://github.com/vector-raw-materials/vector-geology">github.com/vector-raw-materials/vector-geology</a></p>
@@ -89,7 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/index.html">Vector Geology Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/index.html#readers-and-parsers">Readers and Parsers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/index.html#structural-modeling">Structural Modeling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/index.html#forward-geophysics-engines-and-inversion">Forward GeoPhysics Engines and Inversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/index.html#geophysics-and-inversion">GeoPhysics and Inversion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/index.html#probabilistic-modeling">Probabilistic Modeling</a></li>
 </ul>
 </li>
@@ -157,8 +157,8 @@ repository’s documentation and codebase to uncover the most suitable tools and
 <p><a class="reference internal" href="examples/02_structural_modeling/02_model_1_gempy.html#sphx-glr-examples-02-structural-modeling-02-model-1-gempy-py"><span class="std std-ref">Construct Model 1 with Helper Functions</span></a></p>
   <div class="sphx-glr-thumbnail-title">Construct Model 1 with Helper Functions</div>
 </div></div></section>
-<section id="forward-geophysics-engines-and-inversion">
-<h3>Forward GeoPhysics Engines and Inversion<a class="headerlink" href="#forward-geophysics-engines-and-inversion" title="Permalink to this heading">¶</a></h3>
+<section id="geophysics-and-inversion">
+<h3>GeoPhysics and Inversion<a class="headerlink" href="#geophysics-and-inversion" title="Permalink to this heading">¶</a></h3>
 <p>Our tutorials are crafted to guide you through the process of applying geophysical forward modeling and inversion techniques, using advanced tools like <cite>gempy</cite> and <cite>simpeg</cite>. Here’s what you can expect:</p>
 <ul class="simple">
 <li><p><strong>Geophysical Forward Modeling</strong>: Learn how to transform structural models into geophysical models. These tutorials will show you how to use <cite>gempy</cite> to simulate geophysical responses based on your structural models. Whether you are a beginner or looking to refine your modeling skills, these guides offer comprehensive insights.</p></li>
@@ -170,12 +170,15 @@ repository’s documentation and codebase to uncover the most suitable tools and
 </ul>
 </li>
 </ul>
-<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="We use the PGI module within SimPEG to invert gravity gradiometry data on a Tree Mesh. This tut..."><img alt="" src="_images/sphx_glr_01_gravity_gradiometry_inversion_pgi_thumb.png" />
-<p><a class="reference internal" href="examples/03_forward_engines/01_gravity_gradiometry_inversion_pgi.html#sphx-glr-examples-03-forward-engines-01-gravity-gradiometry-inversion-pgi-py"><span class="std std-ref">Inversion of Gravity Gradiometry Data on a Tree Mesh</span></a></p>
-  <div class="sphx-glr-thumbnail-title">Inversion of Gravity Gradiometry Data on a Tree Mesh</div>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the inversion of sub-surface density models from Full-Tensor Gravity G..."><img alt="" src="_images/sphx_glr_01_gravity_gradiometry_inversion_pgi_thumb.png" />
+<p><a class="reference internal" href="examples/03_forward_engines/01_gravity_gradiometry_inversion_pgi.html#sphx-glr-examples-03-forward-engines-01-gravity-gradiometry-inversion-pgi-py"><span class="std std-ref">Inversion of Full Tensor Gravity Gradiometry Data</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Inversion of Full Tensor Gravity Gradiometry Data</div>
 </div><div class="sphx-glr-thumbcontainer" tooltip="This script demonstrates the calculation of forward gravity for model 1. It utilizes libraries ..."><img alt="" src="_images/sphx_glr_02_model_1_gempy_fw_gravity_thumb.png" />
 <p><a class="reference internal" href="examples/03_forward_engines/02_model_1_gempy_fw_gravity.html#sphx-glr-examples-03-forward-engines-02-model-1-gempy-fw-gravity-py"><span class="std std-ref">Model 1 Forward Gravity</span></a></p>
   <div class="sphx-glr-thumbnail-title">Model 1 Forward Gravity</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the prediction of P-Wave velocities from hyperspectral data using mac..."><img alt="" src="_images/sphx_glr_03_HSI_To_Petrophysics_thumb.png" />
+<p><a class="reference internal" href="examples/03_forward_engines/03_HSI_To_Petrophysics.html#sphx-glr-examples-03-forward-engines-03-hsi-to-petrophysics-py"><span class="std std-ref">Predicting P-Wave Velocity from Hyperspectral Data</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Predicting P-Wave Velocity from Hyperspectral Data</div>
 </div></div></section>
 <section id="probabilistic-modeling">
 <h3>Probabilistic Modeling<a class="headerlink" href="#probabilistic-modeling" title="Permalink to this heading">¶</a></h3>
@@ -295,7 +298,7 @@ read/write. Currently, the <code class="docutils literal notranslate"><span clas
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="examples/01_readers/index.html">Readers and Parsers</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/02_structural_modeling/index.html">Structural Modeling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/03_forward_engines/index.html">Forward GeoPhysics Engines and Inversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/03_forward_engines/index.html">GeoPhysics and Inversion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/04_probabilistic_modeling/index.html">Probabilistic Modeling</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
@@ -320,7 +323,7 @@ read/write. Currently, the <code class="docutils literal notranslate"><span clas
       <div class="clearer"></div>
     </div>
     <div class="footer">
-      &copy;2023-2023, Vector Geology Team.
+      &copy;2023-2024, Vector Geology Team.
       
       |
       Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.1</a>
