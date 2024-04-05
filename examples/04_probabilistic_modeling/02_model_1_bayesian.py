@@ -173,7 +173,7 @@ geo_model.grid.set_inactive("regular")
 # %%
 # Perform prior sampling and visualize the results
 if True:
-    prior = Predictive(model, num_samples=50)(y_obs_list, interpolation_input=geo_model.interpolation_input)
+    prior = Predictive(model, num_samples=50)(y_obs_list, interpolation_input=geo_model.interpolation_input_copy)
     data = az.from_pyro(prior=prior)
     az.plot_trace(data.prior)
     plt.show()
@@ -183,12 +183,12 @@ if True:
 pyro.primitives.enable_validation(is_validate=True)
 nuts_kernel = NUTS(model)
 mcmc = MCMC(nuts_kernel, num_samples=1000, warmup_steps=300)
-mcmc.run(y_obs_list, interpolation_input=geo_model.interpolation_input)
+mcmc.run(y_obs_list, interpolation_input=geo_model.interpolation_input_copy)
 
 # %%
 # Analyze posterior samples and predictives, and visualize the results
 posterior_samples = mcmc.get_samples(50)
-posterior_predictive = Predictive(model, posterior_samples)(y_obs_list, interpolation_input=geo_model.interpolation_input)
+posterior_predictive = Predictive(model, posterior_samples)(y_obs_list, interpolation_input=geo_model.interpolation_input_copy)
 data = az.from_pyro(
     posterior=mcmc,
     prior=prior,

@@ -126,7 +126,7 @@ plot_geo_setting_well(geo_model=geo_model)
 # By using Pyro, a probabilistic programming language, we define a model that integrates
 # geological data with uncertainty quantification.
 
-sp_coords_copy = geo_model.interpolation_input.surface_points.sp_coords.copy()
+sp_coords_copy = geo_model.interpolation_input_copy.surface_points.sp_coords.copy()
 # Change the backend to PyTorch for probabilistic modeling
 BackendTensor.change_backend_gempy(engine_backend=gp.data.AvailableBackends.PYTORCH)
 
@@ -149,7 +149,7 @@ def model(y_obs_list):
     mu_top = pyro.sample(r'$\mu_{top}$', dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64)))
 
     # Update the model with the new top layer's location
-    interpolation_input = geo_model.interpolation_input
+    interpolation_input = geo_model.interpolation_input_copy
     interpolation_input.surface_points.sp_coords = torch.index_put(
         interpolation_input.surface_points.sp_coords,
         (torch.tensor([0]), torch.tensor([2])),
