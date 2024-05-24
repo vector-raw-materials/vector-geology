@@ -1,29 +1,27 @@
 """
-Construct Spremberg
--------------------
+Construct Spremberg: Importing borehole data
+--------------------------------------------
 
 This example demonstrates how to construct a 3D geological model of the Model 1 deposit using GemPy. 
 It leverages custom APIs to streamline the modeling process.
 """
-import numpy as np
+# %% [markdown]
+# Import the necessary libraries for geological modeling and visualization.
 import os
 import pandas as pd
-
-import pytest
 import pyvista
 
+import gempy as gp
+import gempy_viewer as gpv
 from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
 from subsurface.core.geological_formats.boreholes.collars import Collars
 from subsurface.core.geological_formats.boreholes.survey import Survey
 from subsurface.core.reader_helpers.readers_data import GenericReaderFilesHelper
 from subsurface.modules.reader.wells.read_borehole_interface import read_lith, read_survey, read_collar
-from subsurface.modules.visualization import to_pyvista_line, pv_plot, to_pyvista_points, init_plotter
+from subsurface.modules.visualization import to_pyvista_line, to_pyvista_points, init_plotter
 
-import gempy as gp
-import gempy_viewer as gpv
-
-# %%
-
+# %% [markdown]
+# Initialize the reader for the lithological data. Specify the file path and column mappings.
 reader: GenericReaderFilesHelper = GenericReaderFilesHelper(
     file_or_buffer=os.getenv("PATH_TO_SPREMBERG_STRATIGRAPHY"),
     columns_map={
@@ -34,7 +32,11 @@ reader: GenericReaderFilesHelper = GenericReaderFilesHelper(
     }
 )
 
+# Read the lithological data into a DataFrame.
 lith: pd.DataFrame = read_lith(reader)
+
+# %% [markdown]
+# Initialize the reader for the survey data. Specify the file path and column mappings.
 reader: GenericReaderFilesHelper = GenericReaderFilesHelper(
     file_or_buffer=os.getenv("PATH_TO_SPREMBERG_SURVEY"),
     columns_map={
@@ -43,43 +45,60 @@ reader: GenericReaderFilesHelper = GenericReaderFilesHelper(
             'azimuth': 'azi'
     },
 )
+
+# Read the survey data into a DataFrame.
 df = read_survey(reader)
 
+# %% [markdown]
+# Create a Survey object from the DataFrame and update it with lithological data.
 survey: Survey = Survey.from_df(df)
 survey.update_survey_with_lith(lith)
 
+# %% [markdown]
+# Initialize the reader for the collar data. Specify the file path, header, and column mappings.
 reader_collar: GenericReaderFilesHelper = GenericReaderFilesHelper(
     file_or_buffer=os.getenv("PATH_TO_SPREMBERG_COLLAR"),
     header=0,
     usecols=[0, 1, 2, 4],
     columns_map={
-            "hole_id"            : "id",  # ? Index name is not mapped
+            "hole_id"            : "id",
             "X_GK5_incl_inserted": "x",
             "Y__incl_inserted"   : "y",
             "Z_GK"               : "z"
     }
 )
+
+# Read the collar data into a DataFrame and create a Collars object.
 df_collar = read_collar(reader_collar)
 collar = Collars.from_df(df_collar)
 
+# %% [markdown]
+# Combine the collar and survey data into a BoreholeSet.
 borehole_set = BoreholeSet(
     collars=collar,
     survey=survey,
     merge_option=MergeOptions.INTERSECT
 )
+
+# %% [markdown]
+# Visualize the borehole trajectories and collars using PyVista.
 well_mesh = to_pyvista_line(
     line_set=borehole_set.combined_trajectory,
     active_scalar="lith_ids",
-    radius=2    
+    radius=2
 )
 
 collars = to_pyvista_points(
     borehole_set.collars.collar_loc,
 )
 
+# Initialize the PyVista plotter.
 pyvista_plotter = init_plotter()
 
+# Define the units limit for thresholding the well mesh.
 units_limit = [-1, 32]
+
+# Add the well mesh and collars to the plotter and display.
 pyvista_plotter.add_mesh(
     well_mesh.threshold(units_limit),
     cmap="tab20c",
@@ -94,7 +113,8 @@ pyvista_plotter.add_mesh(
 
 pyvista_plotter.show()
 
-# %%
+# %% [markdown]
+# Create structural elements from the borehole set for different lithological units.
 elements: list[gp.data.StructuralElement] = gp.structural_elements_from_borehole_set(
     borehole_set=borehole_set,
     elements_dict={
@@ -121,6 +141,8 @@ elements: list[gp.data.StructuralElement] = gp.structural_elements_from_borehole
     }
 )
 
+# %% [markdown]
+# Group the structural elements into a StructuralGroup and create a StructuralFrame.
 group = gp.data.StructuralGroup(
     name="Stratigraphic Pile",
     elements=elements,
@@ -131,11 +153,13 @@ structural_frame = gp.data.StructuralFrame(
     color_gen=gp.data.ColorsGenerator()
 )
 
-# %%
-# Get the extent from the borehole set
+# %% [markdown]
+# Determine the extent of the geological model from the surface points coordinates.
 all_surface_points_coords: gp.data.SurfacePointsTable = structural_frame.surface_points_copy
 extent_from_data = all_surface_points_coords.xyz.min(axis=0), all_surface_points_coords.xyz.max(axis=0)
 
+# %% [markdown]
+# Create a GeoModel with the specified extent, grid resolution, and interpolation options.
 geo_model = gp.data.GeoModel(
     name="Stratigraphic Pile",
     structural_frame=structural_frame,
@@ -151,25 +175,24 @@ geo_model = gp.data.GeoModel(
     ),
 )
 
+# %% [markdown]
+# Visualize the 3D geological model using GemPy's plot_3d function.
 gempy_plot = gpv.plot_3d(
     model=geo_model,
-    # ve=10,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
-            # 'show_zlabels': True,
     },
     show=True,
     image=True
 )
 
-#%% Putting everything together
-
+# %% [markdown]
+# Combine all visual elements and display them together.
 sp_mesh: pyvista.PolyData = gempy_plot.surface_points_mesh
 
 pyvista_plotter = init_plotter()
 pyvista_plotter.show_bounds(all_edges=True)
-
 
 pyvista_plotter.add_mesh(
     well_mesh.threshold(units_limit),
@@ -183,30 +206,6 @@ pyvista_plotter.add_mesh(
     render_points_as_spheres=True
 )
 
-# pyvista_plotter.add_mesh(
-#     sp_mesh
-# )
-
 pyvista_plotter.add_actor(gempy_plot.surface_points_actor)
 
 pyvista_plotter.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
