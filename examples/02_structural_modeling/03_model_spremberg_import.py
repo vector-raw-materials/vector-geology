@@ -85,7 +85,7 @@ borehole_set = BoreholeSet(
 well_mesh = to_pyvista_line(
     line_set=borehole_set.combined_trajectory,
     active_scalar="lith_ids",
-    radius=2
+    radius=40
 )
 
 collars = to_pyvista_points(
@@ -96,7 +96,7 @@ collars = to_pyvista_points(
 pyvista_plotter = init_plotter()
 
 # Define the units limit for thresholding the well mesh.
-units_limit = [-1, 32]
+units_limit = [0, 20]
 
 # Add the well mesh and collars to the plotter and display.
 pyvista_plotter.add_mesh(
@@ -118,14 +118,14 @@ pyvista_plotter.show()
 elements: list[gp.data.StructuralElement] = gp.structural_elements_from_borehole_set(
     borehole_set=borehole_set,
     elements_dict={
-            "Buntsandstein"       : {
-                    "id"   : 53_300,
-                    "color": "#983999"
-            },
-            "Werra-Anhydrit"      : {
-                    "id"   : 61_730,
-                    "color": "#00923f"
-            },
+            # "Buntsandstein"       : {
+            #         "id"   : 53_300,
+            #         "color": "#983999"
+            # },
+            # "Werra-Anhydrit"      : {
+            #         "id"   : 61_730,
+            #         "color": "#00923f"
+            # },
             "Kupfershiefer"       : {
                     "id"   : 61_760,
                     "color": "#da251d"
