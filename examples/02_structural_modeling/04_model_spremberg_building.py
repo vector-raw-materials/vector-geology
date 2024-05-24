@@ -18,7 +18,7 @@ elements_to_gempy = {
         #         "id"   : 61_730,
         #         "color": "#00923f"
         # },
-        "Kupfershiefer"       : {
+        "Kupferschiefer"      : {
                 "id"   : 61_760,
                 "color": "#da251d"
         },
@@ -26,7 +26,7 @@ elements_to_gempy = {
                 "id"   : 61_770,
                 "color": "#f8c300"
         },
-        "Rotliegend": {
+        "Rotliegend"          : {
                 "id"   : 62_000,
                 "color": "#bb825b"
         }

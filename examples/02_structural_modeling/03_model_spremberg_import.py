@@ -85,7 +85,7 @@ borehole_set = BoreholeSet(
 well_mesh = to_pyvista_line(
     line_set=borehole_set.combined_trajectory,
     active_scalar="lith_ids",
-    radius=40
+    radius=10
 )
 
 collars = to_pyvista_points(
@@ -206,6 +206,14 @@ pyvista_plotter.add_mesh(
     render_points_as_spheres=True
 )
 
+pyvista_plotter.add_point_labels(
+    points=collar.collar_loc.points,
+    labels=collar.ids,
+    point_size=10,
+    shape_opacity=0.5,
+    font_size=12,
+    bold=True
+)
 pyvista_plotter.add_actor(gempy_plot.surface_points_actor)
 
 pyvista_plotter.show()
