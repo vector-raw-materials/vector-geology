@@ -118,14 +118,14 @@ pyvista_plotter.show()
 elements: list[gp.data.StructuralElement] = gp.structural_elements_from_borehole_set(
     borehole_set=borehole_set,
     elements_dict={
-            # "Buntsandstein"       : {
-            #         "id"   : 53_300,
-            #         "color": "#983999"
-            # },
-            # "Werra-Anhydrit"      : {
-            #         "id"   : 61_730,
-            #         "color": "#00923f"
-            # },
+            "Buntsandstein"       : {
+                    "id"   : 53_300,
+                    "color": "#983999"
+            },
+            "Werra-Anhydrit"      : {
+                    "id"   : 61_730,
+                    "color": "#00923f"
+            },
             "Kupfershiefer"       : {
                     "id"   : 61_760,
                     "color": "#da251d"
