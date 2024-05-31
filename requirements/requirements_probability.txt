@@ -1,0 +1,8 @@
+-r requirements.txt
+
+xarray
+torch
+pyro-ppl
+arviz
+seaborn
+scikit-learn
