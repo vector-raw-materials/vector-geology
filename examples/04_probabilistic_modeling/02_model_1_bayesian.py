@@ -6,28 +6,27 @@ Probabilistic Inversion Example: Geological Model
 This example demonstrates a probabilistic inversion of a geological model using Bayesian methods.
 """
 
-import time
 import os
+import time
+
+import arviz as az
 import numpy as np
-import xarray as xr
-import pandas as pd
-import torch
 import pyro
 import pyro.distributions as dist
-import gempy as gp
-import gempy_viewer as gpv
-from matplotlib import pyplot as plt
+import torch
+import xarray as xr
 from dotenv import dotenv_values
-from pyro.infer import MCMC, NUTS, Predictive
-import arviz as az
-
 from gempy_probability.plot_posterior import default_red, default_blue
+from matplotlib import pyplot as plt
+from pyro.infer import MCMC, NUTS, Predictive
+
+import gempy as gp
+import gempy_engine
+import gempy_viewer as gpv
+from gempy_engine.core.backend_tensor import BackendTensor
 from vector_geology.bayesian_helpers import calculate_scale_shift, gaussian_kernel
 from vector_geology.model_1_builder import initialize_geo_model, setup_geophysics
 from vector_geology.omf_to_gempy import process_file
-from vector_geology.utils import extend_box
-import gempy_engine
-from gempy_engine.core.backend_tensor import BackendTensor
 
 # %%
 # Start the timer for benchmarking purposes

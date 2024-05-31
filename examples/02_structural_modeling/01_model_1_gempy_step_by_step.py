@@ -76,7 +76,7 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
     project_name='Tutorial_ch1_1_Basics',
     extent=global_extent,
     resolution=[20, 10, 20],
-    refinement=6,
+    refinement=4,
     structural_frame=structural_frame
 )
 
@@ -99,7 +99,7 @@ gp.set_topography_from_arrays(
 # Here, we optimize the nugget value to balance between overfitting and underfitting the data.
 
 TRIGGER_OPTIMIZE_NUGGETS = False
-APPLY_OPTIMIZED_NUGGETS = True
+APPLY_OPTIMIZED_NUGGETS = False
 if TRIGGER_OPTIMIZE_NUGGETS:
 
     # Optimization process for different structural groups
