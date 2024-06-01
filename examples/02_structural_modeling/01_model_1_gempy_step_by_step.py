@@ -86,11 +86,13 @@ geo_model: gp.data.GeoModel = gp.create_geomodel(
 
 import xarray as xr
 
-dataset: xr.Dataset = xr.open_dataset(os.path.join(path, "Topography.nc"))
-gp.set_topography_from_arrays(
-    grid=geo_model.grid,
-    xyz_vertices=dataset.vertex.values
-)
+SET_TOPOGRAPHY = False
+if SET_TOPOGRAPHY:
+    dataset: xr.Dataset = xr.open_dataset(os.path.join(path, "Topography.nc"))
+    gp.set_topography_from_arrays(
+        grid=geo_model.grid,
+        xyz_vertices=dataset.vertex.values
+    )
 
 # %%
 # Optimizing Nuggets
@@ -184,6 +186,7 @@ gpv.plot_2d(geo_model, show_scalar=False)
 gempy_vista = gpv.plot_3d(
     model=geo_model,
     show=True,
+    show_lith=False,
     kwargs_plot_structured_grid={'opacity': 0.8}
 )
 
