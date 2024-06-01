@@ -170,7 +170,7 @@ geo_model.update_transform()
 gp.compute_model(
     geo_model,
     engine_config=gp.data.GemPyEngineConfig(
-        backend=gp.data.AvailableBackends.PYTORCH,
+        backend=gp.data.AvailableBackends.numpy,
         dtype="float64"
     ),
 )
