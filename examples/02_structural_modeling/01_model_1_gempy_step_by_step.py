@@ -11,6 +11,8 @@ import numpy as np
 import os
 import xarray as xr
 from dotenv import dotenv_values
+from gempy_engine.core.data.kernel_classes.solvers import Solvers
+
 from vector_geology.omf_to_gempy import process_file
 import gempy as gp
 import gempy_viewer as gpv
@@ -167,10 +169,11 @@ geo_model.structural_frame.basement_color = "#8B4220"
 geo_model.update_transform()
 
 # Execute the model computation
+geo_model.interpolation_options.kernel_options.kernel_solver = Solvers.SCIPY_CG
 gp.compute_model(
     geo_model,
     engine_config=gp.data.GemPyEngineConfig(
-        backend=gp.data.AvailableBackends.PYTORCH,
+        backend=gp.data.AvailableBackends.numpy,
         dtype="float64"
     ),
 )
@@ -181,6 +184,13 @@ gp.compute_model(
 # 2D visualization of the model
 gpv.plot_2d(geo_model, show_scalar=False)
 
+# %%
+# Measure the total time taken to execute the script, providing insights into performance.
+
+end_time = time.time()
+execution_time = end_time - start_time
+print(f"The function executed in {execution_time} seconds.")
+
 #%%
 # 3D visualization in GemPy viewer
 gempy_vista = gpv.plot_3d(
@@ -190,11 +200,5 @@ gempy_vista = gpv.plot_3d(
     kwargs_plot_structured_grid={'opacity': 0.8}
 )
 
-# %%
-# Measure the total time taken to execute the script, providing insights into performance.
-
-end_time = time.time()
-execution_time = end_time - start_time
-print(f"The function executed in {execution_time} seconds.")
 
 # sphinx_gallery_thumbnail_number = -1
