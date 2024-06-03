@@ -14,23 +14,28 @@ elements_to_gempy = {
         #         "id"   : 53_300,
         #         "color": "#983999"
         # },
-        # "Werra-Anhydrit"      : {
-        #         "id"   : 61_730,
-        #         "color": "#00923f"
+        "Werra-Anhydrit"      : {
+                "id"   : 61_730,
+                "color": "#00923f"
+        },
+        # "Kupferschiefer"      : {
+        #         "id"   : 61_760,
+        #         "color": "#da251d"
         # },
-        "Kupferschiefer"      : {
-                "id"   : 61_760,
-                "color": "#da251d"
-        },
-        "Zechsteinkonglomerat": {
-                "id"   : 61_770,
-                "color": "#f8c300"
-        },
+        # "Zechsteinkonglomerat": {
+        #         "id"   : 61_770,
+        #         "color": "#f8c300"
+        # },
         "Rotliegend"          : {
                 "id"   : 62_000,
                 "color": "#bb825b"
         }
 }
 
-geo_model: gp.data.GeoModel = generate_spremberg_model(elements_to_gempy=elements_to_gempy)
-gpv.plot_3d(geo_model)
+geo_model: gp.data.GeoModel = generate_spremberg_model(
+        elements_to_gempy=elements_to_gempy,
+        plot = True
+)
+
+gempy_plot = gpv.plot_3d(geo_model,ve=10)
+

@@ -1,11 +1,14 @@
 import os
 import pandas as pd
+import pyvista
 
 import gempy as gp
+import gempy_viewer as gpv
 import subsurface as ss
+from subsurface.modules.visualization import init_plotter, to_pyvista_points, to_pyvista_line
 
 
-def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]] ) -> gp.data.GeoModel:
+def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]], plot: bool = False) -> gp.data.GeoModel:
     borehole_set: ss.core.geological_formats.BoreholeSet = _read_spremberg_borehole_set()
 
     elements: list[gp.data.StructuralElement] = gp.structural_elements_from_borehole_set(
@@ -43,7 +46,55 @@ def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]] ) -> g
         ),
     )
 
+    gempy_plot = gpv.plot_3d(
+        model=geo_model,
+        kwargs_pyvista_bounds={
+                'show_xlabels': False,
+                'show_ylabels': False,
+        },
+        show=True,
+        image=True
+    )
+
+    if plot:
+        _plot(borehole_set, gempy_plot)
+
     return geo_model
+
+
+def _plot(borehole_set, gempy_plot):
+    sp_mesh: pyvista.PolyData = gempy_plot.surface_points_mesh
+    well_mesh = to_pyvista_line(
+        line_set=borehole_set.combined_trajectory,
+        active_scalar="lith_ids",
+        radius=10
+    )
+    units_limit = [0, 20]
+    collars = to_pyvista_points(
+        borehole_set.collars.collar_loc,
+    )
+    pyvista_plotter = init_plotter(ve=10)
+    pyvista_plotter.show_bounds(all_edges=False)
+    pyvista_plotter.add_mesh(
+        well_mesh.threshold(units_limit),
+        cmap="tab20c",
+        clim=units_limit
+    )
+    pyvista_plotter.add_mesh(
+        collars,
+        point_size=10,
+        render_points_as_spheres=True
+    )
+    pyvista_plotter.add_point_labels(
+        points=borehole_set.collars.collar_loc.points,
+        labels=borehole_set.collars.ids,
+        point_size=3,
+        shape_opacity=0.5,
+        font_size=12,
+        bold=True
+    )
+    pyvista_plotter.add_actor(gempy_plot.surface_points_actor)
+    pyvista_plotter.show()
 
 
 def _read_spremberg_borehole_set() -> ss.core.geological_formats.BoreholeSet:
