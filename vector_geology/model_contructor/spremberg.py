@@ -1,3 +1,4 @@
+import numpy as np
 import os
 import pandas as pd
 import pyvista
@@ -31,13 +32,33 @@ def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]], plot:
     all_surface_points_coords: gp.data.SurfacePointsTable = structural_frame.surface_points_copy
     extent_from_data = all_surface_points_coords.xyz.min(axis=0), all_surface_points_coords.xyz.max(axis=0)
 
+    extent_from_data_ = [extent_from_data[0][0],
+                         extent_from_data[1][0],
+                         extent_from_data[0][1],
+                         extent_from_data[1][1],
+                         extent_from_data[0][2],
+                         extent_from_data[1][2]]
+
+
+    # Calculate point_y_axis
+    regular_grid = gp.data.grid.RegularGrid.from_corners_box(
+        pivot=(5_478_256.5, 5_698_528.946534388),
+        point_x_axis=((5_483_077.527386775, 5_710_030.2446156405)),
+        distance_point3=35_000,
+        zmin=extent_from_data[0][2],
+        zmax=extent_from_data[1][2],
+        resolution=np.array([50, 50, 50]),
+        plot=True
+    )
+
+
+    grid = gp.data.grid.Grid()
+    grid.dense_grid = regular_grid
+
     geo_model = gp.data.GeoModel(
         name="Stratigraphic Pile",
         structural_frame=structural_frame,
-        grid=gp.data.Grid(
-            extent=[extent_from_data[0][0], extent_from_data[1][0], extent_from_data[0][1], extent_from_data[1][1], extent_from_data[0][2], extent_from_data[1][2]],
-            resolution=(50, 50, 50)
-        ),
+        grid=grid,
         interpolation_options=gp.data.InterpolationOptions(
             range=5,
             c_o=10,
@@ -57,12 +78,12 @@ def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]], plot:
     )
 
     if plot:
-        _plot(borehole_set, gempy_plot)
+        _plot(borehole_set, gempy_plot, geo_model.grid)
 
     return geo_model
 
 
-def _plot(borehole_set, gempy_plot):
+def _plot(borehole_set, gempy_plot, grid: gp.data.grid.Grid):
     sp_mesh: pyvista.PolyData = gempy_plot.surface_points_mesh
     well_mesh = to_pyvista_line(
         line_set=borehole_set.combined_trajectory,
@@ -94,6 +115,10 @@ def _plot(borehole_set, gempy_plot):
         bold=True
     )
     pyvista_plotter.add_actor(gempy_plot.surface_points_actor)
+
+    grid_points = pyvista.PointSet(grid.values)
+    pyvista_plotter.add_mesh(grid_points, color="red", point_size=1)
+
     pyvista_plotter.show()
 
 
@@ -137,7 +162,7 @@ def _read_spremberg_borehole_set() -> ss.core.geological_formats.BoreholeSet:
                 "Z_GK"               : "z"
         }
     )
-    
+
     df_collar = read_collar(reader_collar)
     collar = Collars.from_df(df_collar)
     borehole_set = BoreholeSet(
@@ -145,5 +170,5 @@ def _read_spremberg_borehole_set() -> ss.core.geological_formats.BoreholeSet:
         survey=survey,
         merge_option=MergeOptions.INTERSECT
     )
-    
+
     return borehole_set
