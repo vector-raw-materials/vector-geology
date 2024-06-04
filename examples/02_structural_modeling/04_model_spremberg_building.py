@@ -55,21 +55,26 @@ gp.add_orientations(
 gempy_plot = gpv.plot_3d(
     model=geo_model,
     ve=10,
+    image=True,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
     }
 )
 
-
 # %%
-gp.compute_model(geo_model)
-
+gp.compute_model(
+    gempy_model=geo_model,
+    engine_config=gp.data.GemPyEngineConfig(
+        backend=gp.data.AvailableBackends.PYTORCH,
+        dtype="float64",
+    )
+)
 
 # %%
 gpv.plot_3d(
     model=geo_model,
-    ve=1,
+    ve=10,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
