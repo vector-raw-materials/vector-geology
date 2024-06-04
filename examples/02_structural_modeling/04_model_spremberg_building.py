@@ -56,12 +56,13 @@ gempy_plot = gpv.plot_3d(
     model=geo_model,
     ve=10,
     image=False,
+    transformed_data=True,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
     },
     kwargs_plot_data={
-            'arrow_size': 1000
+            'arrow_size': 0.001000
     }
 )
 
@@ -78,11 +79,12 @@ gp.compute_model(
 gpv.plot_3d(
     model=geo_model,
     ve=10,
+    transformed_data=True,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
     },
     kwargs_plot_data={
-            'arrow_size': 1000
+            'arrow_size': .001000
     }
 )
