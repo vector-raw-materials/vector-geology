@@ -44,21 +44,24 @@ geo_model: gp.data.GeoModel = generate_spremberg_model(
 rotliegend: gp.data.StructuralElement = geo_model.structural_frame.get_element_by_name("Rotliegend")
 gp.add_orientations(
     geo_model=geo_model,
-    x=[5_483_077.527386775],
-    y=[5_710_030.2446156405],
+    x=[5_460_077.527386775],
+    y=[5_720_030.2446156405],
     z=[0.946534388],
     elements_names=["Rotliegend"],
-    pole_vector=[np.array([0, 0, 1])],
+    pole_vector=[np.array([.7, 0.7, 0.2])],
 )
 
 # %%
 gempy_plot = gpv.plot_3d(
     model=geo_model,
     ve=10,
-    image=True,
+    image=False,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
+    },
+    kwargs_plot_data={
+            'arrow_size': 1000
     }
 )
 
@@ -78,5 +81,8 @@ gpv.plot_3d(
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
+    },
+    kwargs_plot_data={
+            'arrow_size': 1000
     }
 )
