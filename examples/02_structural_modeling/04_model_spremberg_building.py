@@ -79,7 +79,7 @@ gp.compute_model(
 gpv.plot_3d(
     model=geo_model,
     ve=10,
-    transformed_data=True,
+    transformed_data=False,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
