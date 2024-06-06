@@ -70,7 +70,8 @@ gempy_plot = gpv.plot_3d(
 
 # * Ignore curvature for now
 geo_model.interpolation_options.kernel_options.range = 1
-geo_model.interpolation_options.compute_scalar_gradient = False
+geo_model.interpolation_options.compute_scalar_gradient = True
+geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 5
 gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
@@ -82,6 +83,7 @@ gp.compute_model(
 # %%
 gpv.plot_3d(
     model=geo_model,
+    show_lith=False,
     ve=10,
     image=False,
     transformed_data=False,

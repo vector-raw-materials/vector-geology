@@ -41,30 +41,33 @@ def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]], plot:
 
 
     # Calculate point_y_axis
+    n_octree_levels = 6
     regular_grid = gp.data.grid.RegularGrid.from_corners_box(
         pivot=(5_478_256.5, 5_698_528.946534388),
         point_x_axis=((5_483_077.527386775, 5_710_030.2446156405)),
         distance_point3=35_000,
         zmin=extent_from_data[0][2],
         zmax=extent_from_data[1][2],
-        resolution=np.array([2, 2, 2]),
+        resolution=np.array([2 ** n_octree_levels] * 3),
         plot=True
     )
-
+    
+    
+    interpolation_options = gp.data.InterpolationOptions(
+        range=5,
+        c_o=10,
+        mesh_extraction=True,
+        number_octree_levels=n_octree_levels,
+    )
 
     grid = gp.data.grid.Grid()
-    grid.octree_grid = regular_grid
+    grid.set_octree_grid(regular_grid, interpolation_options.evaluation_options)
 
     geo_model = gp.data.GeoModel(
         name="Stratigraphic Pile",
         structural_frame=structural_frame,
         grid=grid,
-        interpolation_options=gp.data.InterpolationOptions(
-            range=5,
-            c_o=10,
-            mesh_extraction=True,
-            number_octree_levels=3,
-        ),
+        interpolation_options=interpolation_options,
     )
 
     gempy_plot = gpv.plot_3d(
