@@ -47,13 +47,13 @@ def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]], plot:
         distance_point3=35_000,
         zmin=extent_from_data[0][2],
         zmax=extent_from_data[1][2],
-        resolution=np.array([50, 50, 50]),
+        resolution=np.array([2, 2, 2]),
         plot=True
     )
 
 
     grid = gp.data.grid.Grid()
-    grid.dense_grid = regular_grid
+    grid.octree_grid = regular_grid
 
     geo_model = gp.data.GeoModel(
         name="Stratigraphic Pile",

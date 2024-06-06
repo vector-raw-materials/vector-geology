@@ -24,10 +24,10 @@ elements_to_gempy = {
         #         "id"   : 61_760,
         #         "color": "#da251d"
         # },
-        # "Zechsteinkonglomerat": {
-        #         "id"   : 61_770,
-        #         "color": "#f8c300"
-        # },
+        "Zechsteinkonglomerat": {
+                "id"   : 61_770,
+                "color": "#f8c300"
+        },
         "Rotliegend"    : {
                 "id"   : 62_000,
                 "color": "#bb825b"
@@ -55,7 +55,7 @@ gp.add_orientations(
 gempy_plot = gpv.plot_3d(
     model=geo_model,
     ve=10,
-    image=False,
+    image=True,
     transformed_data=True,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
@@ -67,6 +67,10 @@ gempy_plot = gpv.plot_3d(
 )
 
 # %%
+
+# * Ignore curvature for now
+geo_model.interpolation_options.kernel_options.range = 1
+geo_model.interpolation_options.compute_scalar_gradient = False
 gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
@@ -79,12 +83,13 @@ gp.compute_model(
 gpv.plot_3d(
     model=geo_model,
     ve=10,
+    image=False,
     transformed_data=False,
     kwargs_pyvista_bounds={
             'show_xlabels': False,
             'show_ylabels': False,
     },
     kwargs_plot_data={
-            'arrow_size': .001000
+            'arrow_size': 100.001000
     }
 )
