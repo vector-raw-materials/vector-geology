@@ -17,7 +17,7 @@ elements_to_gempy = {
         #         "id"   : 53_300,
         #         "color": "#983999"
         # },
-        "Werra-Anhydrit": {
+        "Werra-Anhydrit"      : {
                 "id"   : 61_730,
                 "color": "#00923f"
         },
@@ -29,7 +29,7 @@ elements_to_gempy = {
                 "id"   : 61_770,
                 "color": "#f8c300"
         },
-        "Rotliegend"    : {
+        "Rotliegend"          : {
                 "id"   : 62_000,
                 "color": "#bb825b"
         }
@@ -56,6 +56,21 @@ gp.add_orientations(
             np.array([-1, 0, 0.2])
     ],
 )
+
+# %%
+pivot = [5_478_256.5, 5_698_528.946534388]
+point_2 = [5_483_077.527386775, 5_710_030.2446156405]
+point_3 = [5_465_977.5974836275, 5_712_059.373443342]
+section_dict = {
+        'section1': (pivot, point_2, [100, 100]),
+        'section2': (pivot, point_3, [100, 100]),
+        'section3': (point_2, point_3, [100, 100])
+}
+
+
+# %% 
+gp.set_section_grid(geo_model.grid, section_dict)
+gpv.plot_section_traces(geo_model)
 
 # %%
 _ = gpv.plot_3d(
@@ -85,6 +100,16 @@ gp.compute_model(
         backend=gp.data.AvailableBackends.PYTORCH,
         dtype="float64",
     )
+)
+
+# %%
+gpv.plot_2d(
+    model=geo_model,
+    figsize=(15, 15),
+    ve=10,
+    section_names=['section1', 'section2', 'section3'],
+    cell_number=-1,
+    direction='z',
 )
 
 # %%
