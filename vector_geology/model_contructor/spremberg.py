@@ -9,8 +9,9 @@ import subsurface as ss
 from subsurface.modules.visualization import init_plotter, to_pyvista_points, to_pyvista_line
 
 
-def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]], plot: bool = False) -> gp.data.GeoModel:
-    borehole_set: ss.core.geological_formats.BoreholeSet = _read_spremberg_borehole_set()
+def generate_spremberg_model(
+        borehole_set: ss.core.geological_formats.BoreholeSet,
+        elements_to_gempy: dict[str, dict[str, str]], plot: bool = False) -> gp.data.GeoModel:
 
     elements: list[gp.data.StructuralElement] = gp.structural_elements_from_borehole_set(
         borehole_set=borehole_set,
@@ -81,12 +82,17 @@ def generate_spremberg_model(elements_to_gempy: dict[str, dict[str, str]], plot:
     )
 
     if plot:
-        _plot(borehole_set, gempy_plot, geo_model.grid)
+        add_wells_plot(borehole_set, gempy_plot, geo_model.grid)
 
     return geo_model
 
 
-def _plot(borehole_set, gempy_plot, grid: gp.data.grid.Grid):
+def get_spremberg_borehole_set() -> ss.core.geological_formats.BoreholeSet:
+    borehole_set: ss.core.geological_formats.BoreholeSet = _read_spremberg_borehole_set()
+    return borehole_set
+
+
+def add_wells_plot(borehole_set, gempy_plot, grid: gp.data.grid.Grid):
     sp_mesh: pyvista.PolyData = gempy_plot.surface_points_mesh
     well_mesh = to_pyvista_line(
         line_set=borehole_set.combined_trajectory,
@@ -119,8 +125,9 @@ def _plot(borehole_set, gempy_plot, grid: gp.data.grid.Grid):
     )
     pyvista_plotter.add_actor(gempy_plot.surface_points_actor)
 
-    grid_points = pyvista.PointSet(grid.values)
-    pyvista_plotter.add_mesh(grid_points, color="red", point_size=1)
+    if ADD_GRID:=False:
+        grid_points = pyvista.PointSet(grid.values)
+        pyvista_plotter.add_mesh(grid_points, color="red", point_size=1)
 
     pyvista_plotter.show()
 
