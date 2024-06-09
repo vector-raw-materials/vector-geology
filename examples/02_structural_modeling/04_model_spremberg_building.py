@@ -13,10 +13,10 @@ from vector_geology.model_contructor.spremberg import generate_spremberg_model, 
 
 # %%
 elements_to_gempy = {
-        # "Buntsandstein"       : {
-        #         "id"   : 53_300,
-        #         "color": "#983999"
-        # },
+        "Buntsandstein"       : {
+                "id"   : 53_300,
+                "color": "#983999"
+        },
         "Werra-Anhydrit"      : {
                 "id"   : 61_730,
                 "color": "#00923f"
@@ -91,7 +91,7 @@ _ = gpv.plot_3d(
 
 # * Ignore curvature for now
 geo_model.interpolation_options.kernel_options.range = 3
-geo_model.interpolation_options.compute_scalar_gradient = True
+geo_model.interpolation_options.compute_scalar_gradient = False
 geo_model.interpolation_options.evaluation_options.curvature_threshold = 0.4
 geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 5
 gp.compute_model(
