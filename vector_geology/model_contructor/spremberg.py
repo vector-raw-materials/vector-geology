@@ -42,7 +42,7 @@ def generate_spremberg_model(
 
 
     # Calculate point_y_axis
-    n_octree_levels = 6
+    n_octree_levels = 7
     regular_grid = gp.data.grid.RegularGrid.from_corners_box(
         pivot=(5_478_256.5, 5_698_528.946534388),
         point_x_axis=((5_483_077.527386775, 5_710_030.2446156405)),

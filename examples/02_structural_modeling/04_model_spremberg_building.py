@@ -60,7 +60,7 @@ gp.add_orientations(
 # %%
 pivot = [5_478_256.5, 5_698_528.946534388]
 point_2 = [5_483_077.527386775, 5_710_030.2446156405]
-point_3 = [5_465_977.5974836275, 5_712_059.373443342]
+point_3 = [5_474_977.5974836275, 5_712_059.373443342]
 section_dict = {
         'section1': (pivot, point_2, [100, 100]),
         'section2': (pivot, point_3, [100, 100]),
@@ -94,6 +94,11 @@ geo_model.interpolation_options.kernel_options.range = 3
 geo_model.interpolation_options.compute_scalar_gradient = False
 geo_model.interpolation_options.evaluation_options.curvature_threshold = 0.4
 geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 5
+
+geo_model.interpolation_options.evaluation_options.error_threshold = 1.5
+geo_model.interpolation_options.evaluation_options.verbose = True
+
+
 gp.compute_model(
     gempy_model=geo_model,
     engine_config=gp.data.GemPyEngineConfig(
@@ -107,9 +112,7 @@ gpv.plot_2d(
     model=geo_model,
     figsize=(15, 15),
     ve=10,
-    section_names=['section1', 'section2', 'section3'],
-    cell_number=-1,
-    direction='z',
+    section_names=['section1', 'section2', 'section3']
 )
 
 # %%
