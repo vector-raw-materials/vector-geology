@@ -33,22 +33,17 @@ def generate_spremberg_model(
     all_surface_points_coords: gp.data.SurfacePointsTable = structural_frame.surface_points_copy
     extent_from_data = all_surface_points_coords.xyz.min(axis=0), all_surface_points_coords.xyz.max(axis=0)
 
-    extent_from_data_ = [extent_from_data[0][0],
-                         extent_from_data[1][0],
-                         extent_from_data[0][1],
-                         extent_from_data[1][1],
-                         extent_from_data[0][2],
-                         extent_from_data[1][2]]
-
-
     # Calculate point_y_axis
-    n_octree_levels = 7
+    n_octree_levels = 5
+    dz = extent_from_data[1][2] - extent_from_data[0][2]
+    zmin = extent_from_data[0][2] - dz * 0.1
+    zmax = extent_from_data[1][2] + dz * 0.1
     regular_grid = gp.data.grid.RegularGrid.from_corners_box(
         pivot=(5_478_256.5, 5_698_528.946534388),
         point_x_axis=((5_483_077.527386775, 5_710_030.2446156405)),
         distance_point3=35_000,
-        zmin=extent_from_data[0][2],
-        zmax=extent_from_data[1][2],
+        zmin=zmin,
+        zmax=zmax,
         resolution=np.array([2 ** n_octree_levels] * 3),
         plot=True
     )

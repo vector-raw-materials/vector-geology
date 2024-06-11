@@ -95,7 +95,7 @@ geo_model.interpolation_options.compute_scalar_gradient = False
 geo_model.interpolation_options.evaluation_options.curvature_threshold = 0.4
 geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 5
 
-geo_model.interpolation_options.evaluation_options.error_threshold = 1.5
+geo_model.interpolation_options.evaluation_options.error_threshold = 1
 geo_model.interpolation_options.evaluation_options.verbose = True
 
 
@@ -162,3 +162,26 @@ gempy_plot.p.add_point_labels(
 )
 
 gempy_plot.p.show()
+
+
+# %%
+# LiquidEarth Integration
+# ~~~~~~~~~~~~~~~~~~~~~~~
+# Beyond the classical plotting capabilities introduced in GemPy v3, users can now also upload models to LiquidEarth. 
+# `LiquidEarth <https://www.terranigma-solutions.com/liquidearth>`_ is a collaborative platform designed for 3D visualization,
+# developed by many of the main `gempy` maintainers,  with a strong focus on collaboration and sharing. 
+# This makes it an excellent tool for sharing your models with others and viewing them across different platforms.
+# To upload a model to LiquidEarth, you must have an account and a user token. Once your model is uploaded, 
+# you can easily share the link with anyone.
+
+# # %%
+if False:
+    link = gpv.plot_to_liquid_earth(
+        geo_model=geo_model,
+        space_name="Spremberg",
+        file_name="gempy_model",
+        user_token=None,  # If None, it will try to grab it from the environment
+        grab_link=True,
+    )
+
+    print(f"Generated Link: {link}")
