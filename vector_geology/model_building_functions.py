@@ -9,9 +9,7 @@ def optimize_nuggets_for_group(geo_model: gp.data.GeoModel, structural_group: gp
         color_gen=gp.data.ColorsGenerator()
     )
     
-    
     previous_structural_frame = geo_model.structural_frame
-    
     
     geo_model.structural_frame = temp_structural_frame
     
@@ -25,7 +23,7 @@ def optimize_nuggets_for_group(geo_model: gp.data.GeoModel, structural_group: gp
     )
 
     nugget_effect = geo_model.taped_interpolation_input.surface_points.nugget_effect_scalar.detach().numpy()
-    np.save(f"nuggets_{structural_group.name}", nugget_effect)
+    np.save(f"temp/nuggets_{structural_group.name}", nugget_effect)
     
     if plot_evaluation:
         import matplotlib.pyplot as plt
@@ -47,7 +45,7 @@ def optimize_nuggets_for_group(geo_model: gp.data.GeoModel, structural_group: gp
         )
 
         # Create a point cloud mesh
-        surface_points_xyz = geo_model.surface_points.df[['X', 'Y', 'Z']].to_numpy()
+        surface_points_xyz = geo_model.surface_points_copy.df[['X', 'Y', 'Z']].to_numpy()
     
         point_cloud = pv.PolyData(surface_points_xyz[0:])
         point_cloud['values'] = nugget_effect

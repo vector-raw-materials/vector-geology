@@ -74,8 +74,7 @@ structural_frame = gp.data.StructuralFrame(
 geo_model: gp.data.GeoModel = gp.create_geomodel(
     project_name='Tutorial_ch1_1_Basics',
     extent=global_extent,
-    resolution=[20, 10, 20],
-    refinement=6,
+    refinement=5,
     structural_frame=structural_frame
 )
 
@@ -100,7 +99,8 @@ gp.set_topography_from_arrays(
 TRIGGER_OPTIMIZE_NUGGETS = False
 APPLY_OPTIMIZED_NUGGETS = True
 if TRIGGER_OPTIMIZE_NUGGETS:
-
+    geo_model.interpolation_options.cache_mode = gp.data.InterpolationOptions.CacheMode.NO_CACHE
+    
     # Optimization process for different structural groups
     geo_model.interpolation_options.kernel_options.range = 0.7
     geo_model.interpolation_options.kernel_options.c_o = 4
@@ -127,9 +127,9 @@ if TRIGGER_OPTIMIZE_NUGGETS:
 
 if APPLY_OPTIMIZED_NUGGETS:
     # Apply optimized nuggets to the model
-    loaded_nuggets_red = np.load("../temp/nuggets_Red.npy")
-    loaded_nuggets_green = np.load("../temp/nuggets_Green.npy")
-    loaded_nuggets_blue = np.load("../temp/nuggets_Blue.npy")
+    loaded_nuggets_red = np.load("temp/nuggets_Red.npy")
+    loaded_nuggets_green = np.load("temp/nuggets_Green.npy")
+    loaded_nuggets_blue = np.load("temp/nuggets_Blue.npy")
     gp.modify_surface_points(
         geo_model,
         slice=None,
