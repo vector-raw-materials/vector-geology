@@ -45,7 +45,7 @@ def initialize_geo_model(structural_elements: list[gp.data.StructuralElement], e
         project_name='Tutorial_ch1_1_Basics',
         extent=extent,
         resolution=[20, 10, 20],
-        refinement=6,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
+        refinement=5,  # * Here we define the number of octree levels. If octree levels are defined, the resolution is ignored.
         structural_frame=structural_frame
     )
 
