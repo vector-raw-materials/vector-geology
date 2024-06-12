@@ -3,6 +3,8 @@ Construct Spremberg: Building initial model
 --------------------------------------------
 
 This example demonstrates...
+
+# sphinx_gallery_thumbnail_number = -1
 """
 import numpy as np
 

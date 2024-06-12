@@ -7,6 +7,7 @@ It leverages custom APIs to streamline the modeling process.
 """
 # %% [markdown]
 # Import the necessary libraries for geological modeling and visualization.
+# sphinx_gallery_thumbnail_number = -1
 import os
 import pandas as pd
 import pyvista
@@ -22,6 +23,8 @@ from subsurface.modules.visualization import to_pyvista_line, to_pyvista_points,
 
 # %% [markdown]
 # Initialize the reader for the lithological data. Specify the file path and column mappings.
+import dotenv
+dotenv.load_dotenv()
 reader: GenericReaderFilesHelper = GenericReaderFilesHelper(
     file_or_buffer=os.getenv("PATH_TO_SPREMBERG_STRATIGRAPHY"),
     columns_map={
