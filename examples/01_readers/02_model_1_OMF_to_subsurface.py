@@ -16,7 +16,7 @@ import xarray
 
 import subsurface
 from subsurface import TriSurf, LineSet
-from subsurface.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
+from subsurface.modules.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
 from vector_geology.utils import load_omf
 
 # %%

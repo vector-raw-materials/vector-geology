@@ -14,9 +14,11 @@ import omfvista
 import pyvista
 import subsurface
 from subsurface import TriSurf
-from subsurface.visualization import to_pyvista_mesh, pv_plot
-from subsurface.writer import base_structs_to_binary_file
 from dotenv import dotenv_values
+
+from subsurface.modules.visualization import to_pyvista_mesh, pv_plot
+from subsurface.modules.writer import base_structs_to_binary_file
+
 
 # %%
 # Load OMF Project
