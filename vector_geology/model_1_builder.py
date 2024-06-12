@@ -59,7 +59,7 @@ def initialize_geo_model(structural_elements: list[gp.data.StructuralElement], e
         import os
 
         project_root = os.getcwd()
-        path_to_temp = os.path.join(project_root, "../temp")
+        path_to_temp = os.path.join(project_root, "temp")
         apply_optimized_nuggets(
             geo_model=geo_model,
             loaded_nuggets_red=(np.load(path_to_temp + "/nuggets_Red.npy")),
