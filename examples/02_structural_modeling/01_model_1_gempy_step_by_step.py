@@ -9,7 +9,6 @@ This example illustrates how to construct a 3D geological model of a deposit usi
 import time
 import numpy as np
 import os
-import xarray as xr
 from dotenv import dotenv_values
 from vector_geology.omf_to_gempy import process_file
 import gempy as gp
