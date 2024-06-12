@@ -49,7 +49,7 @@ gp.add_orientations(
     geo_model=geo_model,
     x=[5_460_077.527386775, 5_450_077.527386775],
     y=[5_720_030.2446156405, 5_710_030.2446156405],
-    z=[0.946534388, -600],
+    z=[-600, -600],
     elements_names=["Rotliegend", "Rotliegend"],
     pole_vector=[
             np.array([.7, 0.7, 0.2]),
