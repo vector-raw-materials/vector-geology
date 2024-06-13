@@ -88,7 +88,7 @@ geo_model = gp.create_geomodel(
 
 geo_model.interpolation_options.uni_degree = 0
 geo_model.interpolation_options.mesh_extraction = False
-geo_model.interpolation_options.sigmoid_slope = 1100.
+geo_model.interpolation_options.sigmoid_slope = -1  # ! Temporary fix to set the hard sigmoid 
 
 # %%
 # Setting up a Custom Grid
