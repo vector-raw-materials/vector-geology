@@ -24,6 +24,12 @@ from gempy_probability.plot_posterior import default_red, default_blue
 # sphinx_gallery_thumbnail_number = -1
 
 # %%
+# Config
+seed = 123456
+torch.manual_seed(seed)
+pyro.set_rng_seed(seed)
+
+# %%
 # Set the data path
 data_path = os.path.abspath('../')
 
@@ -66,7 +72,7 @@ geo_model = gp.create_geomodel(
     project_name='Wells',
     extent=[0, 12000, -500, 500, 0, 4000],
     resolution=[100, 2, 100],
-    refinement=1,
+    # refinement=1,
     importer_helper=gp.data.ImporterHelper(
         path_to_orientations=data_path + "/data/2-layers/2-layers_orientations.csv",
         path_to_surface_points=data_path + "/data/2-layers/2-layers_surface_points.csv"
@@ -82,7 +88,7 @@ geo_model = gp.create_geomodel(
 
 geo_model.interpolation_options.uni_degree = 0
 geo_model.interpolation_options.mesh_extraction = False
-geo_model.interpolation_options.sigmoid_slope = 1100.
+geo_model.interpolation_options.sigmoid_slope = -1  # ! Temporary fix to set the hard sigmoid 
 
 # %%
 # Setting up a Custom Grid
@@ -126,7 +132,7 @@ plot_geo_setting_well(geo_model=geo_model)
 # By using Pyro, a probabilistic programming language, we define a model that integrates
 # geological data with uncertainty quantification.
 
-sp_coords_copy = geo_model.interpolation_input.surface_points.sp_coords.copy()
+sp_coords_copy = geo_model.interpolation_input_copy.surface_points.sp_coords.copy()
 # Change the backend to PyTorch for probabilistic modeling
 BackendTensor.change_backend_gempy(engine_backend=gp.data.AvailableBackends.PYTORCH)
 
@@ -149,7 +155,7 @@ def model(y_obs_list):
     mu_top = pyro.sample(r'$\mu_{top}$', dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64)))
 
     # Update the model with the new top layer's location
-    interpolation_input = geo_model.interpolation_input
+    interpolation_input = geo_model.interpolation_input_copy
     interpolation_input.surface_points.sp_coords = torch.index_put(
         interpolation_input.surface_points.sp_coords,
         (torch.tensor([0]), torch.tensor([2])),

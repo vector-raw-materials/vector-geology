@@ -6,28 +6,34 @@ Probabilistic Inversion Example: Geological Model
 This example demonstrates a probabilistic inversion of a geological model using Bayesian methods.
 """
 
-import time
 import os
+import time
+
+import arviz as az
 import numpy as np
-import xarray as xr
-import pandas as pd
-import torch
 import pyro
 import pyro.distributions as dist
-import gempy as gp
-import gempy_viewer as gpv
-from matplotlib import pyplot as plt
+import torch
+import xarray as xr
 from dotenv import dotenv_values
+from matplotlib import pyplot as plt
 from pyro.infer import MCMC, NUTS, Predictive
-import arviz as az
 
+import gempy as gp
+import gempy_engine
+import gempy_viewer as gpv
+from gempy_engine.core.backend_tensor import BackendTensor
 from gempy_probability.plot_posterior import default_red, default_blue
 from vector_geology.bayesian_helpers import calculate_scale_shift, gaussian_kernel
 from vector_geology.model_1_builder import initialize_geo_model, setup_geophysics
 from vector_geology.omf_to_gempy import process_file
-from vector_geology.utils import extend_box
-import gempy_engine
-from gempy_engine.core.backend_tensor import BackendTensor
+
+
+# %%
+# Config
+seed = 123456
+torch.manual_seed(seed)
+pyro.set_rng_seed(seed)
 
 # %%
 # Start the timer for benchmarking purposes
@@ -167,13 +173,14 @@ def model(y_obs_list, interpolation_input):
 y_obs_list = torch.tensor(adapted_observed_grav.values).view(1, 17)
 interpolation_options.mesh_extraction = False
 interpolation_options.number_octree_levels = 1
-geo_model.grid.set_inactive("topography")
-geo_model.grid.set_inactive("regular")
+geo_model.grid.active_grids ^= gp.data.Grid.GridTypes.TOPOGRAPHY
+geo_model.grid.active_grids ^= gp.data.Grid.GridTypes.DENSE
 
 # %%
 # Perform prior sampling and visualize the results
+raise NotImplementedError("From this point we need to optimize the code again.")
 if True:
-    prior = Predictive(model, num_samples=50)(y_obs_list, interpolation_input=geo_model.interpolation_input)
+    prior = Predictive(model, num_samples=50)(y_obs_list, interpolation_input=geo_model.interpolation_input_copy)
     data = az.from_pyro(prior=prior)
     az.plot_trace(data.prior)
     plt.show()
@@ -183,12 +190,12 @@ if True:
 pyro.primitives.enable_validation(is_validate=True)
 nuts_kernel = NUTS(model)
 mcmc = MCMC(nuts_kernel, num_samples=1000, warmup_steps=300)
-mcmc.run(y_obs_list, interpolation_input=geo_model.interpolation_input)
+mcmc.run(y_obs_list, interpolation_input=geo_model.interpolation_input_copy)
 
 # %%
 # Analyze posterior samples and predictives, and visualize the results
 posterior_samples = mcmc.get_samples(50)
-posterior_predictive = Predictive(model, posterior_samples)(y_obs_list, interpolation_input=geo_model.interpolation_input)
+posterior_predictive = Predictive(model, posterior_samples)(y_obs_list, interpolation_input=geo_model.interpolation_input_copy)
 data = az.from_pyro(
     posterior=mcmc,
     prior=prior,

@@ -32,7 +32,7 @@ Import the necessary libraries for reading an OMF file and processing it.
 
 .. GENERATED FROM PYTHON SOURCE LINES 14-23
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import omfvista
@@ -41,7 +41,7 @@ Import the necessary libraries for reading an OMF file and processing it.
     from dotenv import dotenv_values
     import subsurface
     from subsurface import TriSurf, LineSet
-    from subsurface.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
+    from subsurface.modules.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
 
 
 
@@ -59,7 +59,7 @@ Load the OMF project using a fixture.
 
 .. GENERATED FROM PYTHON SOURCE LINES 28-37
 
-.. code-block:: default
+.. code-block:: Python
 
 
     def load_omf():
@@ -86,7 +86,7 @@ Optionally, visualize the OMF project using PyVista. This step can be skipped or
 
 .. GENERATED FROM PYTHON SOURCE LINES 42-46
 
-.. code-block:: default
+.. code-block:: Python
 
 
     if False:  # Change to True to enable visualization
@@ -108,7 +108,7 @@ Convert the loaded OMF project into an unstructured single block for further ana
 
 .. GENERATED FROM PYTHON SOURCE LINES 51-95
 
-.. code-block:: default
+.. code-block:: Python
 
 
     meshes = []
@@ -126,7 +126,7 @@ Convert the loaded OMF project into an unstructured single block for further ana
         cell_data = {name: unstruct_pyvista.cell_data[name] for name in unstruct_pyvista.cell_data}
 
         # Process based on cell type
-        match polydata_obj.cell_type(0):
+        match polydata_obj.get_cell(0).type:
             case pyvista.CellType.TRIANGLE:
                 # Process triangle mesh
                 cells_pyvista = unstruct_pyvista.cells.reshape(-1, 4)[:, 1:]
@@ -158,25 +158,6 @@ Convert the loaded OMF project into an unstructured single block for further ana
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/pyvista/core/dataset.py:2697: PyVistaDeprecationWarning: `cell_type` is deprecated. Use `get_cell(i).type` instead
-      warnings.warn(
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/pyvista/core/dataset.py:2697: PyVistaDeprecationWarning: `cell_type` is deprecated. Use `get_cell(i).type` instead
-      warnings.warn(
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/pyvista/core/dataset.py:2697: PyVistaDeprecationWarning: `cell_type` is deprecated. Use `get_cell(i).type` instead
-      warnings.warn(
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/pyvista/core/dataset.py:2697: PyVistaDeprecationWarning: `cell_type` is deprecated. Use `get_cell(i).type` instead
-      warnings.warn(
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/pyvista/core/dataset.py:2697: PyVistaDeprecationWarning: `cell_type` is deprecated. Use `get_cell(i).type` instead
-      warnings.warn(
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/pyvista/core/dataset.py:2697: PyVistaDeprecationWarning: `cell_type` is deprecated. Use `get_cell(i).type` instead
-      warnings.warn(
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/pyvista/core/dataset.py:2697: PyVistaDeprecationWarning: `cell_type` is deprecated. Use `get_cell(i).type` instead
-      warnings.warn(
-
 
 
 
@@ -189,7 +170,7 @@ Visualize the unstructured data using Subsurface and PyVista.
 
 .. GENERATED FROM PYTHON SOURCE LINES 100-111
 
-.. code-block:: default
+.. code-block:: Python
 
 
     plotter = init_plotter()
@@ -217,7 +198,7 @@ Visualize the unstructured data using Subsurface and PyVista.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  1.332 seconds)
+   **Total running time of the script:** (0 minutes 1.242 seconds)
 
 
 .. _sphx_glr_download_examples_01_readers_03_model_2_OMF_to_subsurface.py:
@@ -226,16 +207,13 @@ Visualize the unstructured data using Subsurface and PyVista.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: 03_model_2_OMF_to_subsurface.ipynb <03_model_2_OMF_to_subsurface.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 03_model_2_OMF_to_subsurface.py <03_model_2_OMF_to_subsurface.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 03_model_2_OMF_to_subsurface.ipynb <03_model_2_OMF_to_subsurface.ipynb>`
 
 
 .. only:: html

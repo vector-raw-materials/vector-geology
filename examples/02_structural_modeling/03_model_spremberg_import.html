@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Construct Spremberg: Importing borehole data &#8212; Vector Geology 0.3.dev0+gf79ba49.d20240612 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/style.css?v=f2a985cd" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <script src="../../_static/documentation_options.js?v=020d5cdf"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Construct Spremberg: Building initial model" href="04_model_spremberg_building.html" />
+    <link rel="prev" title="Construct Model 1 with Helper Functions" href="02_model_1_gempy.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-examples-02-structural-modeling-03-model-spremberg-import-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="construct-spremberg-importing-borehole-data">
+<span id="sphx-glr-examples-02-structural-modeling-03-model-spremberg-import-py"></span><h1>Construct Spremberg: Importing borehole data<a class="headerlink" href="#construct-spremberg-importing-borehole-data" title="Link to this heading">¶</a></h1>
+<p>This example demonstrates how to construct a 3D geological model of the Model 1 deposit using GemPy.
+It leverages custom APIs to streamline the modeling process.</p>
+<p>Import the necessary libraries for geological modeling and visualization.
+sphinx_gallery_thumbnail_number = -1</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">pyvista</span>
+
+<span class="kn">import</span> <span class="nn">gempy</span> <span class="k">as</span> <span class="nn">gp</span>
+<span class="kn">import</span> <span class="nn">gempy_viewer</span> <span class="k">as</span> <span class="nn">gpv</span>
+<span class="kn">from</span> <span class="nn">subsurface.core.geological_formats.boreholes.boreholes</span> <span class="kn">import</span> <span class="n">BoreholeSet</span><span class="p">,</span> <span class="n">MergeOptions</span>
+<span class="kn">from</span> <span class="nn">subsurface.core.geological_formats.boreholes.collars</span> <span class="kn">import</span> <span class="n">Collars</span>
+<span class="kn">from</span> <span class="nn">subsurface.core.geological_formats.boreholes.survey</span> <span class="kn">import</span> <span class="n">Survey</span>
+<span class="kn">from</span> <span class="nn">subsurface.core.reader_helpers.readers_data</span> <span class="kn">import</span> <span class="n">GenericReaderFilesHelper</span>
+<span class="kn">from</span> <span class="nn">subsurface.modules.reader.wells.read_borehole_interface</span> <span class="kn">import</span> <span class="n">read_lith</span><span class="p">,</span> <span class="n">read_survey</span><span class="p">,</span> <span class="n">read_collar</span>
+<span class="kn">from</span> <span class="nn">subsurface.modules.visualization</span> <span class="kn">import</span> <span class="n">to_pyvista_line</span><span class="p">,</span> <span class="n">to_pyvista_points</span><span class="p">,</span> <span class="n">init_plotter</span>
+</pre></div>
+</div>
+<p>Initialize the reader for the lithological data. Specify the file path and column mappings.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">dotenv</span>
+<span class="n">dotenv</span><span class="o">.</span><span class="n">load_dotenv</span><span class="p">()</span>
+<span class="n">reader</span><span class="p">:</span> <span class="n">GenericReaderFilesHelper</span> <span class="o">=</span> <span class="n">GenericReaderFilesHelper</span><span class="p">(</span>
+    <span class="n">file_or_buffer</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PATH_TO_SPREMBERG_STRATIGRAPHY&quot;</span><span class="p">),</span>
+    <span class="n">columns_map</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;hole_id&#39;</span>   <span class="p">:</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;depth_from&#39;</span><span class="p">:</span> <span class="s1">&#39;top&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;depth_to&#39;</span>  <span class="p">:</span> <span class="s1">&#39;base&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;lit_code&#39;</span>  <span class="p">:</span> <span class="s1">&#39;component lith&#39;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the lithological data into a DataFrame.</span>
+<span class="n">lith</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">=</span> <span class="n">read_lith</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:116: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  lith_df[&#39;top&#39;] = -np.abs(lith_df[&#39;top&#39;])
+/home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:117: SettingWithCopyWarning:
+A value is trying to be set on a copy of a slice from a DataFrame.
+Try using .loc[row_indexer,col_indexer] = value instead
+
+See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
+  lith_df[&#39;base&#39;] = -np.abs(lith_df[&#39;base&#39;])
+</pre></div>
+</div>
+<p>Initialize the reader for the survey data. Specify the file path and column mappings.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reader</span><span class="p">:</span> <span class="n">GenericReaderFilesHelper</span> <span class="o">=</span> <span class="n">GenericReaderFilesHelper</span><span class="p">(</span>
+    <span class="n">file_or_buffer</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PATH_TO_SPREMBERG_SURVEY&quot;</span><span class="p">),</span>
+    <span class="n">columns_map</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;depth&#39;</span>  <span class="p">:</span> <span class="s1">&#39;md&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;dip&#39;</span>    <span class="p">:</span> <span class="s1">&#39;dip&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;azimuth&#39;</span><span class="p">:</span> <span class="s1">&#39;azi&#39;</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the survey data into a DataFrame.</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">read_survey</span><span class="p">(</span><span class="n">reader</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>/home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:80: UserWarning: inc and/or azi columns are not present in the file. The boreholes will be straight.
+  warnings.warn(
+</pre></div>
+</div>
+<p>Create a Survey object from the DataFrame and update it with lithological data.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">survey</span><span class="p">:</span> <span class="n">Survey</span> <span class="o">=</span> <span class="n">Survey</span><span class="o">.</span><span class="n">from_df</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">survey</span><span class="o">.</span><span class="n">update_survey_with_lith</span><span class="p">(</span><span class="n">lith</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
+Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
+Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
+(&#39;cell&#39;,) are not coordinates with an index xarray dataset must include &#39;cell&#39; key (KeyError) or xarray &#39;cell&#39; has no index (ValueError).
+</pre></div>
+</div>
+<p>Initialize the reader for the collar data. Specify the file path, header, and column mappings.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">reader_collar</span><span class="p">:</span> <span class="n">GenericReaderFilesHelper</span> <span class="o">=</span> <span class="n">GenericReaderFilesHelper</span><span class="p">(</span>
+    <span class="n">file_or_buffer</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;PATH_TO_SPREMBERG_COLLAR&quot;</span><span class="p">),</span>
+    <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+    <span class="n">columns_map</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;hole_id&quot;</span>            <span class="p">:</span> <span class="s2">&quot;id&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;X_GK5_incl_inserted&quot;</span><span class="p">:</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Y__incl_inserted&quot;</span>   <span class="p">:</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Z_GK&quot;</span>               <span class="p">:</span> <span class="s2">&quot;z&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="c1"># Read the collar data into a DataFrame and create a Collars object.</span>
+<span class="n">df_collar</span> <span class="o">=</span> <span class="n">read_collar</span><span class="p">(</span><span class="n">reader_collar</span><span class="p">)</span>
+<span class="n">collar</span> <span class="o">=</span> <span class="n">Collars</span><span class="o">.</span><span class="n">from_df</span><span class="p">(</span><span class="n">df_collar</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Combine the collar and survey data into a BoreholeSet.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">borehole_set</span> <span class="o">=</span> <span class="n">BoreholeSet</span><span class="p">(</span>
+    <span class="n">collars</span><span class="o">=</span><span class="n">collar</span><span class="p">,</span>
+    <span class="n">survey</span><span class="o">=</span><span class="n">survey</span><span class="p">,</span>
+    <span class="n">merge_option</span><span class="o">=</span><span class="n">MergeOptions</span><span class="o">.</span><span class="n">INTERSECT</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Visualize the borehole trajectories and collars using PyVista.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">well_mesh</span> <span class="o">=</span> <span class="n">to_pyvista_line</span><span class="p">(</span>
+    <span class="n">line_set</span><span class="o">=</span><span class="n">borehole_set</span><span class="o">.</span><span class="n">combined_trajectory</span><span class="p">,</span>
+    <span class="n">active_scalar</span><span class="o">=</span><span class="s2">&quot;lith_ids&quot;</span><span class="p">,</span>
+    <span class="n">radius</span><span class="o">=</span><span class="mi">10</span>
+<span class="p">)</span>
+
+<span class="n">collars</span> <span class="o">=</span> <span class="n">to_pyvista_points</span><span class="p">(</span>
+    <span class="n">borehole_set</span><span class="o">.</span><span class="n">collars</span><span class="o">.</span><span class="n">collar_loc</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Initialize the PyVista plotter.</span>
+<span class="n">pyvista_plotter</span> <span class="o">=</span> <span class="n">init_plotter</span><span class="p">()</span>
+
+<span class="c1"># Define the units limit for thresholding the well mesh.</span>
+<span class="n">units_limit</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">]</span>
+
+<span class="c1"># Add the well mesh and collars to the plotter and display.</span>
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span>
+    <span class="n">well_mesh</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">units_limit</span><span class="p">),</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab20c&quot;</span><span class="p">,</span>
+    <span class="n">clim</span><span class="o">=</span><span class="n">units_limit</span>
+<span class="p">)</span>
+
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span>
+    <span class="n">collars</span><span class="p">,</span>
+    <span class="n">point_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">render_points_as_spheres</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_model_spremberg_import_001.png" srcset="../../_images/sphx_glr_03_model_spremberg_import_001.png" alt="03 model spremberg import" class = "sphx-glr-single-img"/><p>Create structural elements from the borehole set for different lithological units.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">elements</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StructuralElement</span><span class="p">]</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">structural_elements_from_borehole_set</span><span class="p">(</span>
+    <span class="n">borehole_set</span><span class="o">=</span><span class="n">borehole_set</span><span class="p">,</span>
+    <span class="n">elements_dict</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;Buntsandstein&quot;</span>       <span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="mi">53_300</span><span class="p">,</span>
+                    <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#983999&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Werra-Anhydrit&quot;</span>      <span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="mi">61_730</span><span class="p">,</span>
+                    <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#00923f&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Kupfershiefer&quot;</span>       <span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="mi">61_760</span><span class="p">,</span>
+                    <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#da251d&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Zechsteinkonglomerat&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="mi">61_770</span><span class="p">,</span>
+                    <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#f8c300&quot;</span>
+            <span class="p">},</span>
+            <span class="s2">&quot;Rotliegend&quot;</span>          <span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;id&quot;</span>   <span class="p">:</span> <span class="mi">62_000</span><span class="p">,</span>
+                    <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#bb825b&quot;</span>
+            <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Group the structural elements into a StructuralGroup and create a StructuralFrame.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">group</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StructuralGroup</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Stratigraphic Pile&quot;</span><span class="p">,</span>
+    <span class="n">elements</span><span class="o">=</span><span class="n">elements</span><span class="p">,</span>
+    <span class="n">structural_relation</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StackRelationType</span><span class="o">.</span><span class="n">ERODE</span>
+<span class="p">)</span>
+<span class="n">structural_frame</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">StructuralFrame</span><span class="p">(</span>
+    <span class="n">structural_groups</span><span class="o">=</span><span class="p">[</span><span class="n">group</span><span class="p">],</span>
+    <span class="n">color_gen</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">ColorsGenerator</span><span class="p">()</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Determine the extent of the geological model from the surface points coordinates.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">all_surface_points_coords</span><span class="p">:</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">SurfacePointsTable</span> <span class="o">=</span> <span class="n">structural_frame</span><span class="o">.</span><span class="n">surface_points_copy</span>
+<span class="n">extent_from_data</span> <span class="o">=</span> <span class="n">all_surface_points_coords</span><span class="o">.</span><span class="n">xyz</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">all_surface_points_coords</span><span class="o">.</span><span class="n">xyz</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Create a GeoModel with the specified extent, grid resolution, and interpolation options.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">geo_model</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">GeoModel</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Stratigraphic Pile&quot;</span><span class="p">,</span>
+    <span class="n">structural_frame</span><span class="o">=</span><span class="n">structural_frame</span><span class="p">,</span>
+    <span class="n">grid</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Grid</span><span class="p">(</span>
+        <span class="n">extent</span><span class="o">=</span><span class="p">[</span><span class="n">extent_from_data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">extent_from_data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">extent_from_data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">extent_from_data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">extent_from_data</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">],</span> <span class="n">extent_from_data</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">2</span><span class="p">]],</span>
+        <span class="n">resolution</span><span class="o">=</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+    <span class="p">),</span>
+    <span class="n">interpolation_options</span><span class="o">=</span><span class="n">gp</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">InterpolationOptions</span><span class="p">(</span>
+        <span class="nb">range</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+        <span class="n">c_o</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+        <span class="n">mesh_extraction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">number_octree_levels</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Visualize the 3D geological model using GemPy’s plot_3d function.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gempy_plot</span> <span class="o">=</span> <span class="n">gpv</span><span class="o">.</span><span class="n">plot_3d</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">geo_model</span><span class="p">,</span>
+    <span class="n">kwargs_pyvista_bounds</span><span class="o">=</span><span class="p">{</span>
+            <span class="s1">&#39;show_xlabels&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;show_ylabels&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">image</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_model_spremberg_import_002.png" srcset="../../_images/sphx_glr_03_model_spremberg_import_002.png" alt="03 model spremberg import" class = "sphx-glr-single-img"/><img src="../../_images/sphx_glr_03_model_spremberg_import_003.png" srcset="../../_images/sphx_glr_03_model_spremberg_import_003.png" alt="03 model spremberg import" class = "sphx-glr-single-img"/><p>Combine all visual elements and display them together.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sp_mesh</span><span class="p">:</span> <span class="n">pyvista</span><span class="o">.</span><span class="n">PolyData</span> <span class="o">=</span> <span class="n">gempy_plot</span><span class="o">.</span><span class="n">surface_points_mesh</span>
+
+<span class="n">pyvista_plotter</span> <span class="o">=</span> <span class="n">init_plotter</span><span class="p">()</span>
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">show_bounds</span><span class="p">(</span><span class="n">all_edges</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span>
+    <span class="n">well_mesh</span><span class="o">.</span><span class="n">threshold</span><span class="p">(</span><span class="n">units_limit</span><span class="p">),</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;tab20c&quot;</span><span class="p">,</span>
+    <span class="n">clim</span><span class="o">=</span><span class="n">units_limit</span>
+<span class="p">)</span>
+
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">add_mesh</span><span class="p">(</span>
+    <span class="n">collars</span><span class="p">,</span>
+    <span class="n">point_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">render_points_as_spheres</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">add_point_labels</span><span class="p">(</span>
+    <span class="n">points</span><span class="o">=</span><span class="n">collar</span><span class="o">.</span><span class="n">collar_loc</span><span class="o">.</span><span class="n">points</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="n">collar</span><span class="o">.</span><span class="n">ids</span><span class="p">,</span>
+    <span class="n">point_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">shape_opacity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">font_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+    <span class="n">bold</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">add_actor</span><span class="p">(</span><span class="n">gempy_plot</span><span class="o">.</span><span class="n">surface_points_actor</span><span class="p">)</span>
+
+<span class="n">pyvista_plotter</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_03_model_spremberg_import_004.png" srcset="../../_images/sphx_glr_03_model_spremberg_import_004.png" alt="03 model spremberg import" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 2.784 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-02-structural-modeling-03-model-spremberg-import-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/71916b46938f22a9c23a758261bcd310/03_model_spremberg_import.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">03_model_spremberg_import.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/1aeb58e5a4aa6113a6a48c4d659d2222/03_model_spremberg_import.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">03_model_spremberg_import.py</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/vector-logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">Vector Geology</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Vector Geology Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../external/external_examples.html">Bayesian Inference Theory</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_readers/index.html">Readers and Parsers</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Structural Modeling</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_model_1_gempy_step_by_step.html">Constructing Structural Geological Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_model_1_gempy_step_by_step.html#setting-up-gempy-model">Setting Up GemPy Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="01_model_1_gempy_step_by_step.html#optimizing-nuggets">Optimizing Nuggets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_1_gempy.html">Construct Model 1 with Helper Functions</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Construct Spremberg: Importing borehole data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="04_model_spremberg_building.html">Construct Spremberg: Building initial model</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../03_forward_engines/index.html">GeoPhysics and Inversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_probabilistic_modeling/index.html">Probabilistic Modeling</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintenance.html">Maintenance</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023-2024, Vector Geology Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/examples/02_structural_modeling/03_model_spremberg_import.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -129,7 +129,7 @@ The `hklearn` package, designed to handle hyperspectral data, is used to organiz
 
  .. code-block:: none
 
-    Removing hull:   0%|          | 0/3771 [00:00<?, ?it/s]    Removing hull:   0%|          | 1/3771 [00:01<1:12:24,  1.15s/it]                                                                     Removing hull:   0%|          | 0/3771 [00:00<?, ?it/s]                                                           Removing hull:   0%|          | 0/3771 [00:00<?, ?it/s]                                                           Removing hull:   0%|          | 0/1028 [00:00<?, ?it/s]                                                           Removing hull:   0%|          | 0/1028 [00:00<?, ?it/s]                                                           Removing hull:   0%|          | 0/1028 [00:00<?, ?it/s]                                                       
+    Removing hull:   0%|          | 0/3771 [00:00<?, ?it/s]    Removing hull:   0%|          | 1/3771 [00:01<1:12:51,  1.16s/it]                                                                     Removing hull:   0%|          | 0/3771 [00:00<?, ?it/s]                                                           Removing hull:   0%|          | 0/3771 [00:00<?, ?it/s]                                                           Removing hull:   0%|          | 0/1028 [00:00<?, ?it/s]                                                           Removing hull:   0%|          | 0/1028 [00:00<?, ?it/s]                                                           Removing hull:   0%|          | 0/1028 [00:00<?, ?it/s]                                                       
 
 
 
@@ -222,7 +222,7 @@ Different machine learning models are initialized and trained. In this example, 
 
  .. code-block:: none
 
-    Fitting models:   0%|          | 0/2 [00:00<?, ?it/s]    Fitting models:  50%|#####     | 1/2 [00:00<00:00,  1.06it/s]    Fitting models: 100%|##########| 2/2 [00:32<00:00, 18.92s/it]    Fitting models: 100%|##########| 2/2 [00:32<00:00, 16.22s/it]
+    Fitting models:   0%|          | 0/2 [00:00<?, ?it/s]    Fitting models:  50%|#####     | 1/2 [00:00<00:00,  1.01it/s]    Fitting models: 100%|##########| 2/2 [00:32<00:00, 18.85s/it]    Fitting models: 100%|##########| 2/2 [00:32<00:00, 16.17s/it]
 
 
 
@@ -250,38 +250,38 @@ Finally, the trained models are scored and evaluated. The `Stack.get_score_table
 
     <div class="output_subarea output_html rendered_html output_result">
     <style type="text/css">
-    #T_bdbd1 td.col2 {
+    #T_87453 td.col2 {
       border-right: 3px solid darkgray;
     }
-    #T_bdbd1_row0_col0, #T_bdbd1_row0_col1, #T_bdbd1_row0_col2 {
+    #T_87453_row0_col0, #T_87453_row0_col1, #T_87453_row0_col2 {
       color: green;
     }
-    #T_bdbd1_row1_col0, #T_bdbd1_row1_col1, #T_bdbd1_row1_col2 {
+    #T_87453_row1_col0, #T_87453_row1_col1, #T_87453_row1_col2 {
       color: green;
       background-color: lightgreen;
     }
     </style>
-    <table id="T_bdbd1">
+    <table id="T_87453">
       <thead>
         <tr>
           <th class="blank level0" >&nbsp;</th>
-          <th id="T_bdbd1_level0_col0" class="col_heading level0 col0" >train set</th>
-          <th id="T_bdbd1_level0_col1" class="col_heading level0 col1" >5-fold CV</th>
-          <th id="T_bdbd1_level0_col2" class="col_heading level0 col2" >test set</th>
+          <th id="T_87453_level0_col0" class="col_heading level0 col0" >train set</th>
+          <th id="T_87453_level0_col1" class="col_heading level0 col1" >5-fold CV</th>
+          <th id="T_87453_level0_col2" class="col_heading level0 col2" >test set</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <th id="T_bdbd1_level0_row0" class="row_heading level0 row0" >Linear</th>
-          <td id="T_bdbd1_row0_col0" class="data row0 col0" >0.686</td>
-          <td id="T_bdbd1_row0_col1" class="data row0 col1" >0.662</td>
-          <td id="T_bdbd1_row0_col2" class="data row0 col2" >0.614</td>
+          <th id="T_87453_level0_row0" class="row_heading level0 row0" >Linear</th>
+          <td id="T_87453_row0_col0" class="data row0 col0" >0.686</td>
+          <td id="T_87453_row0_col1" class="data row0 col1" >0.662</td>
+          <td id="T_87453_row0_col2" class="data row0 col2" >0.614</td>
         </tr>
         <tr>
-          <th id="T_bdbd1_level0_row1" class="row_heading level0 row1" >MLP</th>
-          <td id="T_bdbd1_row1_col0" class="data row1 col0" >0.876</td>
-          <td id="T_bdbd1_row1_col1" class="data row1 col1" >0.822</td>
-          <td id="T_bdbd1_row1_col2" class="data row1 col2" >0.695</td>
+          <th id="T_87453_level0_row1" class="row_heading level0 row1" >MLP</th>
+          <td id="T_87453_row1_col0" class="data row1 col0" >0.874</td>
+          <td id="T_87453_row1_col1" class="data row1 col1" >0.832</td>
+          <td id="T_87453_row1_col2" class="data row1 col2" >0.759</td>
         </tr>
       </tbody>
     </table>
@@ -293,7 +293,7 @@ Finally, the trained models are scored and evaluated. The `Stack.get_score_table
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  34.561 seconds)
+   **Total running time of the script:** ( 0 minutes  35.813 seconds)
 
 
 .. _sphx_glr_download_examples_03_forward_engines_03_HSI_To_Petrophysics.py:

@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Predicting P-Wave Velocity from Hyperspectral Data &#8212; Vector Geology 0.1.dev16+g525c9e2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
+    <title>Predicting P-Wave Velocity from Hyperspectral Data &#8212; Vector Geology 0.3.dev0+gf79ba49.d20240612 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
     <link rel="stylesheet" type="text/css" href="../../_static/style.css?v=f2a985cd" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=f5ef4c94"></script>
+    <script src="../../_static/documentation_options.js?v=020d5cdf"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/design-tabs.js?v=36754332"></script>
     <link rel="icon" href="../../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -46,10 +46,10 @@
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="predicting-p-wave-velocity-from-hyperspectral-data">
-<span id="example-predicting-pwave-velocity"></span><span id="sphx-glr-examples-03-forward-engines-03-hsi-to-petrophysics-py"></span><h1>Predicting P-Wave Velocity from Hyperspectral Data<a class="headerlink" href="#predicting-p-wave-velocity-from-hyperspectral-data" title="Permalink to this heading">¶</a></h1>
+<span id="example-predicting-pwave-velocity"></span><span id="sphx-glr-examples-03-forward-engines-03-hsi-to-petrophysics-py"></span><h1>Predicting P-Wave Velocity from Hyperspectral Data<a class="headerlink" href="#predicting-p-wave-velocity-from-hyperspectral-data" title="Link to this heading">¶</a></h1>
 <p>This example demonstrates the prediction of P-Wave velocities from hyperspectral data using machine learning techniques. Hyperspectral data provides detailed information on rock mineralogy, which influences its petrophysical properties. This script aims to explore and quantify the relationship between spectral features and various petrophysical properties, specifically focusing on P-Wave velocity.</p>
 <section id="importing-necessary-libraries">
-<h2>Importing Necessary Libraries<a class="headerlink" href="#importing-necessary-libraries" title="Permalink to this heading">¶</a></h2>
+<h2>Importing Necessary Libraries<a class="headerlink" href="#importing-necessary-libraries" title="Link to this heading">¶</a></h2>
 <p>First, we import the required Python packages. We use <cite>dotenv</cite> to manage environment variables, <cite>numpy</cite> and <cite>sklearn</cite> for numerical operations and machine learning, and custom packages <cite>hklearn</cite> and <cite>hycore</cite> for handling hyperspectral data and machine learning workflows.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">dotenv_values</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -66,7 +66,7 @@ to download the full example code</p>
 </div>
 </section>
 <section id="loading-data-with-hycore-shed">
-<h2>Loading Data with <cite>hycore.Shed</cite><a class="headerlink" href="#loading-data-with-hycore-shed" title="Permalink to this heading">¶</a></h2>
+<h2>Loading Data with <cite>hycore.Shed</cite><a class="headerlink" href="#loading-data-with-hycore-shed" title="Link to this heading">¶</a></h2>
 <p>The <cite>hycore</cite> package, which organizes hyperspectral data in a structure called Shed, is used here. A Shed makes it convenient to categorize and store hyperspectral data. We use HyLibraries (a data structure within <cite>hylite</cite> for storing spectral libraries) within a Shed to store the hyperspectral data. The corresponding P-Wave velocity measurements are stored as numpy arrays.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Load the train and test sheds</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">dotenv_values</span><span class="p">()</span>
@@ -80,17 +80,17 @@ to download the full example code</p>
 <span class="n">train_fx50</span> <span class="o">=</span> <span class="n">train_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">FX50Lib</span>
 <span class="n">train_fenix</span> <span class="o">=</span> <span class="n">train_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">FENIXLib</span>
 <span class="n">train_lwir</span> <span class="o">=</span> <span class="n">train_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">LWIRLib</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">train_vp</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">train_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">Vp</span></a>
+<span class="n">train_vp</span> <span class="o">=</span> <span class="n">train_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">Vp</span>
 
 <span class="n">test_fx50</span> <span class="o">=</span> <span class="n">test_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">FX50Lib</span>
 <span class="n">test_fenix</span> <span class="o">=</span> <span class="n">test_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">FENIXLib</span>
 <span class="n">test_lwir</span> <span class="o">=</span> <span class="n">test_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">LWIRLib</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test_vp</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">Vp</span></a>
+<span class="n">test_vp</span> <span class="o">=</span> <span class="n">test_shed</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">Vp</span>
 </pre></div>
 </div>
 </section>
 <section id="creating-a-hklearn-stack-object">
-<h2>Creating a <cite>hklearn.Stack</cite> Object<a class="headerlink" href="#creating-a-hklearn-stack-object" title="Permalink to this heading">¶</a></h2>
+<h2>Creating a <cite>hklearn.Stack</cite> Object<a class="headerlink" href="#creating-a-hklearn-stack-object" title="Link to this heading">¶</a></h2>
 <p>The <cite>hklearn</cite> package, designed to handle hyperspectral data, is used to organize spectral libraries into a structure called Stack. A Stack can manage multiple spectral libraries and integrate data from multiple sensors. We perform hull corrections on the spectra to enhance features of interest.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create Stack objects and apply hull correction to the spectra</span>
 <span class="n">hsi_train</span> <span class="o">=</span> <span class="n">hklearn</span><span class="o">.</span><span class="n">Stack</span><span class="p">(</span>
@@ -109,7 +109,7 @@ to download the full example code</p>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Removing hull:   0%|          | 0/3771 [00:00&lt;?, ?it/s]
-Removing hull:   0%|          | 1/3771 [00:01&lt;1:12:24,  1.15s/it]
+Removing hull:   0%|          | 1/3771 [00:01&lt;1:12:51,  1.16s/it]
 
 
 Removing hull:   0%|          | 0/3771 [00:00&lt;?, ?it/s]
@@ -129,29 +129,29 @@ Removing hull:   0%|          | 0/1028 [00:00&lt;?, ?it/s]
 </div>
 </section>
 <section id="scaling-the-dependent-variable-y">
-<h2>Scaling the Dependent Variable (Y)<a class="headerlink" href="#scaling-the-dependent-variable-y" title="Permalink to this heading">¶</a></h2>
+<h2>Scaling the Dependent Variable (Y)<a class="headerlink" href="#scaling-the-dependent-variable-y" title="Link to this heading">¶</a></h2>
 <p>The P-Wave velocities are scaled to facilitate the convergence of the loss function during model training. We use the <cite>StandardScaler</cite> from scikit-learn for this purpose.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scale Y Variable (P-Wave velocity)</span>
 <span class="n">y_scaler</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">preprocessing</span><span class="o">.</span><span class="n">StandardScaler</span><span class="p">()</span>
-<span class="n">_</span> <span class="o">=</span> <span class="n">y_scaler</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">train_vp</span></a><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+<span class="n">_</span> <span class="o">=</span> <span class="n">y_scaler</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">train_vp</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>
 <section id="transforming-the-independent-variable-x">
-<h2>Transforming the Independent Variable (X)<a class="headerlink" href="#transforming-the-independent-variable-x" title="Permalink to this heading">¶</a></h2>
+<h2>Transforming the Independent Variable (X)<a class="headerlink" href="#transforming-the-independent-variable-x" title="Link to this heading">¶</a></h2>
 <p>Hyperspectral data often contains a large number of bands, many of which might be redundant. We apply Principal Component Analysis (PCA) to extract the most significant components. A two-step PCA is performed to ensure that there isn’t any inter-sensor correlation. The <cite>Stack</cite> object stores the PCA, which is also applied to the test set.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Apply PCA to the X variable (spectral data)</span>
 <span class="n">PCA_X</span> <span class="o">=</span> <span class="n">hsi_train</span><span class="o">.</span><span class="n">fit_pca</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">normalise</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">hsi_test</span><span class="o">.</span><span class="n">set_transform</span><span class="p">(</span><span class="n">PCA_X</span><span class="p">)</span>
 
 <span class="c1"># Set the Y-Variable (P-Wave velocity)</span>
-<span class="n">hsi_train</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">train_vp</span></a><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
-<span class="n">hsi_test</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">test_vp</span></a><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+<span class="n">hsi_train</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="n">train_vp</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
+<span class="n">hsi_test</span><span class="o">.</span><span class="n">set_y</span><span class="p">(</span><span class="n">test_vp</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>
 <section id="initializing-and-training-models">
-<h2>Initializing and Training Models<a class="headerlink" href="#initializing-and-training-models" title="Permalink to this heading">¶</a></h2>
+<h2>Initializing and Training Models<a class="headerlink" href="#initializing-and-training-models" title="Link to this heading">¶</a></h2>
 <p>Different machine learning models are initialized and trained. In this example, we use a simple linear regression (<cite>LinearRegression</cite>) and a Multilayer Perceptron (<cite>MLPRegressor</cite>) from scikit-learn. A dictionary with the parameters for optimization is also initialized.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Initialize models</span>
 <span class="n">models</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
@@ -166,7 +166,7 @@ Removing hull:   0%|          | 0/1028 [00:00&lt;?, ?it/s]
 
 <span class="c1"># Define parameter ranges for each model</span>
 <span class="n">params</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">Linear</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;fit_intercept&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]},</span>
-              <span class="n">MLP</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.linspace.html#numpy.linspace" title="numpy.linspace" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">linspace</span></a><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e0</span><span class="p">)})</span>
+              <span class="n">MLP</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">1e0</span><span class="p">)})</span>
 
 <span class="c1"># Train the models</span>
 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="s1">&#39;Fitting models&#39;</span><span class="p">,</span> <span class="n">leave</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -174,14 +174,14 @@ Removing hull:   0%|          | 0/1028 [00:00&lt;?, ?it/s]
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Fitting models:   0%|          | 0/2 [00:00&lt;?, ?it/s]
-Fitting models:  50%|#####     | 1/2 [00:00&lt;00:00,  1.06it/s]
-Fitting models: 100%|##########| 2/2 [00:32&lt;00:00, 18.92s/it]
-Fitting models: 100%|##########| 2/2 [00:32&lt;00:00, 16.22s/it]
+Fitting models:  50%|#####     | 1/2 [00:00&lt;00:00,  1.01it/s]
+Fitting models: 100%|##########| 2/2 [00:32&lt;00:00, 18.85s/it]
+Fitting models: 100%|##########| 2/2 [00:32&lt;00:00, 16.17s/it]
 </pre></div>
 </div>
 </section>
 <section id="scoring-and-evaluating-models">
-<h2>Scoring and Evaluating Models<a class="headerlink" href="#scoring-and-evaluating-models" title="Permalink to this heading">¶</a></h2>
+<h2>Scoring and Evaluating Models<a class="headerlink" href="#scoring-and-evaluating-models" title="Link to this heading">¶</a></h2>
 <p>Finally, the trained models are scored and evaluated. The <cite>Stack.get_score_table()</cite> method is used to display a table with the training, cross-validation, and test scores of the best-performing model.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Evaluate models and display score table</span>
 <span class="n">hsi_train</span><span class="o">.</span><span class="n">get_score_table</span><span class="p">(</span><span class="n">hsi_test</span><span class="p">,</span> <span class="n">y_test</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -189,45 +189,45 @@ Fitting models: 100%|##########| 2/2 [00:32&lt;00:00, 16.22s/it]
 </div>
 <div class="output_subarea output_html rendered_html output_result">
 <style type="text/css">
-#T_bdbd1 td.col2 {
+#T_87453 td.col2 {
   border-right: 3px solid darkgray;
 }
-#T_bdbd1_row0_col0, #T_bdbd1_row0_col1, #T_bdbd1_row0_col2 {
+#T_87453_row0_col0, #T_87453_row0_col1, #T_87453_row0_col2 {
   color: green;
 }
-#T_bdbd1_row1_col0, #T_bdbd1_row1_col1, #T_bdbd1_row1_col2 {
+#T_87453_row1_col0, #T_87453_row1_col1, #T_87453_row1_col2 {
   color: green;
   background-color: lightgreen;
 }
 </style>
-<table id="T_bdbd1">
+<table id="T_87453">
   <thead>
     <tr>
       <th class="blank level0" >&nbsp;</th>
-      <th id="T_bdbd1_level0_col0" class="col_heading level0 col0" >train set</th>
-      <th id="T_bdbd1_level0_col1" class="col_heading level0 col1" >5-fold CV</th>
-      <th id="T_bdbd1_level0_col2" class="col_heading level0 col2" >test set</th>
+      <th id="T_87453_level0_col0" class="col_heading level0 col0" >train set</th>
+      <th id="T_87453_level0_col1" class="col_heading level0 col1" >5-fold CV</th>
+      <th id="T_87453_level0_col2" class="col_heading level0 col2" >test set</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th id="T_bdbd1_level0_row0" class="row_heading level0 row0" >Linear</th>
-      <td id="T_bdbd1_row0_col0" class="data row0 col0" >0.686</td>
-      <td id="T_bdbd1_row0_col1" class="data row0 col1" >0.662</td>
-      <td id="T_bdbd1_row0_col2" class="data row0 col2" >0.614</td>
+      <th id="T_87453_level0_row0" class="row_heading level0 row0" >Linear</th>
+      <td id="T_87453_row0_col0" class="data row0 col0" >0.686</td>
+      <td id="T_87453_row0_col1" class="data row0 col1" >0.662</td>
+      <td id="T_87453_row0_col2" class="data row0 col2" >0.614</td>
     </tr>
     <tr>
-      <th id="T_bdbd1_level0_row1" class="row_heading level0 row1" >MLP</th>
-      <td id="T_bdbd1_row1_col0" class="data row1 col0" >0.876</td>
-      <td id="T_bdbd1_row1_col1" class="data row1 col1" >0.822</td>
-      <td id="T_bdbd1_row1_col2" class="data row1 col2" >0.695</td>
+      <th id="T_87453_level0_row1" class="row_heading level0 row1" >MLP</th>
+      <td id="T_87453_row1_col0" class="data row1 col0" >0.874</td>
+      <td id="T_87453_row1_col1" class="data row1 col1" >0.832</td>
+      <td id="T_87453_row1_col2" class="data row1 col2" >0.759</td>
     </tr>
   </tbody>
 </table>
 
 </div>
 <br />
-<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  34.561 seconds)</p>
+<br /><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  35.813 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-03-forward-engines-03-hsi-to-petrophysics-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4a365c21b18d3e18fa9d64572d2219dd/03_HSI_To_Petrophysics.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">03_HSI_To_Petrophysics.py</span></code></a></p>
@@ -310,7 +310,7 @@ Fitting models: 100%|##########| 2/2 [00:32&lt;00:00, 16.22s/it]
       &copy;2023-2024, Vector Geology Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |

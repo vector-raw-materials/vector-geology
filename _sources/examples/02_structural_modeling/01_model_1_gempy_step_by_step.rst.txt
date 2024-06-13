@@ -23,16 +23,15 @@ Constructing Structural Geological Model
 
 This example illustrates how to construct a 3D geological model of a deposit using GemPy.
 
-.. GENERATED FROM PYTHON SOURCE LINES 7-23
+.. GENERATED FROM PYTHON SOURCE LINES 7-22
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Import necessary libraries
     import time
     import numpy as np
     import os
-    import xarray as xr
     from dotenv import dotenv_values
     from vector_geology.omf_to_gempy import process_file
     import gempy as gp
@@ -47,24 +46,17 @@ This example illustrates how to construct a 3D geological model of a deposit usi
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/leguark/subsurface/subsurface/reader/__init__.py:14: UserWarning: Welly or Striplog not installed. No well reader possible.
-      warnings.warn("Welly or Striplog not installed. No well reader possible.")
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 24-26
+.. GENERATED FROM PYTHON SOURCE LINES 23-25
 
 Load the data necessary for model construction. This involves processing data from nc files
 and organizing it for use in the geological model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 26-39
+.. GENERATED FROM PYTHON SOURCE LINES 25-38
 
-.. code-block:: default
+.. code-block:: Python
 
 
     config = dotenv_values()
@@ -86,16 +78,16 @@ and organizing it for use in the geological model.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 40-44
+.. GENERATED FROM PYTHON SOURCE LINES 39-43
 
 Setting Up GemPy Model
 -----------------------
 Configure the GemPy model object, including defining structural groups and configuring their properties.
 This is a crucial step in setting up the structural framework of the geological model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 44-83
+.. GENERATED FROM PYTHON SOURCE LINES 43-81
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Define structural groups and their relationships
@@ -131,8 +123,7 @@ This is a crucial step in setting up the structural framework of the geological 
     geo_model: gp.data.GeoModel = gp.create_geomodel(
         project_name='Tutorial_ch1_1_Basics',
         extent=global_extent,
-        resolution=[20, 10, 20],
-        refinement=6,
+        refinement=5,
         structural_frame=structural_frame
     )
 
@@ -143,14 +134,14 @@ This is a crucial step in setting up the structural framework of the geological 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 84-86
+.. GENERATED FROM PYTHON SOURCE LINES 82-84
 
 Incorporate topography into the model using a dataset in nc format. This adds realism to the model
 by including surface variations.
 
-.. GENERATED FROM PYTHON SOURCE LINES 86-95
+.. GENERATED FROM PYTHON SOURCE LINES 84-93
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import xarray as xr
@@ -169,28 +160,29 @@ by including surface variations.
 
  .. code-block:: none
 
-    Active grids: ['regular' 'topography']
+    Active grids: GridTypes.NONE|TOPOGRAPHY|OCTREE
 
-    <gempy.core.data.grid_modules.topography.Topography object at 0x7f1609c83e20>
+    <gempy.core.data.grid_modules.topography.Topography object at 0x7f2eaa335ff0>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 96-100
+.. GENERATED FROM PYTHON SOURCE LINES 94-98
 
 Optimizing Nuggets
 ------------------
 Nuggets add a small random noise to the data to account for discrepancies in complex geometries.
 Here, we optimize the nugget value to balance between overfitting and underfitting the data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-148
+.. GENERATED FROM PYTHON SOURCE LINES 98-147
 
-.. code-block:: default
+.. code-block:: Python
 
 
     TRIGGER_OPTIMIZE_NUGGETS = False
     APPLY_OPTIMIZED_NUGGETS = True
     if TRIGGER_OPTIMIZE_NUGGETS:
-
+        geo_model.interpolation_options.cache_mode = gp.data.InterpolationOptions.CacheMode.NO_CACHE
+    
         # Optimization process for different structural groups
         geo_model.interpolation_options.kernel_options.range = 0.7
         geo_model.interpolation_options.kernel_options.c_o = 4
@@ -241,14 +233,14 @@ Here, we optimize the nugget value to balance between overfitting and underfitti
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-151
+.. GENERATED FROM PYTHON SOURCE LINES 148-150
 
 Compute the geological model. This involves setting interpolation options and executing the computation
 to generate the 3D geological structure.
 
-.. GENERATED FROM PYTHON SOURCE LINES 151-176
+.. GENERATED FROM PYTHON SOURCE LINES 150-175
 
-.. code-block:: default
+.. code-block:: Python
 
 
     geo_model.interpolation_options.mesh_extraction = True
@@ -284,25 +276,25 @@ to generate the 3D geological structure.
  .. code-block:: none
 
     Setting Backend To: AvailableBackends.PYTORCH
-    /home/leguark/gempy/gempy/core/data/geo_model.py:183: UserWarning: You are using refinement and passing a regular grid. The resolution of the regular grid will be overwritten
-      warnings.warn(
+    Condition number: 146830.09028250765.
+    Condition number: 276736.9518433538.
 
 
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <b>Solutions:</b> 6 Octree Levels, 5 DualContouringMeshes
+    <b>Solutions:</b> 5 Octree Levels, 5 DualContouringMeshes
     </div>
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 177-178
+.. GENERATED FROM PYTHON SOURCE LINES 176-177
 
 Visualize the constructed geological model in both 2D and 3D formats to assess the structure and layout.
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-182
+.. GENERATED FROM PYTHON SOURCE LINES 177-181
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # 2D visualization of the model
@@ -322,17 +314,17 @@ Visualize the constructed geological model in both 2D and 3D formats to assess t
  .. code-block:: none
 
 
-    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f164b5813c0>
+    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f2ef511cac0>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-184
+.. GENERATED FROM PYTHON SOURCE LINES 182-183
 
 3D visualization in GemPy viewer
 
-.. GENERATED FROM PYTHON SOURCE LINES 184-190
+.. GENERATED FROM PYTHON SOURCE LINES 183-189
 
-.. code-block:: default
+.. code-block:: Python
 
     gempy_vista = gpv.plot_3d(
         model=geo_model,
@@ -352,13 +344,13 @@ Visualize the constructed geological model in both 2D and 3D formats to assess t
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-192
+.. GENERATED FROM PYTHON SOURCE LINES 190-191
 
 Measure the total time taken to execute the script, providing insights into performance.
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-198
+.. GENERATED FROM PYTHON SOURCE LINES 191-197
 
-.. code-block:: default
+.. code-block:: Python
 
 
     end_time = time.time()
@@ -374,7 +366,7 @@ Measure the total time taken to execute the script, providing insights into perf
 
  .. code-block:: none
 
-    The function executed in 3.7581591606140137 seconds.
+    The function executed in 10.007350206375122 seconds.
 
 
 
@@ -382,7 +374,7 @@ Measure the total time taken to execute the script, providing insights into perf
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  3.922 seconds)
+   **Total running time of the script:** (0 minutes 10.189 seconds)
 
 
 .. _sphx_glr_download_examples_02_structural_modeling_01_model_1_gempy_step_by_step.py:
@@ -391,16 +383,13 @@ Measure the total time taken to execute the script, providing insights into perf
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: 01_model_1_gempy_step_by_step.ipynb <01_model_1_gempy_step_by_step.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 01_model_1_gempy_step_by_step.py <01_model_1_gempy_step_by_step.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 01_model_1_gempy_step_by_step.ipynb <01_model_1_gempy_step_by_step.ipynb>`
 
 
 .. only:: html

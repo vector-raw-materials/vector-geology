@@ -26,7 +26,7 @@ It leverages custom APIs to streamline the modeling process.
 
 .. GENERATED FROM PYTHON SOURCE LINES 8-19
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import time
@@ -43,13 +43,6 @@ It leverages custom APIs to streamline the modeling process.
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/leguark/subsurface/subsurface/reader/__init__.py:14: UserWarning: Welly or Striplog not installed. No well reader possible.
-      warnings.warn("Welly or Striplog not installed. No well reader possible.")
-
 
 
 
@@ -59,7 +52,7 @@ Start the timer to measure execution time
 
 .. GENERATED FROM PYTHON SOURCE LINES 21-23
 
-.. code-block:: default
+.. code-block:: Python
 
     start_time = time.time()
 
@@ -77,7 +70,7 @@ This step is crucial for setting up the directory paths for the model data.
 
 .. GENERATED FROM PYTHON SOURCE LINES 26-29
 
-.. code-block:: default
+.. code-block:: Python
 
     config = dotenv_values()
     path = config.get("PATH_TO_MODEL_1_Subsurface")
@@ -96,7 +89,7 @@ Here we prepare the containers for the structural elements and the global extent
 
 .. GENERATED FROM PYTHON SOURCE LINES 32-36
 
-.. code-block:: default
+.. code-block:: Python
 
     structural_elements = []
     global_extent = None
@@ -116,7 +109,7 @@ This loop reads the necessary data from each .nc file for modeling.
 
 .. GENERATED FROM PYTHON SOURCE LINES 39-45
 
-.. code-block:: default
+.. code-block:: Python
 
     for filename in os.listdir(path):
         base, ext = os.path.splitext(filename)
@@ -138,7 +131,7 @@ We use the data processed above to initialize the geological model with GemPy.
 
 .. GENERATED FROM PYTHON SOURCE LINES 48-55
 
-.. code-block:: default
+.. code-block:: Python
 
     geo_model = initialize_geo_model(
         structural_elements=structural_elements,
@@ -155,7 +148,9 @@ We use the data processed above to initialize the geological model with GemPy.
 
  .. code-block:: none
 
-    Active grids: ['regular' 'topography']
+    /home/leguark/gempy/gempy/core/data/structural_frame.py:188: UserWarning: The basement color was already used in the structural elements.Changing the basement color to #015482.
+      warnings.warn(f"The basement color was already used in the structural elements."
+    Active grids: GridTypes.NONE|TOPOGRAPHY|DENSE
 
 
 
@@ -167,7 +162,7 @@ It's helpful to print the model to verify its initialization.
 
 .. GENERATED FROM PYTHON SOURCE LINES 58-60
 
-.. code-block:: default
+.. code-block:: Python
 
     print(geo_model)
 
@@ -179,8 +174,39 @@ It's helpful to print the model to verify its initialization.
 
  .. code-block:: none
 
-    {'_interpolation_options': InterpolationOptions(kernel_options={'range': 5, 'c_o': 10, 'uni_degree': 1, 'i_res': 4, 'gi_res': 2, 'number_dimensions': 3, 'kernel_function': <AvailableKernelFunctions.cubic: KernelFunction(base_function=<function cubic_function at 0x7fa8cbe9bd90>, derivative_div_r=<function cubic_function_p_div_r at 0x7fa8cbe9be20>, second_derivative=<function cubic_function_a at 0x7fa8cbe9beb0>, consume_sq_distance=False)>, 'kernel_solver': <Solvers.DEFAULT: 1>, 'compute_condition_number': False, 'optimizing_condition_number': False, 'condition_number': None}, number_octree_levels=6, current_octree_level=0, compute_scalar_gradient=False, mesh_extraction=True, mesh_extraction_masking_options=MeshExtractionMaskingOptions.INTERSECT, mesh_extraction_fancy=True, debug=True, debug_water_tight=False, sigmoid_slope=50000, _number_octree_levels_surface=4, _model_name=None),
-     'grid': <gempy.core.data.grid.Grid object at 0x7fa8762c0eb0>,
+    {'_interpolation_options': InterpolationOptions(kernel_options={'range': 5, 'c_o': 10, 'uni_degree': 1, 'i_res': 4, 'gi_res': 2, 'number_dimensions': 3, 'kernel_function': <AvailableKernelFunctions.cubic: KernelFunction(base_function=<function cubic_function at 0x7fea8a6cd480>, derivative_div_r=<function cubic_function_p_div_r at 0x7fea8a6cd510>, second_derivative=<function cubic_function_a at 0x7fea8a6cd5a0>, consume_sq_distance=False)>, 'kernel_solver': <Solvers.DEFAULT: 1>, 'compute_condition_number': False, 'optimizing_condition_number': False, 'condition_number': None}, evaluation_options={'_number_octree_levels': 5, '_number_octree_levels_surface': 4, 'curvature_threshold': -1, 'error_threshold': 1.5, 'min_octree_level': 2, 'mesh_extraction': True, 'mesh_extraction_masking_options': <MeshExtractionMaskingOptions.INTERSECT: 3>, 'mesh_extraction_fancy': True, 'evaluation_chunk_size': 5000000, 'compute_scalar_gradient': False, 'verbose': False}, temp_interpolation_values=<gempy_engine.core.data.options.temp_interpolation_values.TempInterpolationValues object at 0x7fea2d6872e0>, debug=True, cache_mode=CacheMode.IN_MEMORY_CACHE, cache_model_name=, block_solutions_type=BlockSolutionType.OCTREE, sigmoid_slope=50000, debug_water_tight=False),
+     'grid': Grid(_octree_grid=None,
+                  _dense_grid=RegularGrid(resolution=array([20, 10, 20]),
+                                          extent=array([ 5.59902830e+05,  5.64955682e+05,  6.44278260e+05,  6.50608735e+05,
+           -1.75340000e+03,  1.60326604e+02]),
+                                          values=array([[ 5.60029151e+05,  6.44594784e+05, -1.70555683e+03],
+           [ 5.60029151e+05,  6.44594784e+05, -1.60987050e+03],
+           [ 5.60029151e+05,  6.44594784e+05, -1.51418417e+03],
+           ...,
+           [ 5.64829361e+05,  6.50292212e+05, -7.88892213e+01],
+           [ 5.64829361e+05,  6.50292212e+05,  1.67971089e+01],
+           [ 5.64829361e+05,  6.50292212e+05,  1.12483439e+02]]),
+                                          mask_topo=array([], shape=(0, 3), dtype=bool),
+                                          _transform=None),
+                  _custom_grid=None,
+                  _topography=<gempy.core.data.grid_modules.topography.Topography object at 0x7fea789b5600>,
+                  _sections=None,
+                  _centered_grid=None,
+                  values=array([[ 5.60029151e+05,  6.44594784e+05, -1.70555683e+03],
+           [ 5.60029151e+05,  6.44594784e+05, -1.60987050e+03],
+           [ 5.60029151e+05,  6.44594784e+05, -1.51418417e+03],
+           ...,
+           [ 5.64955682e+05,  6.49201963e+05,  1.06993262e+02],
+           [ 5.64955682e+05,  6.49905349e+05,  8.89864414e+01],
+           [ 5.64955682e+05,  6.50608735e+05,  7.05702308e+01]]),
+                  length=array([], dtype=float64),
+                  _transform=None,
+                  _octree_levels=-1),
+     'input_transform': {'_cached_pivot': None,
+     '_is_default_transform': False,
+     'position': array([-562422.65655014, -647329.31794742,     823.58712106]),
+     'rotation': array([0., 0., 0.]),
+     'scale': array([8.55363115e-05, 8.55363115e-05, 8.55363115e-05])},
      'meta': GeoModelMeta(name='Tutorial_ch1_1_Basics',
                           creation_date=None,
                           last_modification_date=None,
@@ -228,11 +254,7 @@ It's helpful to print the model to verify its initialization.
             fault_relations=
     [[False, False],
      [False, False]],
-    ,
-     'transform': {'_is_default_transform': False,
-     'position': array([-562422.65655014, -647329.31794742,     823.58712106]),
-     'rotation': array([0., 0., 0.]),
-     'scale': array([8.55363115e-05, 8.55363115e-05, 8.55363115e-05])}}
+    }
 
 
 
@@ -244,7 +266,7 @@ This step configures the model's interpolation settings for better accuracy.
 
 .. GENERATED FROM PYTHON SOURCE LINES 63-69
 
-.. code-block:: default
+.. code-block:: Python
 
     interpolation_options = geo_model.interpolation_options
     interpolation_options.mesh_extraction = True
@@ -266,12 +288,12 @@ Adjustments to the surface points can influence the resulting geological feature
 
 .. GENERATED FROM PYTHON SOURCE LINES 72-78
 
-.. code-block:: default
+.. code-block:: Python
 
     gp.modify_surface_points(
         geo_model,
         slice=0,
-        X=geo_model.surface_points.data[0][0] + 130,
+        X=geo_model.surface_points_copy.data[0][0] + 130,
     )
 
 
@@ -346,7 +368,7 @@ This is where the model computation happens, utilizing the GemPy engine.
 
 .. GENERATED FROM PYTHON SOURCE LINES 81-90
 
-.. code-block:: default
+.. code-block:: Python
 
     before_compute_time = time.time()
     gp.compute_model(
@@ -366,16 +388,14 @@ This is where the model computation happens, utilizing the GemPy engine.
  .. code-block:: none
 
     Setting Backend To: AvailableBackends.PYTORCH
-    /home/leguark/gempy/gempy/core/data/geo_model.py:183: UserWarning: You are using refinement and passing a regular grid. The resolution of the regular grid will be overwritten
-      warnings.warn(
-    Final Iteration 230, Residual Norm: 3.6824900462306687e-08
-    Final Iteration 102, Residual Norm: 8.902938475330302e-07
+    Condition number: 146825.828125.
+    Condition number: 276737.5.
 
 
 .. raw:: html
 
     <div class="output_subarea output_html rendered_html output_result">
-    <b>Solutions:</b> 6 Octree Levels, 5 DualContouringMeshes
+    <b>Solutions:</b> 5 Octree Levels, 5 DualContouringMeshes
     </div>
     <br />
     <br />
@@ -387,7 +407,7 @@ Visualizing the model in 2D helps in understanding the geological layers.
 
 .. GENERATED FROM PYTHON SOURCE LINES 93-95
 
-.. code-block:: default
+.. code-block:: Python
 
     gpv.plot_2d(geo_model, show_scalar=False)
 
@@ -405,7 +425,7 @@ Visualizing the model in 2D helps in understanding the geological layers.
  .. code-block:: none
 
 
-    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7fa87752c970>
+    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7fea2d483790>
 
 
 
@@ -416,7 +436,7 @@ A 3D view provides a comprehensive look at the model's structure.
 
 .. GENERATED FROM PYTHON SOURCE LINES 98-104
 
-.. code-block:: default
+.. code-block:: Python
 
     gempy_vista = gpv.plot_3d(
         model=geo_model,
@@ -443,7 +463,7 @@ It's useful to know how long different parts of the process take.
 
 .. GENERATED FROM PYTHON SOURCE LINES 107-117
 
-.. code-block:: default
+.. code-block:: Python
 
     end_time = time.time()
     prep_time = before_compute_time - start_time
@@ -463,9 +483,9 @@ It's useful to know how long different parts of the process take.
 
  .. code-block:: none
 
-    Preparation time: 1.1760990619659424 seconds.
-    Computation time: 2.8446145057678223 seconds.
-    Total execution time: 4.020713567733765 seconds.
+    Preparation time: 1.0133297443389893 seconds.
+    Computation time: 4.729570627212524 seconds.
+    Total execution time: 5.742900371551514 seconds.
 
 
 
@@ -473,7 +493,7 @@ It's useful to know how long different parts of the process take.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  4.193 seconds)
+   **Total running time of the script:** (0 minutes 5.802 seconds)
 
 
 .. _sphx_glr_download_examples_02_structural_modeling_02_model_1_gempy.py:
@@ -482,16 +502,13 @@ It's useful to know how long different parts of the process take.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: 02_model_1_gempy.ipynb <02_model_1_gempy.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 02_model_1_gempy.py <02_model_1_gempy.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 02_model_1_gempy.ipynb <02_model_1_gempy.ipynb>`
 
 
 .. only:: html

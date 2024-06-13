@@ -26,7 +26,7 @@ Complex probabilistic model
 
 .. GENERATED FROM PYTHON SOURCE LINES 8-26
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import os
@@ -55,11 +55,30 @@ Complex probabilistic model
 
 .. GENERATED FROM PYTHON SOURCE LINES 27-28
 
+Config
+
+.. GENERATED FROM PYTHON SOURCE LINES 28-32
+
+.. code-block:: Python
+
+    seed = 123456
+    torch.manual_seed(seed)
+    pyro.set_rng_seed(seed)
+
+
+
+
+
+
+
+
+.. GENERATED FROM PYTHON SOURCE LINES 33-34
+
 Set the data path
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-31
+.. GENERATED FROM PYTHON SOURCE LINES 34-37
 
-.. code-block:: default
+.. code-block:: Python
 
     data_path = os.path.abspath('../')
 
@@ -71,13 +90,13 @@ Set the data path
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 32-33
+.. GENERATED FROM PYTHON SOURCE LINES 38-39
 
 Define a function for plotting geological settings with wells
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-59
+.. GENERATED FROM PYTHON SOURCE LINES 39-65
 
-.. code-block:: default
+.. code-block:: Python
 
     def plot_geo_setting_well(geo_model):
         """
@@ -112,23 +131,23 @@ Define a function for plotting geological settings with wells
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 60-64
+.. GENERATED FROM PYTHON SOURCE LINES 66-70
 
 Creating the Geological Model
 -----------------------------
 Here we create a geological model using GemPy. The model defines the spatial extent,
 resolution, and geological information derived from orientations and surface points data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-77
+.. GENERATED FROM PYTHON SOURCE LINES 70-83
 
-.. code-block:: default
+.. code-block:: Python
 
 
     geo_model = gp.create_geomodel(
         project_name='Wells',
         extent=[0, 12000, -500, 500, 0, 4000],
         resolution=[100, 2, 100],
-        refinement=1,
+        # refinement=1,
         importer_helper=gp.data.ImporterHelper(
             path_to_orientations=data_path + "/data/2-layers/2-layers_orientations.csv",
             path_to_surface_points=data_path + "/data/2-layers/2-layers_surface_points.csv"
@@ -143,21 +162,21 @@ resolution, and geological information derived from orientations and surface poi
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-82
+.. GENERATED FROM PYTHON SOURCE LINES 84-88
 
 Configuring the Model
 ---------------------
 We configure the interpolation options for the geological model. 
 These options determine how the model interpolates between data points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 82-87
+.. GENERATED FROM PYTHON SOURCE LINES 88-93
 
-.. code-block:: default
+.. code-block:: Python
 
 
     geo_model.interpolation_options.uni_degree = 0
     geo_model.interpolation_options.mesh_extraction = False
-    geo_model.interpolation_options.sigmoid_slope = 1100.
+    geo_model.interpolation_options.sigmoid_slope = -1  # ! Temporary fix to set the hard sigmoid 
 
 
 
@@ -166,16 +185,16 @@ These options determine how the model interpolates between data points.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-92
+.. GENERATED FROM PYTHON SOURCE LINES 94-98
 
 Setting up a Custom Grid
 ------------------------
 A custom grid is set for the model, defining specific points in space
 where geological formations will be evaluated.
 
-.. GENERATED FROM PYTHON SOURCE LINES 92-99
+.. GENERATED FROM PYTHON SOURCE LINES 98-105
 
-.. code-block:: default
+.. code-block:: Python
 
 
     x_loc = 6000
@@ -192,22 +211,22 @@ where geological formations will be evaluated.
 
  .. code-block:: none
 
-    Active grids: ['regular' 'custom']
+    Active grids: GridTypes.NONE|CUSTOM|DENSE
 
-    <gempy.core.data.grid_modules.grid_types.CustomGrid object at 0x7fd4e3c53be0>
+    <gempy.core.data.grid_modules.grid_types.CustomGrid object at 0x7f3657603190>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 100-104
+.. GENERATED FROM PYTHON SOURCE LINES 106-110
 
 Plotting the Initial Geological Setting
 ---------------------------------------
 Before running any probabilistic analysis, we first visualize the initial geological setting.
 This step ensures that our model is correctly set up with the initial data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 104-109
+.. GENERATED FROM PYTHON SOURCE LINES 110-115
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Plot initial geological settings
@@ -226,16 +245,16 @@ This step ensures that our model is correctly set up with the initial data.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-114
+.. GENERATED FROM PYTHON SOURCE LINES 116-120
 
 Interpolating the Initial Guess
 -------------------------------
 The model interpolates an initial guess for the geological formations.
 This step is crucial to provide a starting point for further probabilistic analysis.
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-122
+.. GENERATED FROM PYTHON SOURCE LINES 120-128
 
-.. code-block:: default
+.. code-block:: Python
 
 
     gp.compute_model(
@@ -259,13 +278,11 @@ This step is crucial to provide a starting point for further probabilistic analy
  .. code-block:: none
 
     Setting Backend To: AvailableBackends.numpy
-    A size: (5, 5)
-    CG iterations: 5
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 123-128
+.. GENERATED FROM PYTHON SOURCE LINES 129-134
 
 Probabilistic Geomodeling with Pyro
 -----------------------------------
@@ -273,12 +290,12 @@ In this section, we introduce a probabilistic approach to geological modeling.
 By using Pyro, a probabilistic programming language, we define a model that integrates
 geological data with uncertainty quantification.
 
-.. GENERATED FROM PYTHON SOURCE LINES 128-134
+.. GENERATED FROM PYTHON SOURCE LINES 134-140
 
-.. code-block:: default
+.. code-block:: Python
 
 
-    sp_coords_copy = geo_model.interpolation_input.surface_points.sp_coords.copy()
+    sp_coords_copy = geo_model.interpolation_input_copy.surface_points.sp_coords.copy()
     # Change the backend to PyTorch for probabilistic modeling
     BackendTensor.change_backend_gempy(engine_backend=gp.data.AvailableBackends.PYTORCH)
 
@@ -296,7 +313,7 @@ geological data with uncertainty quantification.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 135-140
+.. GENERATED FROM PYTHON SOURCE LINES 141-146
 
 Defining the Probabilistic Model
 --------------------------------
@@ -304,9 +321,9 @@ The Pyro model represents the probabilistic aspects of the geological model.
 It defines a prior distribution for the top layer's location and computes the thickness
 of the geological layer as an observed variable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 140-174
+.. GENERATED FROM PYTHON SOURCE LINES 146-180
 
-.. code-block:: default
+.. code-block:: Python
 
 
     def model(y_obs_list):
@@ -320,7 +337,7 @@ of the geological layer as an observed variable.
         mu_top = pyro.sample(r'$\mu_{top}$', dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64)))
 
         # Update the model with the new top layer's location
-        interpolation_input = geo_model.interpolation_input
+        interpolation_input = geo_model.interpolation_input_copy
         interpolation_input.surface_points.sp_coords = torch.index_put(
             interpolation_input.surface_points.sp_coords,
             (torch.tensor([0]), torch.tensor([2])),
@@ -349,20 +366,20 @@ of the geological layer as an observed variable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 175-179
+.. GENERATED FROM PYTHON SOURCE LINES 181-185
 
 Running Prior Sampling and Visualization
 ----------------------------------------
 Prior sampling is an essential step in probabilistic modeling. 
 It helps in understanding the distribution of our prior assumptions before observing any data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-182
+.. GENERATED FROM PYTHON SOURCE LINES 187-188
 
 Prepare observation data
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-184
+.. GENERATED FROM PYTHON SOURCE LINES 188-190
 
-.. code-block:: default
+.. code-block:: Python
 
     y_obs_list = torch.tensor([200, 210, 190])
 
@@ -373,13 +390,13 @@ Prepare observation data
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 185-186
+.. GENERATED FROM PYTHON SOURCE LINES 191-192
 
 Run prior sampling and visualization
 
-.. GENERATED FROM PYTHON SOURCE LINES 186-191
+.. GENERATED FROM PYTHON SOURCE LINES 192-197
 
-.. code-block:: default
+.. code-block:: Python
 
     prior = Predictive(model, num_samples=50)(y_obs_list)
     data = az.from_pyro(prior=prior)
@@ -390,74 +407,15 @@ Run prior sampling and visualization
 
 
 .. image-sg:: /examples/04_probabilistic_modeling/images/sphx_glr_01_thickness_problem_gempy_003.png
-   :alt: $\mu_{top}$, $\mu_{top}$, $\mu_{thickness}$, $\mu_{thickness}$, $y_{thickness}$, $y_{thickness}$
+   :alt: $\mu_{thickness}$, $\mu_{thickness}$, $\mu_{top}$, $\mu_{top}$, $y_{thickness}$, $y_{thickness}$
    :srcset: /examples/04_probabilistic_modeling/images/sphx_glr_01_thickness_problem_gempy_003.png
    :class: sphx-glr-single-img
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Final Iteration 5, Residual Norm: 1.4089725943911736e-05
-    Final Iteration 5, Residual Norm: 6.317415998961143e-06
-    Final Iteration 5, Residual Norm: 1.468542842347646e-07
-    Final Iteration 5, Residual Norm: 9.099129314637124e-06
-    Final Iteration 5, Residual Norm: 2.667314595389484e-06
-    Final Iteration 5, Residual Norm: 1.4855313948945798e-07
-    Final Iteration 5, Residual Norm: 5.579229931795512e-05
-    Final Iteration 5, Residual Norm: 0.0002460598490319718
-    Final Iteration 5, Residual Norm: 4.7170726870053344e-06
-    Final Iteration 5, Residual Norm: 2.1329508670549636e-05
-    Final Iteration 5, Residual Norm: 0.00036439299934579183
-    Final Iteration 5, Residual Norm: 0.00048370251094574413
-    Final Iteration 5, Residual Norm: 1.0623705901568265e-06
-    Final Iteration 5, Residual Norm: 6.863468575162967e-05
-    Final Iteration 5, Residual Norm: 1.0331479933604487e-05
-    Final Iteration 5, Residual Norm: 1.049956003777276e-05
-    Final Iteration 5, Residual Norm: 0.0003624536197216722
-    Final Iteration 5, Residual Norm: 0.0006498274068455044
-    Final Iteration 5, Residual Norm: 0.00018471277567577628
-    Final Iteration 5, Residual Norm: 0.00040254824513041377
-    Final Iteration 5, Residual Norm: 0.0013596079008816946
-    Final Iteration 5, Residual Norm: 1.648709638209521e-05
-    Final Iteration 5, Residual Norm: 7.735022324916065e-06
-    Final Iteration 5, Residual Norm: 0.0001824839154379149
-    Final Iteration 5, Residual Norm: 0.0029643142652577897
-    Final Iteration 5, Residual Norm: 8.423194596482126e-06
-    Final Iteration 5, Residual Norm: 0.0005033355317047751
-    Final Iteration 5, Residual Norm: 3.466862162591784e-05
-    Final Iteration 5, Residual Norm: 4.100952832656466e-06
-    Final Iteration 5, Residual Norm: 5.186807534557172e-06
-    Final Iteration 5, Residual Norm: 7.225228101225706e-05
-    Final Iteration 5, Residual Norm: 0.00012718195369019127
-    Final Iteration 5, Residual Norm: 1.6491035955590957e-05
-    Final Iteration 5, Residual Norm: 7.977804546947701e-06
-    Final Iteration 5, Residual Norm: 6.816675195364853e-05
-    Final Iteration 5, Residual Norm: 2.4168551204555964e-07
-    Final Iteration 5, Residual Norm: 3.548664905916464e-08
-    Final Iteration 5, Residual Norm: 0.0022503253931455245
-    Final Iteration 5, Residual Norm: 0.0036943902745817376
-    Final Iteration 5, Residual Norm: 8.690035021310801e-05
-    Final Iteration 5, Residual Norm: 7.142135244993335e-08
-    Final Iteration 5, Residual Norm: 3.5356345481439774e-06
-    Final Iteration 5, Residual Norm: 7.538530566253355e-09
-    Final Iteration 5, Residual Norm: 3.4309134085127624e-07
-    Final Iteration 5, Residual Norm: 1.948481493782957e-08
-    Final Iteration 5, Residual Norm: 0.00014888343414485883
-    Final Iteration 5, Residual Norm: 4.704095188284034e-05
-    Final Iteration 5, Residual Norm: 0.00011895489197375922
-    Final Iteration 5, Residual Norm: 2.789264939712866e-06
-    Final Iteration 5, Residual Norm: 1.4900200944495394e-05
-    Final Iteration 5, Residual Norm: 3.218010200331566e-06
-    Final Iteration 5, Residual Norm: 1.0887753762451048e-06
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/arviz/utils.py:184: NumbaDeprecationWarning: The 'nopython' keyword argument was not supplied to the 'numba.jit' decorator. The implicit default value for this argument is currently False, but it will be changed to True in Numba 0.59.0. See https://numba.readthedocs.io/en/stable/reference/deprecation.html#deprecation-of-object-mode-fall-back-behaviour-when-using-jit for details.
-      numba_fn = numba.jit(**self.kwargs)(self.function)
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 192-197
+.. GENERATED FROM PYTHON SOURCE LINES 198-203
 
 Sampling from the Posterior using MCMC
 --------------------------------------
@@ -465,13 +423,13 @@ We use Markov Chain Monte Carlo (MCMC) with the NUTS (No-U-Turn Sampler) algorit
 to sample from the posterior distribution. This gives us an understanding of the 
 distribution of our model parameters after considering the observed data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 199-200
+.. GENERATED FROM PYTHON SOURCE LINES 205-206
 
 Run MCMC using NUTS to sample from the posterior
 
-.. GENERATED FROM PYTHON SOURCE LINES 200-212
+.. GENERATED FROM PYTHON SOURCE LINES 206-218
 
-.. code-block:: default
+.. code-block:: Python
 
 
     # Magic sauce
@@ -494,26 +452,26 @@ Run MCMC using NUTS to sample from the posterior
  .. code-block:: none
 
     Setting Backend To: AvailableBackends.PYTORCH
-    Warmup:   0%|          | 0/250 [00:00, ?it/s]    Warmup:   0%|          | 1/250 [00:00,  3.12it/s, step size=3.22e-01, acc. prob=0.869]    Warmup:   2%|1         | 4/250 [00:00, 10.90it/s, step size=2.55e-03, acc. prob=0.472]    Warmup:   2%|2         | 6/250 [00:01,  4.24it/s, step size=2.14e-03, acc. prob=0.624]    Warmup:   3%|3         | 8/250 [00:02,  2.77it/s, step size=3.46e-03, acc. prob=0.717]    Warmup:   4%|3         | 9/250 [00:02,  3.16it/s, step size=2.47e-03, acc. prob=0.727]    Warmup:   4%|4         | 10/250 [00:03,  2.73it/s, step size=3.36e-03, acc. prob=0.754]    Warmup:   4%|4         | 11/250 [00:03,  2.81it/s, step size=4.63e-03, acc. prob=0.776]    Warmup:   5%|4         | 12/250 [00:03,  2.87it/s, step size=6.41e-03, acc. prob=0.795]    Warmup:   6%|5         | 14/250 [00:04,  3.31it/s, step size=4.38e-03, acc. prob=0.800]    Warmup:   6%|6         | 15/250 [00:04,  3.08it/s, step size=6.13e-03, acc. prob=0.814]    Warmup:   6%|6         | 16/250 [00:04,  3.41it/s, step size=8.56e-03, acc. prob=0.825]    Warmup:   7%|6         | 17/250 [00:04,  4.06it/s, step size=5.01e-03, acc. prob=0.819]    Warmup:   7%|7         | 18/250 [00:05,  4.26it/s, step size=6.53e-03, acc. prob=0.828]    Warmup:   8%|8         | 20/250 [00:05,  5.91it/s, step size=4.68e-03, acc. prob=0.828]    Warmup:   8%|8         | 21/250 [00:05,  5.69it/s, step size=6.44e-03, acc. prob=0.836]    Warmup:   9%|8         | 22/250 [00:05,  5.65it/s, step size=5.43e-03, acc. prob=0.836]    Warmup:   9%|9         | 23/250 [00:05,  5.48it/s, step size=7.42e-03, acc. prob=0.843]    Warmup:  10%|9         | 24/250 [00:06,  5.35it/s, step size=6.77e-03, acc. prob=0.843]    Warmup:  10%|#         | 25/250 [00:06,  5.31it/s, step size=9.25e-03, acc. prob=0.850]    Warmup:  11%|#         | 27/250 [00:06,  5.89it/s, step size=6.68e-03, acc. prob=0.848]    Warmup:  12%|#1        | 29/250 [00:06,  7.31it/s, step size=1.16e-02, acc. prob=0.858]    Warmup:  12%|#2        | 31/250 [00:06,  9.21it/s, step size=8.17e-03, acc. prob=0.856]    Warmup:  13%|#3        | 33/250 [00:07,  9.11it/s, step size=1.46e-02, acc. prob=0.864]    Warmup:  14%|#4        | 35/250 [00:07,  6.52it/s, step size=1.59e-03, acc. prob=0.842]    Warmup:  14%|#4        | 36/250 [00:08,  3.73it/s, step size=2.15e-03, acc. prob=0.846]    Warmup:  15%|#4        | 37/250 [00:09,  2.67it/s, step size=2.90e-03, acc. prob=0.850]    Warmup:  16%|#5        | 39/250 [00:09,  3.41it/s, step size=1.61e-03, acc. prob=0.846]    Warmup:  16%|#6        | 41/250 [00:09,  4.51it/s, step size=4.38e-04, acc. prob=0.835]    Warmup:  17%|#6        | 42/250 [00:09,  4.47it/s, step size=4.32e-04, acc. prob=0.836]    Warmup:  17%|#7        | 43/250 [00:11,  2.21it/s, step size=5.49e-04, acc. prob=0.840]    Warmup:  18%|#7        | 44/250 [00:13,  1.01it/s, step size=5.81e+00, acc. prob=0.843]    Warmup:  19%|#8        | 47/250 [00:13,  1.97it/s, step size=9.76e-02, acc. prob=0.796]    Warmup:  20%|#9        | 49/250 [00:14,  2.58it/s, step size=4.33e-02, acc. prob=0.781]    Warmup:  20%|##        | 50/250 [00:14,  2.29it/s, step size=4.33e-02, acc. prob=0.786]    Warmup:  20%|##        | 51/250 [00:16,  1.26it/s, step size=4.33e-02, acc. prob=1.000]    Sample:  21%|##        | 52/250 [00:20,  1.45s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  21%|##1       | 53/250 [00:21,  1.33s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  22%|##1       | 54/250 [00:23,  1.45s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  22%|##2       | 55/250 [00:24,  1.39s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  22%|##2       | 56/250 [00:25,  1.35s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  23%|##2       | 57/250 [00:27,  1.35s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  23%|##3       | 58/250 [00:27,  1.08s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  24%|##3       | 59/250 [00:29,  1.28s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  24%|##4       | 60/250 [00:29,  1.03s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  24%|##4       | 61/250 [00:30,  1.07s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  25%|##4       | 62/250 [00:31,  1.04s/it, step size=4.33e-02, acc. prob=1.000]    Sample:  25%|##5       | 63/250 [00:32,  1.27it/s, step size=4.33e-02, acc. prob=1.000]    Sample:  26%|##5       | 64/250 [00:32,  1.23it/s, step size=4.33e-02, acc. prob=1.000]    Sample:  26%|##6       | 65/250 [00:33,  1.38it/s, step size=4.33e-02, acc. prob=1.000]    Sample:  26%|##6       | 66/250 [00:33,  1.50it/s, step size=4.33e-02, acc. prob=1.000]    Sample:  27%|##6       | 67/250 [00:34,  1.40it/s, step size=4.33e-02, acc. prob=0.998]    Sample:  27%|##7       | 68/250 [00:36,  1.04s/it, step size=4.33e-02, acc. prob=0.998]    Sample:  28%|##7       | 69/250 [00:37,  1.17it/s, step size=4.33e-02, acc. prob=0.998]    Sample:  28%|##8       | 70/250 [00:37,  1.41it/s, step size=4.33e-02, acc. prob=0.998]    Sample:  28%|##8       | 71/250 [00:39,  1.02s/it, step size=4.33e-02, acc. prob=0.998]    Sample:  29%|##8       | 72/250 [00:40,  1.18s/it, step size=4.33e-02, acc. prob=0.997]    Sample:  29%|##9       | 73/250 [00:42,  1.34s/it, step size=4.33e-02, acc. prob=0.996]    Sample:  30%|##9       | 74/250 [00:42,  1.01it/s, step size=4.33e-02, acc. prob=0.996]    Sample:  30%|###       | 75/250 [00:43,  1.06s/it, step size=4.33e-02, acc. prob=0.996]    Sample:  30%|###       | 76/250 [00:44,  1.08it/s, step size=4.33e-02, acc. prob=0.996]    Sample:  31%|###       | 77/250 [00:45,  1.04s/it, step size=4.33e-02, acc. prob=0.995]    Sample:  31%|###1      | 78/250 [00:47,  1.20s/it, step size=4.33e-02, acc. prob=0.995]    Sample:  32%|###1      | 79/250 [00:49,  1.51s/it, step size=4.33e-02, acc. prob=0.995]    Sample:  32%|###2      | 80/250 [00:49,  1.17s/it, step size=4.33e-02, acc. prob=0.995]    Sample:  32%|###2      | 81/250 [00:51,  1.41s/it, step size=4.33e-02, acc. prob=0.995]    Sample:  33%|###2      | 82/250 [00:52,  1.29s/it, step size=4.33e-02, acc. prob=0.994]    Sample:  33%|###3      | 83/250 [00:54,  1.36s/it, step size=4.33e-02, acc. prob=0.994]    Sample:  34%|###3      | 84/250 [00:54,  1.11s/it, step size=4.33e-02, acc. prob=0.994]    Sample:  34%|###4      | 85/250 [00:55,  1.15it/s, step size=4.33e-02, acc. prob=0.994]    Sample:  34%|###4      | 86/250 [00:55,  1.27it/s, step size=4.33e-02, acc. prob=0.994]    Sample:  35%|###5      | 88/250 [00:56,  1.61it/s, step size=4.33e-02, acc. prob=0.994]    Sample:  36%|###5      | 89/250 [00:57,  1.60it/s, step size=4.33e-02, acc. prob=0.995]    Sample:  36%|###6      | 90/250 [00:58,  1.38it/s, step size=4.33e-02, acc. prob=0.995]    Sample:  36%|###6      | 91/250 [00:58,  1.73it/s, step size=4.33e-02, acc. prob=0.995]    Sample:  37%|###6      | 92/250 [00:59,  1.27it/s, step size=4.33e-02, acc. prob=0.994]    Sample:  37%|###7      | 93/250 [01:01,  1.15s/it, step size=4.33e-02, acc. prob=0.995]    Sample:  38%|###7      | 94/250 [01:03,  1.27s/it, step size=4.33e-02, acc. prob=0.994]    Sample:  38%|###8      | 95/250 [01:03,  1.01s/it, step size=4.33e-02, acc. prob=0.993]    Sample:  38%|###8      | 96/250 [01:05,  1.10s/it, step size=4.33e-02, acc. prob=0.993]    Sample:  39%|###8      | 97/250 [01:06,  1.05s/it, step size=4.33e-02, acc. prob=0.993]    Sample:  39%|###9      | 98/250 [01:06,  1.11it/s, step size=4.33e-02, acc. prob=0.993]    Sample:  40%|###9      | 99/250 [01:08,  1.12s/it, step size=4.33e-02, acc. prob=0.993]    Sample:  40%|####      | 100/250 [01:09,  1.17s/it, step size=4.33e-02, acc. prob=0.993]    Sample:  40%|####      | 101/250 [01:10,  1.24s/it, step size=4.33e-02, acc. prob=0.993]    Sample:  41%|####      | 102/250 [01:11,  1.13s/it, step size=4.33e-02, acc. prob=0.993]    Sample:  41%|####1     | 103/250 [01:12,  1.10it/s, step size=4.33e-02, acc. prob=0.992]    Sample:  42%|####1     | 104/250 [01:13,  1.14it/s, step size=4.33e-02, acc. prob=0.991]    Sample:  42%|####2     | 105/250 [01:14,  1.02s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  42%|####2     | 106/250 [01:16,  1.24s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  43%|####2     | 107/250 [01:17,  1.37s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  43%|####3     | 108/250 [01:19,  1.37s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  44%|####3     | 109/250 [01:20,  1.33s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  44%|####4     | 110/250 [01:20,  1.01it/s, step size=4.33e-02, acc. prob=0.991]    Sample:  44%|####4     | 111/250 [01:21,  1.01it/s, step size=4.33e-02, acc. prob=0.991]    Sample:  45%|####4     | 112/250 [01:22,  1.08it/s, step size=4.33e-02, acc. prob=0.991]    Sample:  45%|####5     | 113/250 [01:23,  1.05s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  46%|####5     | 114/250 [01:26,  1.48s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  46%|####6     | 115/250 [01:29,  1.90s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  46%|####6     | 116/250 [01:31,  2.02s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  47%|####6     | 117/250 [01:32,  1.62s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  47%|####7     | 118/250 [01:32,  1.30s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  48%|####7     | 119/250 [01:33,  1.07s/it, step size=4.33e-02, acc. prob=0.991]    Sample:  48%|####8     | 120/250 [01:33,  1.18it/s, step size=4.33e-02, acc. prob=0.990]    Sample:  48%|####8     | 121/250 [01:33,  1.40it/s, step size=4.33e-02, acc. prob=0.990]    Sample:  49%|####8     | 122/250 [01:34,  1.27it/s, step size=4.33e-02, acc. prob=0.989]    Sample:  49%|####9     | 123/250 [01:35,  1.38it/s, step size=4.33e-02, acc. prob=0.989]    Sample:  50%|####9     | 124/250 [01:36,  1.29it/s, step size=4.33e-02, acc. prob=0.989]    Sample:  50%|#####     | 125/250 [01:37,  1.25it/s, step size=4.33e-02, acc. prob=0.989]    Sample:  50%|#####     | 126/250 [01:37,  1.54it/s, step size=4.33e-02, acc. prob=0.988]    Sample:  51%|#####     | 127/250 [01:37,  1.96it/s, step size=4.33e-02, acc. prob=0.988]    Sample:  51%|#####1    | 128/250 [01:39,  1.14it/s, step size=4.33e-02, acc. prob=0.988]    Sample:  52%|#####1    | 129/250 [01:42,  1.40s/it, step size=4.33e-02, acc. prob=0.989]    Sample:  52%|#####2    | 130/250 [01:42,  1.03s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  52%|#####2    | 131/250 [01:42,  1.27it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  53%|#####2    | 132/250 [01:42,  1.69it/s, step size=4.33e-02, acc. prob=0.983]    Sample:  53%|#####3    | 133/250 [01:44,  1.05it/s, step size=4.33e-02, acc. prob=0.983]    Sample:  54%|#####3    | 134/250 [01:46,  1.21s/it, step size=4.33e-02, acc. prob=0.983]    Sample:  54%|#####4    | 135/250 [01:46,  1.06s/it, step size=4.33e-02, acc. prob=0.983]    Sample:  54%|#####4    | 136/250 [01:49,  1.51s/it, step size=4.33e-02, acc. prob=0.983]    Sample:  55%|#####4    | 137/250 [01:51,  1.66s/it, step size=4.33e-02, acc. prob=0.983]    Sample:  55%|#####5    | 138/250 [01:52,  1.60s/it, step size=4.33e-02, acc. prob=0.983]    Sample:  56%|#####5    | 139/250 [01:55,  1.85s/it, step size=4.33e-02, acc. prob=0.983]    Sample:  56%|#####6    | 140/250 [01:56,  1.59s/it, step size=4.33e-02, acc. prob=0.984]    Sample:  56%|#####6    | 141/250 [01:58,  1.83s/it, step size=4.33e-02, acc. prob=0.984]    Sample:  57%|#####6    | 142/250 [02:00,  1.82s/it, step size=4.33e-02, acc. prob=0.984]    Sample:  57%|#####7    | 143/250 [02:00,  1.39s/it, step size=4.33e-02, acc. prob=0.984]    Sample:  58%|#####7    | 144/250 [02:01,  1.07s/it, step size=4.33e-02, acc. prob=0.984]    Sample:  58%|#####8    | 145/250 [02:02,  1.06s/it, step size=4.33e-02, acc. prob=0.984]    Sample:  58%|#####8    | 146/250 [02:02,  1.22it/s, step size=4.33e-02, acc. prob=0.984]    Sample:  59%|#####8    | 147/250 [02:02,  1.44it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  59%|#####9    | 148/250 [02:03,  1.68it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  60%|#####9    | 149/250 [02:03,  1.64it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  60%|######    | 150/250 [02:05,  1.16it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  60%|######    | 151/250 [02:07,  1.12s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  61%|######    | 152/250 [02:08,  1.08s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  61%|######1   | 153/250 [02:09,  1.16s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  62%|######1   | 154/250 [02:10,  1.20s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  62%|######2   | 155/250 [02:12,  1.36s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  62%|######2   | 156/250 [02:13,  1.17s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  63%|######2   | 157/250 [02:14,  1.26s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  63%|######3   | 158/250 [02:16,  1.56s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  64%|######3   | 159/250 [02:18,  1.45s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  64%|######4   | 160/250 [02:19,  1.55s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  64%|######4   | 161/250 [02:20,  1.34s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  65%|######4   | 162/250 [02:21,  1.14s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  65%|######5   | 163/250 [02:22,  1.03s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  66%|######5   | 164/250 [02:23,  1.10s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  66%|######6   | 165/250 [02:23,  1.07it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  66%|######6   | 166/250 [02:24,  1.10it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  67%|######6   | 167/250 [02:26,  1.02s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  67%|######7   | 168/250 [02:27,  1.26s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  68%|######7   | 169/250 [02:28,  1.06s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  68%|######8   | 170/250 [02:29,  1.09it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  68%|######8   | 171/250 [02:30,  1.19s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  69%|######8   | 172/250 [02:31,  1.06s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  69%|######9   | 173/250 [02:33,  1.32s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  70%|######9   | 174/250 [02:34,  1.32s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  70%|#######   | 175/250 [02:37,  1.72s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  70%|#######   | 176/250 [02:39,  1.91s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  71%|#######   | 177/250 [02:40,  1.53s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  71%|#######1  | 178/250 [02:41,  1.23s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  72%|#######1  | 179/250 [02:41,  1.09it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  72%|#######2  | 180/250 [02:42,  1.05s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  72%|#######2  | 181/250 [02:44,  1.20s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  73%|#######2  | 182/250 [02:44,  1.05s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  73%|#######3  | 183/250 [02:46,  1.30s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  74%|#######3  | 184/250 [02:48,  1.27s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  74%|#######4  | 185/250 [02:48,  1.15s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  74%|#######4  | 186/250 [02:49,  1.06s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  75%|#######4  | 187/250 [02:50,  1.11it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  75%|#######5  | 188/250 [02:51,  1.08it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  76%|#######5  | 189/250 [02:51,  1.29it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  76%|#######6  | 190/250 [02:53,  1.06it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  76%|#######6  | 191/250 [02:54,  1.04it/s, step size=4.33e-02, acc. prob=0.985]    Sample:  77%|#######6  | 192/250 [02:55,  1.17s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  77%|#######7  | 193/250 [02:56,  1.18s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  78%|#######7  | 194/250 [02:57,  1.11s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  78%|#######8  | 195/250 [02:58,  1.10s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  78%|#######8  | 196/250 [03:00,  1.11s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  79%|#######8  | 197/250 [03:01,  1.23s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  79%|#######9  | 198/250 [03:03,  1.31s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  80%|#######9  | 199/250 [03:05,  1.70s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  80%|########  | 200/250 [03:06,  1.39s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  80%|########  | 201/250 [03:06,  1.17s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  81%|########  | 202/250 [03:09,  1.70s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  81%|########1 | 203/250 [03:11,  1.60s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  82%|########1 | 204/250 [03:13,  1.69s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  82%|########2 | 205/250 [03:15,  1.76s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  82%|########2 | 206/250 [03:16,  1.79s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  83%|########2 | 207/250 [03:17,  1.51s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  83%|########3 | 208/250 [03:18,  1.40s/it, step size=4.33e-02, acc. prob=0.986]    Sample:  84%|########3 | 209/250 [03:19,  1.01s/it, step size=4.33e-02, acc. prob=0.985]    Sample:  84%|########4 | 211/250 [03:19,  1.75it/s, step size=4.33e-02, acc. prob=0.977]    Sample:  85%|########4 | 212/250 [03:19,  2.15it/s, step size=4.33e-02, acc. prob=0.975]    Sample:  85%|########5 | 213/250 [03:21,  1.12it/s, step size=4.33e-02, acc. prob=0.976]    Sample:  86%|########5 | 214/250 [03:24,  1.36s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  86%|########6 | 215/250 [03:26,  1.63s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  86%|########6 | 216/250 [03:28,  1.68s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  87%|########6 | 217/250 [03:28,  1.39s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  87%|########7 | 218/250 [03:29,  1.23s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  88%|########7 | 219/250 [03:30,  1.03s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  88%|########8 | 220/250 [03:32,  1.47s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  88%|########8 | 221/250 [03:34,  1.52s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  89%|########8 | 222/250 [03:35,  1.33s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  89%|########9 | 223/250 [03:36,  1.33s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  90%|########9 | 224/250 [03:37,  1.29s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  90%|######### | 225/250 [03:38,  1.24s/it, step size=4.33e-02, acc. prob=0.976]    Sample:  91%|######### | 227/250 [03:39,  1.44it/s, step size=4.33e-02, acc. prob=0.976]    Sample:  91%|#########1| 228/250 [03:39,  1.33it/s, step size=4.33e-02, acc. prob=0.977]    Sample:  92%|#########1| 229/250 [03:41,  1.16it/s, step size=4.33e-02, acc. prob=0.977]    Sample:  92%|#########2| 230/250 [03:42,  1.08it/s, step size=4.33e-02, acc. prob=0.977]    Sample:  92%|#########2| 231/250 [03:43,  1.06it/s, step size=4.33e-02, acc. prob=0.977]    Sample:  93%|#########2| 232/250 [03:44,  1.09s/it, step size=4.33e-02, acc. prob=0.977]    Sample:  93%|#########3| 233/250 [03:46,  1.30s/it, step size=4.33e-02, acc. prob=0.977]    Sample:  94%|#########3| 234/250 [03:47,  1.35s/it, step size=4.33e-02, acc. prob=0.977]    Sample:  94%|#########3| 235/250 [03:50,  1.75s/it, step size=4.33e-02, acc. prob=0.977]    Sample:  94%|#########4| 236/250 [03:52,  1.77s/it, step size=4.33e-02, acc. prob=0.978]    Sample:  95%|#########4| 237/250 [03:53,  1.45s/it, step size=4.33e-02, acc. prob=0.977]    Sample:  95%|#########5| 238/250 [03:54,  1.42s/it, step size=4.33e-02, acc. prob=0.978]    Sample:  96%|#########5| 239/250 [03:56,  1.45s/it, step size=4.33e-02, acc. prob=0.978]    Sample:  96%|#########6| 240/250 [03:57,  1.43s/it, step size=4.33e-02, acc. prob=0.978]    Sample:  96%|#########6| 241/250 [03:57,  1.09s/it, step size=4.33e-02, acc. prob=0.978]    Sample:  97%|#########6| 242/250 [03:59,  1.30s/it, step size=4.33e-02, acc. prob=0.978]    Sample:  97%|#########7| 243/250 [04:00,  1.25s/it, step size=4.33e-02, acc. prob=0.978]    Sample:  98%|#########7| 244/250 [04:00,  1.03it/s, step size=4.33e-02, acc. prob=0.978]    Sample:  98%|#########8| 245/250 [04:01,  1.06it/s, step size=4.33e-02, acc. prob=0.978]    Sample:  98%|#########8| 246/250 [04:02,  1.21it/s, step size=4.33e-02, acc. prob=0.978]    Sample:  99%|#########8| 247/250 [04:02,  1.44it/s, step size=4.33e-02, acc. prob=0.979]    Sample:  99%|#########9| 248/250 [04:04,  1.09it/s, step size=4.33e-02, acc. prob=0.979]    Sample: 100%|#########9| 249/250 [04:04,  1.19it/s, step size=4.33e-02, acc. prob=0.979]    Sample: 100%|##########| 250/250 [04:06,  1.00it/s, step size=4.33e-02, acc. prob=0.979]    Sample: 100%|##########| 250/250 [04:06,  1.02it/s, step size=4.33e-02, acc. prob=0.979]
+    Warmup:   0%|          | 0/250 [00:00, ?it/s]    Warmup:   0%|          | 1/250 [00:01,  1.16s/it, step size=1.93e-01, acc. prob=0.970]    Warmup:   2%|▏         | 5/250 [00:01,  4.75it/s, step size=1.12e-02, acc. prob=0.718]    Warmup:   3%|▎         | 7/250 [00:01,  5.65it/s, step size=9.70e-03, acc. prob=0.769]    Warmup:   4%|▎         | 9/250 [00:01,  5.55it/s, step size=6.16e-03, acc. prob=0.783]    Warmup:   4%|▍         | 10/250 [00:02,  5.38it/s, step size=2.96e-03, acc. prob=0.772]    Warmup:   4%|▍         | 11/250 [00:02,  3.67it/s, step size=4.08e-03, acc. prob=0.793]    Warmup:   5%|▌         | 13/250 [00:03,  4.24it/s, step size=6.41e-03, acc. prob=0.820]    Warmup:   6%|▌         | 14/250 [00:03,  4.10it/s, step size=8.27e-03, acc. prob=0.831]    Warmup:   6%|▌         | 15/250 [00:03,  3.43it/s, step size=1.06e-02, acc. prob=0.840]    Warmup:   6%|▋         | 16/250 [00:04,  3.72it/s, step size=7.28e-03, acc. prob=0.836]    Warmup:   7%|▋         | 18/250 [00:04,  4.46it/s, step size=1.09e-02, acc. prob=0.850]    Warmup:   8%|▊         | 19/250 [00:04,  4.81it/s, step size=1.50e-02, acc. prob=0.858]    Warmup:   8%|▊         | 21/250 [00:05,  2.94it/s, step size=3.33e-03, acc. prob=0.837]    Warmup:   9%|▉         | 22/250 [00:05,  2.85it/s, step size=4.14e-03, acc. prob=0.842]    Warmup:   9%|▉         | 23/250 [00:06,  3.01it/s, step size=4.21e-03, acc. prob=0.845]    Warmup:  10%|█         | 25/250 [00:06,  3.85it/s, step size=6.50e-03, acc. prob=0.854]    Warmup:  10%|█         | 26/250 [00:06,  4.00it/s, step size=2.82e-03, acc. prob=0.844]    Warmup:  11%|█         | 27/250 [00:07,  3.90it/s, step size=1.21e-03, acc. prob=0.835]    Warmup:  11%|█         | 28/250 [00:07,  2.71it/s, step size=1.28e-03, acc. prob=0.837]    Warmup:  12%|█▏        | 29/250 [00:09,  1.56it/s, step size=1.45e-03, acc. prob=0.840]    Warmup:  12%|█▏        | 30/250 [00:10,  1.29it/s, step size=1.83e-03, acc. prob=0.845]    Warmup:  12%|█▏        | 31/250 [00:11,  1.23it/s, step size=2.49e-03, acc. prob=0.850]    Warmup:  13%|█▎        | 32/250 [00:12,  1.20it/s, step size=3.38e-03, acc. prob=0.855]    Warmup:  13%|█▎        | 33/250 [00:12,  1.38it/s, step size=3.21e-03, acc. prob=0.855]    Warmup:  14%|█▎        | 34/250 [00:13,  1.48it/s, step size=3.82e-03, acc. prob=0.858]    Warmup:  14%|█▍        | 35/250 [00:13,  1.81it/s, step size=3.74e-03, acc. prob=0.859]    Warmup:  14%|█▍        | 36/250 [00:14,  1.49it/s, step size=3.88e-03, acc. prob=0.860]    Warmup:  15%|█▍        | 37/250 [00:14,  1.95it/s, step size=5.13e-03, acc. prob=0.863]    Warmup:  15%|█▌        | 38/250 [00:14,  2.27it/s, step size=6.00e-03, acc. prob=0.866]    Warmup:  16%|█▌        | 39/250 [00:14,  2.70it/s, step size=7.95e-03, acc. prob=0.869]    Warmup:  16%|█▋        | 41/250 [00:15,  4.14it/s, step size=1.04e-02, acc. prob=0.873]    Warmup:  17%|█▋        | 42/250 [00:15,  4.52it/s, step size=1.36e-02, acc. prob=0.876]    Warmup:  18%|█▊        | 44/250 [00:15,  3.62it/s, step size=1.97e+00, acc. prob=0.871]    Warmup:  18%|█▊        | 46/250 [00:16,  5.10it/s, step size=2.99e+00, acc. prob=0.855]    Warmup:  19%|█▉        | 48/250 [00:16,  6.74it/s, step size=2.72e-01, acc. prob=0.843]    Warmup:  20%|██        | 50/250 [00:16,  4.90it/s, step size=6.43e-01, acc. prob=0.844]    Warmup:  20%|██        | 51/250 [00:16,  5.18it/s, step size=6.43e-01, acc. prob=1.000]    Sample:  21%|██        | 53/250 [00:17,  6.85it/s, step size=6.43e-01, acc. prob=0.962]    Sample:  22%|██▏       | 55/250 [00:17,  7.38it/s, step size=6.43e-01, acc. prob=0.955]    Sample:  23%|██▎       | 57/250 [00:17,  7.21it/s, step size=6.43e-01, acc. prob=0.943]    Sample:  23%|██▎       | 58/250 [00:17,  6.61it/s, step size=6.43e-01, acc. prob=0.933]    Sample:  24%|██▍       | 60/250 [00:17,  8.43it/s, step size=6.43e-01, acc. prob=0.941]    Sample:  25%|██▍       | 62/250 [00:18,  7.22it/s, step size=6.43e-01, acc. prob=0.914]    Sample:  25%|██▌       | 63/250 [00:18,  7.11it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  26%|██▌       | 65/250 [00:18,  7.07it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  27%|██▋       | 67/250 [00:18,  7.52it/s, step size=6.43e-01, acc. prob=0.927]    Sample:  27%|██▋       | 68/250 [00:19,  6.72it/s, step size=6.43e-01, acc. prob=0.927]    Sample:  28%|██▊       | 69/250 [00:19,  6.19it/s, step size=6.43e-01, acc. prob=0.931]    Sample:  28%|██▊       | 70/250 [00:19,  6.31it/s, step size=6.43e-01, acc. prob=0.928]    Sample:  29%|██▉       | 72/250 [00:19,  7.73it/s, step size=6.43e-01, acc. prob=0.931]    Sample:  29%|██▉       | 73/250 [00:19,  7.45it/s, step size=6.43e-01, acc. prob=0.933]    Sample:  30%|██▉       | 74/250 [00:20,  6.62it/s, step size=6.43e-01, acc. prob=0.935]    Sample:  30%|███       | 75/250 [00:20,  5.93it/s, step size=6.43e-01, acc. prob=0.936]    Sample:  30%|███       | 76/250 [00:20,  5.56it/s, step size=6.43e-01, acc. prob=0.935]    Sample:  31%|███       | 78/250 [00:20,  5.97it/s, step size=6.43e-01, acc. prob=0.939]    Sample:  32%|███▏      | 79/250 [00:20,  6.13it/s, step size=6.43e-01, acc. prob=0.932]    Sample:  32%|███▏      | 81/250 [00:21,  7.45it/s, step size=6.43e-01, acc. prob=0.935]    Sample:  33%|███▎      | 83/250 [00:21,  8.53it/s, step size=6.43e-01, acc. prob=0.936]    Sample:  34%|███▎      | 84/250 [00:21,  7.29it/s, step size=6.43e-01, acc. prob=0.930]    Sample:  34%|███▍      | 85/250 [00:21,  7.22it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  34%|███▍      | 86/250 [00:21,  6.37it/s, step size=6.43e-01, acc. prob=0.923]    Sample:  35%|███▍      | 87/250 [00:22,  5.84it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  35%|███▌      | 88/250 [00:22,  5.55it/s, step size=6.43e-01, acc. prob=0.922]    Sample:  36%|███▌      | 90/250 [00:22,  6.05it/s, step size=6.43e-01, acc. prob=0.922]    Sample:  36%|███▋      | 91/250 [00:22,  6.20it/s, step size=6.43e-01, acc. prob=0.924]    Sample:  37%|███▋      | 92/250 [00:22,  5.76it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  38%|███▊      | 94/250 [00:23,  7.95it/s, step size=6.43e-01, acc. prob=0.928]    Sample:  38%|███▊      | 95/250 [00:23,  7.68it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  39%|███▉      | 97/250 [00:23,  8.79it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  39%|███▉      | 98/250 [00:23,  8.95it/s, step size=6.43e-01, acc. prob=0.927]    Sample:  40%|███▉      | 99/250 [00:23,  8.17it/s, step size=6.43e-01, acc. prob=0.928]    Sample:  40%|████      | 100/250 [00:23,  6.82it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  41%|████      | 102/250 [00:24,  7.43it/s, step size=6.43e-01, acc. prob=0.924]    Sample:  41%|████      | 103/250 [00:24,  6.72it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  42%|████▏     | 104/250 [00:24,  6.05it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  42%|████▏     | 105/250 [00:24,  6.25it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  42%|████▏     | 106/250 [00:24,  6.40it/s, step size=6.43e-01, acc. prob=0.922]    Sample:  43%|████▎     | 107/250 [00:24,  5.84it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  43%|████▎     | 108/250 [00:25,  5.45it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  44%|████▎     | 109/250 [00:25,  5.86it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  44%|████▍     | 111/250 [00:25,  6.71it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  45%|████▍     | 112/250 [00:25,  6.11it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  46%|████▌     | 114/250 [00:25,  8.32it/s, step size=6.43e-01, acc. prob=0.923]    Sample:  47%|████▋     | 117/250 [00:26,  9.51it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  48%|████▊     | 119/250 [00:26,  7.74it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  48%|████▊     | 120/250 [00:26,  7.51it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  49%|████▉     | 122/250 [00:26,  7.21it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  50%|████▉     | 124/250 [00:27,  7.50it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  50%|█████     | 125/250 [00:27,  7.40it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  50%|█████     | 126/250 [00:27,  6.65it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  51%|█████     | 127/250 [00:27,  6.71it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  52%|█████▏    | 129/250 [00:27,  8.07it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  52%|█████▏    | 131/250 [00:28,  9.08it/s, step size=6.43e-01, acc. prob=0.924]    Sample:  53%|█████▎    | 132/250 [00:28,  8.50it/s, step size=6.43e-01, acc. prob=0.924]    Sample:  54%|█████▎    | 134/250 [00:28,  8.47it/s, step size=6.43e-01, acc. prob=0.923]    Sample:  54%|█████▍    | 136/250 [00:28,  9.16it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  55%|█████▍    | 137/250 [00:28,  8.55it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  55%|█████▌    | 138/250 [00:28,  7.31it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  56%|█████▌    | 140/250 [00:29,  8.46it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  57%|█████▋    | 142/250 [00:29,  8.48it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  58%|█████▊    | 144/250 [00:29,  9.31it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  58%|█████▊    | 145/250 [00:29,  7.90it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  58%|█████▊    | 146/250 [00:29,  6.83it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  59%|█████▉    | 147/250 [00:30,  6.80it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  60%|█████▉    | 149/250 [00:30,  8.95it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  60%|██████    | 151/250 [00:30,  9.68it/s, step size=6.43e-01, acc. prob=0.915]    Sample:  61%|██████    | 153/250 [00:30, 10.29it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  62%|██████▏   | 155/250 [00:30,  8.71it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  62%|██████▏   | 156/250 [00:31,  7.73it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  63%|██████▎   | 158/250 [00:31,  8.59it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  64%|██████▍   | 160/250 [00:31,  7.94it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  65%|██████▍   | 162/250 [00:31,  8.76it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  66%|██████▌   | 164/250 [00:32,  8.05it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  66%|██████▌   | 165/250 [00:32,  7.15it/s, step size=6.43e-01, acc. prob=0.915]    Sample:  66%|██████▋   | 166/250 [00:32,  6.52it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  67%|██████▋   | 168/250 [00:32,  7.74it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  68%|██████▊   | 170/250 [00:32,  8.64it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  68%|██████▊   | 171/250 [00:33,  7.71it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  69%|██████▉   | 172/250 [00:33,  6.96it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  69%|██████▉   | 173/250 [00:33,  6.99it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  70%|███████   | 175/250 [00:33,  7.78it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  70%|███████   | 176/250 [00:33,  7.55it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  71%|███████   | 178/250 [00:33,  8.71it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  72%|███████▏  | 180/250 [00:34,  8.65it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  73%|███████▎  | 182/250 [00:34, 10.54it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  74%|███████▎  | 184/250 [00:34,  8.42it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  75%|███████▍  | 187/250 [00:34, 10.41it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  76%|███████▌  | 189/250 [00:35,  8.58it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  76%|███████▋  | 191/250 [00:35,  8.71it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  77%|███████▋  | 193/250 [00:35,  9.39it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  78%|███████▊  | 195/250 [00:35, 10.03it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  79%|███████▉  | 197/250 [00:35, 10.50it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  80%|███████▉  | 199/250 [00:35, 11.90it/s, step size=6.43e-01, acc. prob=0.915]    Sample:  80%|████████  | 201/250 [00:36,  8.37it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  81%|████████  | 203/250 [00:36,  9.14it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  82%|████████▏ | 205/250 [00:36,  7.74it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  83%|████████▎ | 207/250 [00:37,  8.61it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  84%|████████▎ | 209/250 [00:37,  7.52it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  84%|████████▍ | 210/250 [00:37,  7.37it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  84%|████████▍ | 211/250 [00:37,  7.27it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  85%|████████▍ | 212/250 [00:37,  6.60it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  86%|████████▌ | 214/250 [00:38,  7.25it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  86%|████████▋ | 216/250 [00:38,  8.44it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  87%|████████▋ | 218/250 [00:38,  7.70it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  88%|████████▊ | 219/250 [00:38,  6.87it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  88%|████████▊ | 220/250 [00:38,  6.39it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  89%|████████▉ | 222/250 [00:39,  7.70it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  90%|████████▉ | 224/250 [00:39,  7.41it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  90%|█████████ | 225/250 [00:39,  6.79it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  90%|█████████ | 226/250 [00:39,  6.78it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  91%|█████████ | 227/250 [00:39,  6.75it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  91%|█████████ | 228/250 [00:40,  6.90it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  92%|█████████▏| 230/250 [00:40,  8.20it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  92%|█████████▏| 231/250 [00:40,  7.90it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  93%|█████████▎| 232/250 [00:40,  6.83it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  94%|█████████▎| 234/250 [00:40,  7.52it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  94%|█████████▍| 236/250 [00:41,  8.02it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  95%|█████████▍| 237/250 [00:41,  7.12it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  96%|█████████▋| 241/250 [00:41, 11.39it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  97%|█████████▋| 243/250 [00:41, 10.62it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  98%|█████████▊| 245/250 [00:41,  9.19it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  98%|█████████▊| 246/250 [00:42,  7.98it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  99%|█████████▉| 247/250 [00:42,  7.21it/s, step size=6.43e-01, acc. prob=0.919]    Sample: 100%|█████████▉| 249/250 [00:42,  7.77it/s, step size=6.43e-01, acc. prob=0.920]    Sample: 100%|██████████| 250/250 [00:42,  5.86it/s, step size=6.43e-01, acc. prob=0.920]
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 213-217
+.. GENERATED FROM PYTHON SOURCE LINES 219-223
 
 Posterior Predictive Checks
 ---------------------------
 After obtaining the posterior samples, we perform posterior predictive checks.
 This step is crucial to evaluate the performance and validity of our probabilistic model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-220
+.. GENERATED FROM PYTHON SOURCE LINES 225-226
 
 Sample from posterior predictive and visualize
 
-.. GENERATED FROM PYTHON SOURCE LINES 220-227
+.. GENERATED FROM PYTHON SOURCE LINES 226-233
 
-.. code-block:: default
+.. code-block:: Python
 
     posterior_samples = mcmc.get_samples()
     posterior_predictive = Predictive(model, posterior_samples)(y_obs_list)
@@ -535,13 +493,13 @@ Sample from posterior predictive and visualize
 
  .. code-block:: none
 
-    /home/leguark/.virtualenvs/gempy-geotop-pilot/lib/python3.10/site-packages/arviz/data/io_pyro.py:157: UserWarning: Could not get vectorized trace, log_likelihood group will be omitted. Check your model vectorization or set log_likelihood=False
+    /home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/io_pyro.py:158: UserWarning: Could not get vectorized trace, log_likelihood group will be omitted. Check your model vectorization or set log_likelihood=False
       warnings.warn(
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 228-233
+.. GENERATED FROM PYTHON SOURCE LINES 234-239
 
 Density Plot of Posterior Predictive
 ------------------------------------
@@ -549,13 +507,13 @@ A density plot provides a visual representation of the distribution of the
 posterior predictive checks. It helps in comparing the prior and posterior distributions 
 and in assessing the impact of our observed data on the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 235-236
+.. GENERATED FROM PYTHON SOURCE LINES 241-242
 
 Plot density of posterior predictive and prior predictive
 
-.. GENERATED FROM PYTHON SOURCE LINES 236-246
+.. GENERATED FROM PYTHON SOURCE LINES 242-252
 
-.. code-block:: default
+.. code-block:: Python
 
     az.plot_density(
         data=[data.posterior_predictive, data.prior_predictive],
@@ -582,7 +540,7 @@ Plot density of posterior predictive and prior predictive
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 4 minutes  11.687 seconds)
+   **Total running time of the script:** (0 minutes 47.845 seconds)
 
 
 .. _sphx_glr_download_examples_04_probabilistic_modeling_01_thickness_problem_gempy.py:
@@ -591,16 +549,13 @@ Plot density of posterior predictive and prior predictive
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: 01_thickness_problem_gempy.ipynb <01_thickness_problem_gempy.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 01_thickness_problem_gempy.py <01_thickness_problem_gempy.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 01_thickness_problem_gempy.ipynb <01_thickness_problem_gempy.ipynb>`
 
 
 .. only:: html

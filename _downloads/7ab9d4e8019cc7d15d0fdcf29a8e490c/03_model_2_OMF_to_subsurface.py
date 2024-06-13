@@ -18,7 +18,7 @@ import pyvista
 from dotenv import dotenv_values
 import subsurface
 from subsurface import TriSurf, LineSet
-from subsurface.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
+from subsurface.modules.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
 
 # %%
 # Load OMF Project
@@ -64,7 +64,7 @@ for block_index in range(omf_project.n_blocks):
     cell_data = {name: unstruct_pyvista.cell_data[name] for name in unstruct_pyvista.cell_data}
 
     # Process based on cell type
-    match polydata_obj.cell_type(0):
+    match polydata_obj.get_cell(0).type:
         case pyvista.CellType.TRIANGLE:
             # Process triangle mesh
             cells_pyvista = unstruct_pyvista.cells.reshape(-1, 4)[:, 1:]

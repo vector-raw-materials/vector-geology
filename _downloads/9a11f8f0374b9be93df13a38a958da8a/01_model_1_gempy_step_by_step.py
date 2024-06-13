@@ -9,7 +9,6 @@ This example illustrates how to construct a 3D geological model of a deposit usi
 import time
 import numpy as np
 import os
-import xarray as xr
 from dotenv import dotenv_values
 from vector_geology.omf_to_gempy import process_file
 import gempy as gp
@@ -75,8 +74,7 @@ structural_frame = gp.data.StructuralFrame(
 geo_model: gp.data.GeoModel = gp.create_geomodel(
     project_name='Tutorial_ch1_1_Basics',
     extent=global_extent,
-    resolution=[20, 10, 20],
-    refinement=6,
+    refinement=5,
     structural_frame=structural_frame
 )
 
@@ -101,7 +99,8 @@ gp.set_topography_from_arrays(
 TRIGGER_OPTIMIZE_NUGGETS = False
 APPLY_OPTIMIZED_NUGGETS = True
 if TRIGGER_OPTIMIZE_NUGGETS:
-
+    geo_model.interpolation_options.cache_mode = gp.data.InterpolationOptions.CacheMode.NO_CACHE
+    
     # Optimization process for different structural groups
     geo_model.interpolation_options.kernel_options.range = 0.7
     geo_model.interpolation_options.kernel_options.c_o = 4

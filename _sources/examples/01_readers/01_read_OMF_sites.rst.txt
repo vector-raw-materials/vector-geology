@@ -29,42 +29,37 @@ Required Libraries
 ------------------
 First, we import the necessary libraries for handling and visualizing OMF files.
 
-.. GENERATED FROM PYTHON SOURCE LINES 12-21
+.. GENERATED FROM PYTHON SOURCE LINES 12-23
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import omfvista
     import pyvista
     import subsurface
     from subsurface import TriSurf
-    from subsurface.visualization import to_pyvista_mesh, pv_plot
-    from subsurface.writer import base_structs_to_binary_file
     from dotenv import dotenv_values
 
+    from subsurface.modules.visualization import to_pyvista_mesh, pv_plot
+    from subsurface.modules.writer import base_structs_to_binary_file
 
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    /home/leguark/subsurface/subsurface/reader/__init__.py:14: UserWarning: Welly or Striplog not installed. No well reader possible.
-      warnings.warn("Welly or Striplog not installed. No well reader possible.")
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 22-25
+
+.. GENERATED FROM PYTHON SOURCE LINES 24-27
 
 Load OMF Project
 ----------------
 Here, we define a function to load an OMF project using a path specified in a .env file.
 
-.. GENERATED FROM PYTHON SOURCE LINES 25-34
+.. GENERATED FROM PYTHON SOURCE LINES 27-36
 
-.. code-block:: default
+.. code-block:: Python
 
 
     def load_omf():
@@ -82,15 +77,15 @@ Here, we define a function to load an OMF project using a path specified in a .e
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 35-38
+.. GENERATED FROM PYTHON SOURCE LINES 37-40
 
 Visualize OMF with PyVista
 --------------------------
 Utilize PyVista for an interactive visualization of the OMF project.
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-41
+.. GENERATED FROM PYTHON SOURCE LINES 40-43
 
-.. code-block:: default
+.. code-block:: Python
 
 
     omf_project.plot(multi_colors=True, show_edges=True, notebook=False)
@@ -107,15 +102,15 @@ Utilize PyVista for an interactive visualization of the OMF project.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 42-45
+.. GENERATED FROM PYTHON SOURCE LINES 44-47
 
 Convert OMF to Unstructured Single Block
 ----------------------------------------
 Convert the loaded OMF project into an unstructured single block for further processing.
 
-.. GENERATED FROM PYTHON SOURCE LINES 45-61
+.. GENERATED FROM PYTHON SOURCE LINES 47-63
 
-.. code-block:: default
+.. code-block:: Python
 
 
     block_name = omf_project.get_block_name(4)
@@ -140,15 +135,15 @@ Convert the loaded OMF project into an unstructured single block for further pro
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-65
+.. GENERATED FROM PYTHON SOURCE LINES 64-67
 
 Visualize Unstructured Data
 ---------------------------
 Finally, visualize the converted unstructured data using Subsurface and PyVista.
 
-.. GENERATED FROM PYTHON SOURCE LINES 65-69
+.. GENERATED FROM PYTHON SOURCE LINES 67-71
 
-.. code-block:: default
+.. code-block:: Python
 
 
     ts = TriSurf(mesh=unstruct)
@@ -168,14 +163,14 @@ Finally, visualize the converted unstructured data using Subsurface and PyVista.
  .. code-block:: none
 
 
-    <pyvista.plotting.plotting.Plotter object at 0x7fd53b397f70>
+    <pyvista.plotting.plotter.Plotter object at 0x7f2ef690bb80>
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.341 seconds)
+   **Total running time of the script:** (0 minutes 2.693 seconds)
 
 
 .. _sphx_glr_download_examples_01_readers_01_read_OMF_sites.py:
@@ -184,16 +179,13 @@ Finally, visualize the converted unstructured data using Subsurface and PyVista.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: 01_read_OMF_sites.ipynb <01_read_OMF_sites.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 01_read_OMF_sites.py <01_read_OMF_sites.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 01_read_OMF_sites.ipynb <01_read_OMF_sites.ipynb>`
 
 
 .. only:: html

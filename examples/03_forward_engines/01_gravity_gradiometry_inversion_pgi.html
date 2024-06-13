@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" data-content_root="../../">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Inversion of Full Tensor Gravity Gradiometry Data &#8212; Vector Geology 0.1.dev16+g525c9e2 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b849a4e9" />
+    <title>Inversion of Full Tensor Gravity Gradiometry Data &#8212; Vector Geology 0.3.dev0+gf79ba49.d20240612 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
     <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
     <link rel="stylesheet" type="text/css" href="../../_static/style.css?v=f2a985cd" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=e5fbc548" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
     <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
     <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=f5ef4c94"></script>
+    <script src="../../_static/documentation_options.js?v=020d5cdf"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
-    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/design-tabs.js?v=36754332"></script>
     <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link rel="icon" href="../../_static/favicon.ico"/>
@@ -47,7 +47,7 @@
 to download the full example code</p>
 </div>
 <section class="sphx-glr-example-title" id="inversion-of-full-tensor-gravity-gradiometry-data">
-<span id="example-inversion-ftg-data"></span><span id="sphx-glr-examples-03-forward-engines-01-gravity-gradiometry-inversion-pgi-py"></span><h1>Inversion of Full Tensor Gravity Gradiometry Data<a class="headerlink" href="#inversion-of-full-tensor-gravity-gradiometry-data" title="Permalink to this heading">¶</a></h1>
+<span id="example-inversion-ftg-data"></span><span id="sphx-glr-examples-03-forward-engines-01-gravity-gradiometry-inversion-pgi-py"></span><h1>Inversion of Full Tensor Gravity Gradiometry Data<a class="headerlink" href="#inversion-of-full-tensor-gravity-gradiometry-data" title="Link to this heading">¶</a></h1>
 <p>This example illustrates the inversion of sub-surface density models from Full-Tensor Gravity Gradiometry (FTG-G) data,
 measured over the Irish Midlands, using Petrophysically and Geologically guided Inversion (PGI). The key steps include:</p>
 <ul class="simple">
@@ -82,17 +82,17 @@ measured over the Irish Midlands, using Petrophysically and Geologically guided 
 <span class="kn">from</span> <span class="nn">vector_geology</span> <span class="kn">import</span> <span class="n">SimpegHelper</span> <span class="k">as</span> <span class="n">SH</span>
 
 <span class="c1"># Plot beautification</span>
-<a href="https://matplotlib.org/stable/api/ticker_api.html#matplotlib.ticker.ScalarFormatter" title="matplotlib.ticker.ScalarFormatter" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">formatter</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/ticker_api.html#matplotlib.ticker.ScalarFormatter" title="matplotlib.ticker.ScalarFormatter" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-class"><span class="n">mpl</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">ScalarFormatter</span></a><span class="p">(</span><span class="n">useMathText</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/ticker_api.html#matplotlib.ticker.ScalarFormatter.set_scientific" title="matplotlib.ticker.ScalarFormatter.set_scientific" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-method"><span class="n">formatter</span><span class="o">.</span><span class="n">set_scientific</span></a><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/ticker_api.html#matplotlib.ticker.ScalarFormatter.set_powerlimits" title="matplotlib.ticker.ScalarFormatter.set_powerlimits" class="sphx-glr-backref-module-matplotlib-ticker sphx-glr-backref-type-py-method"><span class="n">formatter</span><span class="o">.</span><span class="n">set_powerlimits</span></a><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">formatter</span> <span class="o">=</span> <span class="n">mpl</span><span class="o">.</span><span class="n">ticker</span><span class="o">.</span><span class="n">ScalarFormatter</span><span class="p">(</span><span class="n">useMathText</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">formatter</span><span class="o">.</span><span class="n">set_scientific</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">formatter</span><span class="o">.</span><span class="n">set_powerlimits</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 
-<a href="https://matplotlib.org/stable/api/matplotlib_configuration_api.html#matplotlib.rc" title="matplotlib.rc" class="sphx-glr-backref-module-matplotlib sphx-glr-backref-type-py-function"><span class="n">mpl</span><span class="o">.</span><span class="n">rc</span></a><span class="p">(</span><span class="s2">&quot;axes&quot;</span><span class="p">,</span> <span class="n">titlesize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/matplotlib_configuration_api.html#matplotlib.rc" title="matplotlib.rc" class="sphx-glr-backref-module-matplotlib sphx-glr-backref-type-py-function"><span class="n">mpl</span><span class="o">.</span><span class="n">rc</span></a><span class="p">(</span><span class="s2">&quot;xtick&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/matplotlib_configuration_api.html#matplotlib.rc" title="matplotlib.rc" class="sphx-glr-backref-module-matplotlib sphx-glr-backref-type-py-function"><span class="n">mpl</span><span class="o">.</span><span class="n">rc</span></a><span class="p">(</span><span class="s2">&quot;ytick&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;axes&quot;</span><span class="p">,</span> <span class="n">titlesize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;xtick&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">mpl</span><span class="o">.</span><span class="n">rc</span><span class="p">(</span><span class="s2">&quot;ytick&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 </pre></div>
 </div>
 <section id="step-1-create-directories-for-storing-model-iterations-and-outputs">
-<h2>Step 1: Create Directories for Storing Model Iterations and Outputs<a class="headerlink" href="#step-1-create-directories-for-storing-model-iterations-and-outputs" title="Permalink to this heading">¶</a></h2>
+<h2>Step 1: Create Directories for Storing Model Iterations and Outputs<a class="headerlink" href="#step-1-create-directories-for-storing-model-iterations-and-outputs" title="Link to this heading">¶</a></h2>
 <p>PGI is an iterative process, and it’s useful to save the model at every iteration. This helps in preventing overfitting
 and in adjusting the stopping criteria based on the model iterations.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Ireland_FTG&quot;</span>
@@ -110,7 +110,7 @@ and in adjusting the stopping criteria based on the model iterations.</p>
 </div>
 </section>
 <section id="step-2-load-the-ftg-g-data">
-<h2>Step 2: Load the FTG-G Data<a class="headerlink" href="#step-2-load-the-ftg-g-data" title="Permalink to this heading">¶</a></h2>
+<h2>Step 2: Load the FTG-G Data<a class="headerlink" href="#step-2-load-the-ftg-g-data" title="Link to this heading">¶</a></h2>
 <p>Full Tensor Gradiometry data, a 2-Tensor, contains five independent components due to its symmetric and traceless nature. These components are used for the inversion.</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}G = \left[\begin{array}{cc}
@@ -120,34 +120,34 @@ G_{xz} &amp; G_{yz} &amp; G_{zz}
 \end{array}\right]\end{split}\]</div>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">dotenv_values</span><span class="p">()</span>
 <span class="n">file_path</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PATH_TO_GRADIOMETRY&quot;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FTG_Data</span></a> <span class="o">=</span> <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html#pandas.read_csv" title="pandas.read_csv" class="sphx-glr-backref-module-pandas sphx-glr-backref-type-py-function"><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span></a><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">FTG_Data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
 <section id="step-3-resample-data-onto-a-regular-grid">
-<h2>Step 3: Resample Data onto a Regular Grid<a class="headerlink" href="#step-3-resample-data-onto-a-regular-grid" title="Permalink to this heading">¶</a></h2>
+<h2>Step 3: Resample Data onto a Regular Grid<a class="headerlink" href="#step-3-resample-data-onto-a-regular-grid" title="Link to this heading">¶</a></h2>
 <p>Resampling the data onto a regular grid aids in mesh generation and visualization. The <cite>SimpegHelper.pf_rs()</cite> function
 resamples potential field data onto a new regular grid.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inc</span> <span class="o">=</span> <span class="mi">150</span>  <span class="c1"># New sampling interval (ground units)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_new</span></a><span class="p">,</span> <span class="n">nx_new</span><span class="p">,</span> <span class="n">ny_new</span> <span class="o">=</span> <span class="n">SH</span><span class="o">.</span><span class="n">pf_rs</span><span class="p">(</span>
-    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">FTG_Data</span></a><span class="p">,</span>
+<span class="n">grav_new</span><span class="p">,</span> <span class="n">nx_new</span><span class="p">,</span> <span class="n">ny_new</span> <span class="o">=</span> <span class="n">SH</span><span class="o">.</span><span class="n">pf_rs</span><span class="p">(</span>
+    <span class="n">FTG_Data</span><span class="p">,</span>
     <span class="n">inc</span><span class="p">,</span>
     <span class="n">bounds</span><span class="o">=</span><span class="p">[</span><span class="mi">156000</span><span class="p">,</span> <span class="mi">168000</span><span class="p">,</span> <span class="mi">143000</span><span class="p">,</span> <span class="mi">148500</span><span class="p">]</span>
 <span class="p">)</span>
 
 <span class="c1"># NOTE: This step is necessary for real data since the convention followed by</span>
 <span class="c1"># the SimPEG forward operator is the opposite of the general convention</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_vec</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_new</span></a><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">])[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># Adjusting sign convention</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_topo</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_new</span></a><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>  <span class="c1"># Extracting topography</span>
+<span class="n">grav_vec</span> <span class="o">=</span> <span class="n">grav_new</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">:]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">])[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>  <span class="c1"># Adjusting sign convention</span>
+<span class="n">inv_topo</span> <span class="o">=</span> <span class="n">grav_new</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>  <span class="c1"># Extracting topography</span>
 </pre></div>
 </div>
 </section>
 <section id="step-4-visualize-the-data">
-<h2>Step 4: Visualize the Data<a class="headerlink" href="#step-4-visualize-the-data" title="Permalink to this heading">¶</a></h2>
+<h2>Step 4: Visualize the Data<a class="headerlink" href="#step-4-visualize-the-data" title="Link to this heading">¶</a></h2>
 <p>The <cite>SimpegHelper.plot_2D_data()</cite> function is used to visualize the datasets with <cite>matplotlib</cite>.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">SH</span><span class="o">.</span><span class="n">plot_2D_data</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_" title="numpy.c_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">c_</span></a><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_new</span></a><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_vec</span></a><span class="p">[:,</span> <span class="mi">0</span><span class="p">]],</span>
-    <span class="n">clim</span><span class="o">=</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.nanmin.html#numpy.nanmin" title="numpy.nanmin" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_vec</span></a><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.nanmax.html#numpy.nanmax" title="numpy.nanmax" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_vec</span></a><span class="p">[:,</span> <span class="mi">0</span><span class="p">])],</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">grav_new</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span> <span class="n">grav_vec</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]],</span>
+    <span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">grav_vec</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">grav_vec</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])],</span>
     <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span>
     <span class="n">which_data</span><span class="o">=</span><span class="s2">&quot;FTG&quot;</span><span class="p">,</span>
     <span class="n">comp</span><span class="o">=</span><span class="s2">&quot;xx&quot;</span><span class="p">,</span>
@@ -155,8 +155,8 @@ resamples potential field data onto a new regular grid.</p>
     <span class="n">name</span><span class="o">=</span><span class="n">name</span>
 <span class="p">)</span>
 <span class="n">SH</span><span class="o">.</span><span class="n">plot_2D_data</span><span class="p">(</span>
-    <span class="n">data</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_" title="numpy.c_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">c_</span></a><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_new</span></a><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_topo</span></a><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
-    <span class="n">clim</span><span class="o">=</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.nanmin.html#numpy.nanmin" title="numpy.nanmin" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_topo</span></a><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.nanmax.html#numpy.nanmax" title="numpy.nanmax" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_topo</span></a><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])],</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="n">grav_new</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span> <span class="n">inv_topo</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]],</span>
+    <span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nanmin</span><span class="p">(</span><span class="n">inv_topo</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">inv_topo</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])],</span>
     <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;terrain&quot;</span><span class="p">,</span>
     <span class="n">which_data</span><span class="o">=</span><span class="s2">&quot;Topo&quot;</span><span class="p">,</span>
     <span class="n">comp</span><span class="o">=</span><span class="s2">&quot;xx&quot;</span><span class="p">,</span>
@@ -171,7 +171,7 @@ resamples potential field data onto a new regular grid.</p>
 </ul>
 </section>
 <section id="step-5-create-a-tensormesh-object-for-inversion">
-<h2>Step 5: Create a TensorMesh Object for Inversion<a class="headerlink" href="#step-5-create-a-tensormesh-object-for-inversion" title="Permalink to this heading">¶</a></h2>
+<h2>Step 5: Create a TensorMesh Object for Inversion<a class="headerlink" href="#step-5-create-a-tensormesh-object-for-inversion" title="Link to this heading">¶</a></h2>
 <p>A 3D TensorMesh is created using the <cite>discretize.TensorMesh</cite> utility to invert the gravity gradiometry data. The mesh
 is designed to have a constant cell size in the core region and expanding/contracting cells in the padding region.</p>
 <div class="math notranslate nohighlight">
@@ -183,20 +183,20 @@ region is an area of interest).</p>
 <span class="n">nz_core</span><span class="p">,</span> <span class="n">nz_pad</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">18</span>  <span class="c1"># Number of cells in core and padding</span>
 <span class="n">fact</span> <span class="o">=</span> <span class="mf">1.1</span>  <span class="c1"># Factor for expanding/contracting cells</span>
 
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_hx</span></a> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="n">nx_new</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_hy</span></a> <span class="o">=</span> <span class="n">dy</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="n">ny_new</span><span class="p">)</span>
+<span class="n">inv_hx</span> <span class="o">=</span> <span class="n">dx</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nx_new</span><span class="p">)</span>
+<span class="n">inv_hy</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">ny_new</span><span class="p">)</span>
 <span class="n">inv_hz</span> <span class="o">=</span> <span class="p">[(</span><span class="n">dz</span><span class="p">,</span> <span class="n">nz_pad</span><span class="p">,</span> <span class="o">-</span><span class="n">fact</span><span class="p">),</span> <span class="p">(</span><span class="n">dz</span><span class="p">,</span> <span class="n">nz_core</span><span class="p">),</span> <span class="p">(</span><span class="n">dz</span><span class="p">,</span> <span class="n">nz_pad</span><span class="p">,</span> <span class="n">fact</span><span class="p">)]</span>
 
 <span class="c1"># Create the inverse tensor mesh</span>
 <span class="n">inv_mesh</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">TensorMesh</span><span class="p">(</span>
-    <span class="n">h</span><span class="o">=</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_hx</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_hy</span></a><span class="p">,</span> <span class="n">inv_hz</span><span class="p">],</span>
-    <span class="n">x0</span><span class="o">=</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.min.html#numpy.min" title="numpy.min" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">min</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_topo</span></a><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.min.html#numpy.min" title="numpy.min" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">min</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_topo</span></a><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="s2">&quot;C&quot;</span><span class="p">])</span>
+    <span class="n">h</span><span class="o">=</span><span class="p">[</span><span class="n">inv_hx</span><span class="p">,</span> <span class="n">inv_hy</span><span class="p">,</span> <span class="n">inv_hz</span><span class="p">],</span>
+    <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">inv_topo</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">inv_topo</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="s2">&quot;C&quot;</span><span class="p">])</span>
 
 <span class="c1"># Drape the topography over the mesh</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a> <span class="o">=</span> <span class="n">active_from_xyz</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_topo</span></a><span class="p">)</span>
-<span class="n">ndv</span> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/constants.html#numpy.nan" title="numpy.nan" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">nan</span></a>
-<span class="n">actvMap</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">InjectActiveCells</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span> <span class="n">ndv</span><span class="p">)</span>
-<span class="n">nactv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">actv</span> <span class="o">=</span> <span class="n">active_from_xyz</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <span class="n">inv_topo</span><span class="p">)</span>
+<span class="n">ndv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">actvMap</span> <span class="o">=</span> <span class="n">maps</span><span class="o">.</span><span class="n">InjectActiveCells</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <span class="n">actv</span><span class="p">,</span> <span class="n">ndv</span><span class="p">)</span>
+<span class="n">nactv</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">actv</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 
 <span class="c1"># Print mesh details</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">)</span>
@@ -214,33 +214,33 @@ dir    nC        min           max         min       max      max
 </div>
 </section>
 <section id="step-6-visualize-the-mesh">
-<h2>Step 6: Visualize the Mesh<a class="headerlink" href="#step-6-visualize-the-mesh" title="Permalink to this heading">¶</a></h2>
+<h2>Step 6: Visualize the Mesh<a class="headerlink" href="#step-6-visualize-the-mesh" title="Link to this heading">¶</a></h2>
 <p>A slice of the Tensor Mesh object is visualized using the <cite>discretize.TensorMesh.plot_slice()</cite> utility.</p>
 <p>Create a background model.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bg</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="n">nactv</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mod</span></a> <span class="o">=</span> <span class="n">actvMap</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">bg</span></a>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">nactv</span><span class="p">)</span>
+<span class="n">mod</span> <span class="o">=</span> <span class="n">actvMap</span> <span class="o">*</span> <span class="n">bg</span>
 
 <span class="c1"># Plot the mesh slice.</span>
-<a href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure.add_axes" title="matplotlib.figure.Figure.add_axes" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-method"><span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span></a><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
-<span class="n">cplot</span> <span class="o">=</span> <span class="n">inv_mesh</span><span class="o">.</span><span class="n">plot_slice</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">mod</span></a><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="n">ind</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span><span class="o">.</span><span class="n">set_title</span></a><span class="p">(</span><span class="s1">&#39;Tensor Mesh Slice&#39;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span></a><span class="p">(</span><span class="s1">&#39;x (m)&#39;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span></a><span class="p">(</span><span class="s1">&#39;z (m)&#39;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span></a><span class="p">([</span><span class="mi">158000</span><span class="p">,</span> <span class="mi">159000</span><span class="p">])</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span></a><span class="p">([</span><span class="o">-</span><span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span><span class="o">.</span><span class="n">ticklabel_format</span></a><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span></a><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="matplotlib.pyplot.savefig" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span></a><span class="p">(</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
+<span class="n">cplot</span> <span class="o">=</span> <span class="n">inv_mesh</span><span class="o">.</span><span class="n">plot_slice</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="n">ind</span><span class="o">=</span><span class="mi">22</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Tensor Mesh Slice&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x (m)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;z (m)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">158000</span><span class="p">,</span> <span class="mi">159000</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="o">-</span><span class="mi">500</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
     <span class="n">path_to_output</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_TreeMeshSlice.pdf&quot;</span><span class="p">,</span>
     <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span>
 <span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <img src="../../_images/sphx_glr_01_gravity_gradiometry_inversion_pgi_003.png" srcset="../../_images/sphx_glr_01_gravity_gradiometry_inversion_pgi_003.png" alt="Tensor Mesh Slice" class = "sphx-glr-single-img"/></section>
 <section id="step-7-set-up-the-gravity-inverse-problem">
-<h2>Step 7: Set up the Gravity Inverse Problem<a class="headerlink" href="#step-7-set-up-the-gravity-inverse-problem" title="Permalink to this heading">¶</a></h2>
+<h2>Step 7: Set up the Gravity Inverse Problem<a class="headerlink" href="#step-7-set-up-the-gravity-inverse-problem" title="Link to this heading">¶</a></h2>
 <p>The gravity inverse problem is set up using SimPEG’s <cite>pf.gravity</cite> module to generate a forward model based on the mesh
 and receiver locations.</p>
 <p>Create wires for the density model</p>
@@ -256,11 +256,11 @@ and receiver locations.</p>
 <span class="n">gravity_components</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;gxx&quot;</span><span class="p">,</span> <span class="s2">&quot;gyy&quot;</span><span class="p">,</span> <span class="s2">&quot;gxz&quot;</span><span class="p">,</span> <span class="s2">&quot;gyz&quot;</span><span class="p">,</span> <span class="s2">&quot;gxy&quot;</span><span class="p">]</span>
 
 <span class="c1"># Receiver locations (25 meters above the topography)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gravity_receiver_locations</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inv_topo</span></a> <span class="o">+</span> <span class="mf">120.</span>
+<span class="n">gravity_receiver_locations</span> <span class="o">=</span> <span class="n">inv_topo</span> <span class="o">+</span> <span class="mf">120.</span>
 
 <span class="c1"># Create a gravity receiver list</span>
 <span class="n">gravity_receivers</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">gravity</span><span class="o">.</span><span class="n">receivers</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span>
-    <span class="n">locations</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gravity_receiver_locations</span></a><span class="p">,</span>
+    <span class="n">locations</span><span class="o">=</span><span class="n">gravity_receiver_locations</span><span class="p">,</span>
     <span class="n">components</span><span class="o">=</span><span class="n">gravity_components</span>
 <span class="p">)</span>
 <span class="n">gravity_receiver_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">gravity_receivers</span><span class="p">]</span>
@@ -278,13 +278,13 @@ and receiver locations.</p>
     <span class="n">inv_mesh</span><span class="p">,</span>
     <span class="n">survey</span><span class="o">=</span><span class="n">gravity_survey</span><span class="p">,</span>
     <span class="n">rhoMap</span><span class="o">=</span><span class="n">wires</span><span class="o">.</span><span class="n">density</span><span class="p">,</span>
-    <span class="n">ind_active</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a>
+    <span class="n">ind_active</span><span class="o">=</span><span class="n">actv</span>
 <span class="p">)</span>
 
 <span class="c1"># Create a gravity data object, with the relative errors and a standard noise floor</span>
 <span class="n">gravity_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">Data</span><span class="p">(</span>
     <span class="n">survey</span><span class="o">=</span><span class="n">gravity_survey</span><span class="p">,</span>
-    <span class="n">dobs</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">grav_vec</span></a><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+    <span class="n">dobs</span><span class="o">=</span><span class="n">grav_vec</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
     <span class="n">noise_floor</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
     <span class="n">relative_error</span><span class="o">=</span><span class="mf">0.1</span>
 <span class="p">)</span>
@@ -298,7 +298,7 @@ and receiver locations.</p>
 </div>
 </section>
 <section id="step-8-setting-up-the-gaussian-mixture-model-gmm-prior">
-<h2>Step 8: Setting up the Gaussian Mixture Model (GMM) Prior<a class="headerlink" href="#step-8-setting-up-the-gaussian-mixture-model-gmm-prior" title="Permalink to this heading">¶</a></h2>
+<h2>Step 8: Setting up the Gaussian Mixture Model (GMM) Prior<a class="headerlink" href="#step-8-setting-up-the-gaussian-mixture-model-gmm-prior" title="Link to this heading">¶</a></h2>
 <p>In PGI, the petrophysical data is used as a constraint in the form of a <a class="reference external" href="https://scikit-learn.org/stable/modules/mixture.html">Gaussian Mixture Model</a> (GMM).
 A GMM is a multimodal probabilistic distribution which is just a weighted sum of multiple gaussian distributions. Given the number of rock units (<span class="math notranslate nohighlight">\(n\)</span>),
 the petrophysical distribution can be displayed as an $n$-modal GMM. If you have no petrophysical information available, you can initialize the GMM as below.
@@ -311,7 +311,7 @@ If you do have a petrophysical dataset, you can fit the GMM to said dataset usin
 <span class="n">gmmref</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">WeightedGaussianMixture</span><span class="p">(</span>
     <span class="n">n_components</span><span class="o">=</span><span class="n">num_rock_units</span><span class="p">,</span>
     <span class="n">mesh</span><span class="o">=</span><span class="n">inv_mesh</span><span class="p">,</span>
-    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span>
+    <span class="n">actv</span><span class="o">=</span><span class="n">actv</span><span class="p">,</span>
     <span class="n">covariance_type</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -320,11 +320,11 @@ If you do have a petrophysical dataset, you can fit the GMM to said dataset usin
 
 <span class="c1"># Initialize the GMM fit with random samples, mesh size,</span>
 <span class="c1"># and number of physical properties</span>
-<span class="n">gmmref</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/random/generated/numpy.random.randn.html#numpy.random.randn" title="numpy.random.randn" class="sphx-glr-backref-module-numpy-random sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span></a><span class="p">(</span><span class="n">nactv</span><span class="p">,</span> <span class="n">num_physical_props</span><span class="p">))</span>
+<span class="n">gmmref</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">nactv</span><span class="p">,</span> <span class="n">num_physical_props</span><span class="p">))</span>
 
 <span class="c1"># Set the mean values of physical property contrasts for each rock unit</span>
 <span class="c1"># One value (density) for each rock unit</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gmmref</span><span class="o">.</span><span class="n">means_</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_" title="numpy.c_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">c_</span></a><span class="p">[</span>
+<span class="n">gmmref</span><span class="o">.</span><span class="n">means_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span>
     <span class="p">[</span><span class="o">-</span><span class="mf">0.4</span><span class="p">],</span>
     <span class="p">[</span><span class="o">-</span><span class="mf">0.2</span><span class="p">],</span>
     <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span>
@@ -339,7 +339,7 @@ If you do have a petrophysical dataset, you can fit the GMM to said dataset usin
 <span class="c1"># NOTE: Since we don&#39;t have petrophysical information for this example,</span>
 <span class="c1"># we keep the covariances # same for every unit. The GMM will update</span>
 <span class="c1"># itself during the inversion.</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gmmref</span><span class="o">.</span><span class="n">covariances_</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.array.html#numpy.array" title="numpy.array" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">array</span></a><span class="p">(</span>
+<span class="n">gmmref</span><span class="o">.</span><span class="n">covariances_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
     <span class="p">[</span>
         <span class="p">[[</span><span class="n">density_variance</span><span class="p">]],</span>
         <span class="p">[[</span><span class="n">density_variance</span><span class="p">]],</span>
@@ -354,26 +354,26 @@ If you do have a petrophysical dataset, you can fit the GMM to said dataset usin
 
 <span class="c1"># Set the weights for each rock unit</span>
 <span class="c1"># NOTE: This determines the size of each peak of the n-modal GMM</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">gmmref</span><span class="o">.</span><span class="n">weights_</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">((</span><span class="n">nactv</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.c_.html#numpy.c_" title="numpy.c_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">c_</span></a><span class="p">[</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">]</span>
+<span class="n">gmmref</span><span class="o">.</span><span class="n">weights_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">nactv</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">c_</span><span class="p">[</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
 <section id="plot-the-1d-gmm">
-<h2>Plot the 1D-GMM<a class="headerlink" href="#plot-the-1d-gmm" title="Permalink to this heading">¶</a></h2>
+<h2>Plot the 1D-GMM<a class="headerlink" href="#plot-the-1d-gmm" title="Link to this heading">¶</a></h2>
 <p>The initial density distribution is visualized.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <span class="n">gmmref</span><span class="o">.</span><span class="n">plot_pdf</span><span class="p">(</span><span class="n">flag2d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plotting_precision</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Density Contrast (g/cc)&quot;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Probability Density Values&quot;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Initial DelRho Distribution&quot;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;scientific&quot;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">20</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="matplotlib.pyplot.savefig" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span></a><span class="p">(</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">gmmref</span><span class="o">.</span><span class="n">plot_pdf</span><span class="p">(</span><span class="n">flag2d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plotting_precision</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Density Contrast (g/cc)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Probability Density Values&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Initial DelRho Distribution&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;scientific&quot;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span>
     <span class="n">path_to_output</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_Init_GMM.pdf&quot;</span><span class="p">,</span>
     <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span>
 <span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
@@ -382,7 +382,7 @@ If you do have a petrophysical dataset, you can fit the GMM to said dataset usin
 </ul>
 </section>
 <section id="step-9-setting-the-hyper-parameters-and-the-sensitivity-weights">
-<h2>Step 9: Setting the Hyper-parameters and the Sensitivity Weights<a class="headerlink" href="#step-9-setting-the-hyper-parameters-and-the-sensitivity-weights" title="Permalink to this heading">¶</a></h2>
+<h2>Step 9: Setting the Hyper-parameters and the Sensitivity Weights<a class="headerlink" href="#step-9-setting-the-hyper-parameters-and-the-sensitivity-weights" title="Link to this heading">¶</a></h2>
 <p>Every PGI is a set of three Maximum-A-Posteriori (<a class="reference external" href="https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation">MAP</a>)
 problems, being solved iteratively. The solver tries to minimize the L2 error of an objective function containing both
 the FTG Data and the petrophysical GMM. In this section we tune the necessary hyper-parameters, as well as initialise
@@ -392,15 +392,15 @@ The regularization smallness (<span class="math notranslate nohighlight">\(\alph
 for the physical meaning of these parameters and the fundamentals of a Tikhonov regularized inversion.</p>
 <p>NOTE: The smoothness parameters (<cite>alpha_i</cite>) are static and hence need to be fine-tuned
 through trial and error.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">initial_model</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.r_.html#numpy.r_" title="numpy.r_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">r_</span></a><span class="p">[</span><span class="n">background_density</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="n">actvMap</span><span class="o">.</span><span class="n">nP</span><span class="p">)]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">initial_model</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">background_density</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">actvMap</span><span class="o">.</span><span class="n">nP</span><span class="p">)]</span>
 </pre></div>
 </div>
 <p>Sensitivity weighting
 Compute the sensitivity weights for each cell based on the gravity problem’s sensitivity matrix (G)
 This is done by computing the square root of the sum of the squared elements of G for each cell,
 and then normalizing by the cell volumes and the maximum weight value.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sensitivity_weights_gravity</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.sum.html#numpy.sum" title="numpy.sum" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">sum</span></a><span class="p">(</span><span class="n">gravity_problem</span><span class="o">.</span><span class="n">G</span> <span class="o">**</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="p">(</span><span class="n">inv_mesh</span><span class="o">.</span><span class="n">cell_volumes</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">])</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sensitivity_weights_gravity</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sensitivity_weights_gravity</span></a> <span class="o">/</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.nanmax.html#numpy.nanmax" title="numpy.nanmax" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span></a><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sensitivity_weights_gravity</span></a><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sensitivity_weights_gravity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gravity_problem</span><span class="o">.</span><span class="n">G</span> <span class="o">**</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="p">(</span><span class="n">inv_mesh</span><span class="o">.</span><span class="n">cell_volumes</span><span class="p">[</span><span class="n">actv</span><span class="p">])</span>
+<span class="n">sensitivity_weights_gravity</span> <span class="o">=</span> <span class="n">sensitivity_weights_gravity</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">sensitivity_weights_gravity</span><span class="p">)</span>
 
 <span class="c1"># Regularization multipliers</span>
 <span class="n">smallness_multiplier</span> <span class="o">=</span> <span class="mf">1e-4</span>
@@ -414,7 +414,7 @@ and then normalizing by the cell volumes and the maximum weight value.</p>
     <span class="n">mesh</span><span class="o">=</span><span class="n">inv_mesh</span><span class="p">,</span>
     <span class="n">wiresmap</span><span class="o">=</span><span class="n">wires</span><span class="p">,</span>
     <span class="n">maplist</span><span class="o">=</span><span class="p">[</span><span class="n">identity_map</span><span class="p">],</span>
-    <span class="n">active_cells</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span>
+    <span class="n">active_cells</span><span class="o">=</span><span class="n">actv</span><span class="p">,</span>
     <span class="n">alpha_pgi</span><span class="o">=</span><span class="n">smallness_multiplier</span><span class="p">,</span>
     <span class="n">alpha_x</span><span class="o">=</span><span class="n">smoothness_x_multiplier</span><span class="p">,</span>
     <span class="n">alpha_y</span><span class="o">=</span><span class="n">smoothness_y_multiplier</span><span class="p">,</span>
@@ -424,13 +424,13 @@ and then normalizing by the cell volumes and the maximum weight value.</p>
     <span class="n">alpha_xx</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
     <span class="n">alpha_yy</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
     <span class="n">alpha_zz</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
-    <span class="n">weights_list</span><span class="o">=</span><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sensitivity_weights_gravity</span></a><span class="p">]</span>
+    <span class="n">weights_list</span><span class="o">=</span><span class="p">[</span><span class="n">sensitivity_weights_gravity</span><span class="p">]</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="step-10-initialize-the-directives">
-<h2>Step 10: Initialize the Directives<a class="headerlink" href="#step-10-initialize-the-directives" title="Permalink to this heading">¶</a></h2>
+<h2>Step 10: Initialize the Directives<a class="headerlink" href="#step-10-initialize-the-directives" title="Link to this heading">¶</a></h2>
 <p>Directives are set, including instructions on the bounds, update factors, and other hyperparameters for the inversion solver.</p>
 <p>Estimate smoothness multipliers</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">alphas_directive</span> <span class="o">=</span> <span class="n">directives</span><span class="o">.</span><span class="n">AlphasSmoothEstimate_ByEig</span><span class="p">(</span><span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -477,12 +477,12 @@ and then normalizing by the cell volumes and the maximum weight value.</p>
 <span class="p">)</span>
 
 <span class="c1"># Optimization options for the inversion</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lower_bound</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.r_.html#numpy.r_" title="numpy.r_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">r_</span></a><span class="p">[</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="n">actvMap</span><span class="o">.</span><span class="n">nP</span><span class="p">)]</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">upper_bound</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.r_.html#numpy.r_" title="numpy.r_" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-data"><span class="n">np</span><span class="o">.</span><span class="n">r_</span></a><span class="p">[</span><span class="mf">1.0</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ones.html#numpy.ones" title="numpy.ones" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-function"><span class="n">np</span><span class="o">.</span><span class="n">ones</span></a><span class="p">(</span><span class="n">actvMap</span><span class="o">.</span><span class="n">nP</span><span class="p">)]</span>
+<span class="n">lower_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">actvMap</span><span class="o">.</span><span class="n">nP</span><span class="p">)]</span>
+<span class="n">upper_bound</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">actvMap</span><span class="o">.</span><span class="n">nP</span><span class="p">)]</span>
 <span class="n">optimizer</span> <span class="o">=</span> <span class="n">optimization</span><span class="o">.</span><span class="n">ProjectedGNCG</span><span class="p">(</span>
     <span class="n">maxIter</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
-    <span class="n">lower</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">lower_bound</span></a><span class="p">,</span>
-    <span class="n">upper</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">upper_bound</span></a><span class="p">,</span>
+    <span class="n">lower</span><span class="o">=</span><span class="n">lower_bound</span><span class="p">,</span>
+    <span class="n">upper</span><span class="o">=</span><span class="n">upper_bound</span><span class="p">,</span>
     <span class="n">maxIterLS</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
     <span class="n">maxIterCG</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
     <span class="n">tolCG</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">,</span>
@@ -508,9 +508,9 @@ and then normalizing by the cell volumes and the maximum weight value.</p>
 </div>
 </section>
 <section id="step-11-run-the-inversion">
-<h2>Step 11: Run the Inversion!<a class="headerlink" href="#step-11-run-the-inversion" title="Permalink to this heading">¶</a></h2>
+<h2>Step 11: Run the Inversion!<a class="headerlink" href="#step-11-run-the-inversion" title="Link to this heading">¶</a></h2>
 <p>The inversion is executed using the initialized settings.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inverted_model</span></a> <span class="o">=</span> <span class="n">inversion_algo</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">initial_model</span></a><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">inverted_model</span> <span class="o">=</span> <span class="n">inversion_algo</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">initial_model</span><span class="p">)</span>
 </pre></div>
 </div>
 <div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>SimPEG.InvProblem will set Regularization.reference_model to m0.
@@ -519,93 +519,93 @@ SimPEG.InvProblem will set Regularization.reference_model to m0.
                     SimPEG.InvProblem is setting bfgsH0 to the inverse of the eval2Deriv.
                     ***Done using the default solver SolverLU and no solver_opts.***
 
-Alpha scales: [410030855.8629278, 0.0, 423924847.8682445, 0.0, 221301.76852332294, 0.0]
+Alpha scales: [450539987.2319715, 0.0, 450331911.77148, 0.0, 252496.71182171933, 0.0]
 &lt;class &#39;SimPEG.regularization.pgi.PGIsmallness&#39;&gt;
-SimPEG.SaveOutputEveryIteration will save your inversion progress as: &#39;###-Ireland_FTG-2024-01-26-10-56.txt&#39;
-SimPEG.SaveModelEveryIteration will save your models as: &#39;./Ireland_FTG/Model Iterations/###-Ireland_FTG-2024-01-26-10-56.npy&#39;
+SimPEG.SaveOutputEveryIteration will save your inversion progress as: &#39;###-Ireland_FTG-2024-06-12-11-31.txt&#39;
+SimPEG.SaveModelEveryIteration will save your models as: &#39;./Ireland_FTG/Model Iterations/###-Ireland_FTG-2024-06-12-11-31.npy&#39;
 model has any nan: 0
 =============================== Projected GNCG ===============================
   #     beta     phi_d     phi_m       f      |proj(x-g)-x|  LS    Comment
 -----------------------------------------------------------------------------
 x0 has any nan: 0
-   0  5.50e-11  1.76e+04  0.00e+00  1.76e+04    2.82e+02      0
-geophys. misfits: 7363.5 (target 7492.5 [True]) | smallness misfit: 53932.6 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [7363.5]; minimum progress targets: [14114.6]
-Warming alpha_pgi to favor clustering:  0.0001017520433220537
-mref changed in  46923  places
-   1  5.50e-11  7.36e+03  2.93e+12  7.52e+03    2.40e+02      0
-geophys. misfits: 2878.4 (target 7492.5 [True]) | smallness misfit: 56886.0 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [2878.4]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  0.00026486260428953257
-mref changed in  24033  places
-   2  5.50e-11  2.88e+03  2.82e+12  3.03e+03    1.76e+02      0
-geophys. misfits: 1902.3 (target 7492.5 [True]) | smallness misfit: 59150.1 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1902.3]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  0.0010432238094228118
-mref changed in  13728  places
-   3  5.50e-11  1.90e+03  2.90e+12  2.06e+03    1.25e+02      0   Skip BFGS
-geophys. misfits: 1377.6 (target 7492.5 [True]) | smallness misfit: 60406.7 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1377.6]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  0.005673861421188311
-mref changed in  9162  places
-   4  5.50e-11  1.38e+03  2.90e+12  1.54e+03    8.08e+01      0
-geophys. misfits: 1370.3 (target 7492.5 [True]) | smallness misfit: 60168.8 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1370.3]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  0.031023047077501028
-mref changed in  1935  places
-   5  5.50e-11  1.37e+03  2.88e+12  1.53e+03    1.12e+02      2   Skip BFGS
-geophys. misfits: 1367.2 (target 7492.5 [True]) | smallness misfit: 60140.0 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1367.2]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  0.1700062887019205
-mref changed in  493  places
-   6  5.50e-11  1.37e+03  2.88e+12  1.53e+03    1.15e+02      4   Skip BFGS
-geophys. misfits: 1323.8 (target 7492.5 [True]) | smallness misfit: 60296.1 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1323.8]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  0.9622012648565086
-mref changed in  1397  places
-   7  5.50e-11  1.32e+03  2.86e+12  1.48e+03    1.00e+02      2   Skip BFGS
-geophys. misfits: 1245.7 (target 7492.5 [True]) | smallness misfit: 61068.6 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1245.7]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  5.787288226899011
-mref changed in  5580  places
-   8  5.50e-11  1.25e+03  2.92e+12  1.41e+03    6.00e+01      0
-geophys. misfits: 1241.2 (target 7492.5 [True]) | smallness misfit: 61073.9 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1241.2]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  34.93527456181403
-mref changed in  510  places
-   9  5.50e-11  1.24e+03  3.02e+12  1.41e+03    6.36e+01      3   Skip BFGS
-geophys. misfits: 1234.0 (target 7492.5 [True]) | smallness misfit: 61269.3 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1234.]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  212.1246047516577
-mref changed in  306  places
-  10  5.50e-11  1.23e+03  3.66e+12  1.44e+03    6.63e+01      3
-geophys. misfits: 1215.3 (target 7492.5 [True]) | smallness misfit: 68474.0 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1215.3]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  1307.8129600116547
-mref changed in  153  places
-  11  5.50e-11  1.22e+03  8.38e+12  1.68e+03    5.77e+01      1   Skip BFGS
-geophys. misfits: 1206.7 (target 7492.5 [True]) | smallness misfit: 67958.3 (target: 44885.0 [False])
-Beta cooling evaluation: progress: [1206.7]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  8120.550411338
-mref changed in  11  places
-  12  5.50e-11  1.21e+03  4.07e+13  3.44e+03    2.13e+02      0
-geophys. misfits: 1463.9 (target 7492.5 [True]) | smallness misfit: 43152.9 (target: 44885.0 [True])
+   0  5.16e-11  1.76e+04  0.00e+00  1.76e+04    2.82e+02      0
+geophys. misfits: 7371.6 (target 7492.5 [True]) | smallness misfit: 53906.0 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [7371.6]; minimum progress targets: [14114.6]
+Warming alpha_pgi to favor clustering:  0.00010163944435366406
+mref changed in  46847  places
+   1  5.16e-11  7.37e+03  3.14e+12  7.53e+03    2.40e+02      0
+geophys. misfits: 2838.5 (target 7492.5 [True]) | smallness misfit: 56935.5 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [2838.5]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  0.000268289722030569
+mref changed in  24087  places
+   2  5.16e-11  2.84e+03  3.03e+12  2.99e+03    1.75e+02      0
+geophys. misfits: 1905.4 (target 7492.5 [True]) | smallness misfit: 59195.7 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1905.4]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  0.0010549908997251215
+mref changed in  13874  places
+   3  5.16e-11  1.91e+03  3.11e+12  2.07e+03    1.25e+02      0   Skip BFGS
+geophys. misfits: 1372.4 (target 7492.5 [True]) | smallness misfit: 60354.0 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1372.4]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  0.005759570489988677
+mref changed in  8966  places
+   4  5.16e-11  1.37e+03  3.11e+12  1.53e+03    7.93e+01      0
+geophys. misfits: 1272.3 (target 7492.5 [True]) | smallness misfit: 60282.9 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1272.3]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  0.03391664568403566
+mref changed in  911  places
+   5  5.16e-11  1.27e+03  3.10e+12  1.43e+03    7.56e+01      3   Skip BFGS
+geophys. misfits: 1267.5 (target 7492.5 [True]) | smallness misfit: 60283.2 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1267.5]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  0.20048874090982202
+mref changed in  505  places
+   6  5.16e-11  1.27e+03  3.09e+12  1.43e+03    7.91e+01      4   Skip BFGS
+geophys. misfits: 1262.7 (target 7492.5 [True]) | smallness misfit: 60177.5 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1262.7]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  1.1896358760296895
+mref changed in  770  places
+   7  5.16e-11  1.26e+03  3.09e+12  1.42e+03    8.12e+01      3   Skip BFGS
+geophys. misfits: 1256.3 (target 7492.5 [True]) | smallness misfit: 60322.2 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1256.3]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  7.095110291995982
+mref changed in  1257  places
+   8  5.16e-11  1.26e+03  3.11e+12  1.42e+03    7.58e+01      2   Skip BFGS
+geophys. misfits: 1229.7 (target 7492.5 [True]) | smallness misfit: 60662.4 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1229.7]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  43.22879746069664
+mref changed in  838  places
+   9  5.16e-11  1.23e+03  3.23e+12  1.40e+03    5.95e+01      2
+geophys. misfits: 1228.5 (target 7492.5 [True]) | smallness misfit: 61694.0 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1228.5]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  263.6454125573714
+mref changed in  240  places
+  10  5.16e-11  1.23e+03  4.05e+12  1.44e+03    4.98e+01      2   Skip BFGS
+geophys. misfits: 1221.9 (target 7492.5 [True]) | smallness misfit: 71285.7 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1221.9]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  1616.6169674812083
+mref changed in  256  places
+  11  5.16e-11  1.22e+03  1.05e+13  1.77e+03    6.99e+01      0
+geophys. misfits: 1250.7 (target 7492.5 [True]) | smallness misfit: 60283.1 (target: 44885.0 [False])
+Beta cooling evaluation: progress: [1250.7]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  9684.855466686517
+mref changed in  68  places
+  12  5.16e-11  1.25e+03  4.23e+13  3.43e+03    2.30e+02      0
+geophys. misfits: 1487.9 (target 7492.5 [True]) | smallness misfit: 33779.6 (target: 44885.0 [True])
 All targets have been reached
-Beta cooling evaluation: progress: [1463.9]; minimum progress targets: [8991.]
-Warming alpha_pgi to favor clustering:  41561.559728045744
-mref changed in  31  places
+Beta cooling evaluation: progress: [1487.9]; minimum progress targets: [8991.]
+Warming alpha_pgi to favor clustering:  48768.36025676174
+mref changed in  75  places
 ------------------------- STOP! -------------------------
 1 : |fc-fOld| = 0.0000e+00 &lt;= tolF*(1+|f0|) = 1.7644e+03
-0 : |xc-x_last| = 1.1471e+01 &lt;= tolX*(1+|x0|) = 1.0000e-01
-0 : |proj(x-g)-x|    = 2.0926e+02 &lt;= tolG          = 1.0000e-01
-0 : |proj(x-g)-x|    = 2.0926e+02 &lt;= 1e3*eps       = 1.0000e-02
+0 : |xc-x_last| = 1.1970e+01 &lt;= tolX*(1+|x0|) = 1.0000e-01
+0 : |proj(x-g)-x|    = 2.2712e+02 &lt;= tolG          = 1.0000e-01
+0 : |proj(x-g)-x|    = 2.2712e+02 &lt;= 1e3*eps       = 1.0000e-02
 0 : maxIter   =      20    &lt;= iter          =     13
 ------------------------- DONE! -------------------------
 </pre></div>
 </div>
 </section>
 <section id="step-12-visualize-the-3d-model">
-<h2>Step 12: Visualize the 3D Model<a class="headerlink" href="#step-12-visualize-the-3d-model" title="Permalink to this heading">¶</a></h2>
+<h2>Step 12: Visualize the 3D Model<a class="headerlink" href="#step-12-visualize-the-3d-model" title="Link to this heading">¶</a></h2>
 <p>The inverted 3D model is visualized using slices in different orientations.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="nb">set</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">save_plots</span> <span class="o">=</span> <span class="kc">True</span>
@@ -618,16 +618,16 @@ mref changed in  31  places
 <span class="n">ind_plot</span> <span class="o">=</span> <span class="p">[</span><span class="n">ind_plot_x</span><span class="p">,</span> <span class="n">ind_plot_y</span><span class="p">,</span> <span class="n">ind_plot_z</span><span class="p">]</span>
 
 <span class="c1"># Extract the results</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inverted_density_model</span></a> <span class="o">=</span> <span class="n">density_map</span> <span class="o">*</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inverted_model</span></a>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">quasi_geology_model</span></a> <span class="o">=</span> <span class="n">actvMap</span> <span class="o">*</span> <span class="n">regularization_term</span><span class="o">.</span><span class="n">objfcts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">compute_quasi_geology_model</span><span class="p">()</span>
+<span class="n">inverted_density_model</span> <span class="o">=</span> <span class="n">density_map</span> <span class="o">*</span> <span class="n">inverted_model</span>
+<span class="n">quasi_geology_model</span> <span class="o">=</span> <span class="n">actvMap</span> <span class="o">*</span> <span class="n">regularization_term</span><span class="o">.</span><span class="n">objfcts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">compute_quasi_geology_model</span><span class="p">()</span>
 
 <span class="c1"># Plot Density Contrast Model (Z)</span>
 <span class="n">normal</span> <span class="o">=</span> <span class="s2">&quot;Z&quot;</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inverted_density_model</span></a>
+<span class="n">model_to_plot</span> <span class="o">=</span> <span class="n">inverted_density_model</span>
 <span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span>
     <span class="n">mesh</span><span class="o">=</span><span class="n">inv_mesh</span><span class="p">,</span>
-    <span class="n">ind_active</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span>
-    <span class="n">model</span><span class="o">=</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a><span class="p">,</span>
+    <span class="n">ind_active</span><span class="o">=</span><span class="n">actv</span><span class="p">,</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">model_to_plot</span><span class="p">,</span>
     <span class="n">normal</span><span class="o">=</span> <span class="n">normal</span><span class="p">,</span>
     <span class="n">ind_plot_arr</span><span class="o">=</span><span class="n">ind_plot</span><span class="p">,</span>
     <span class="n">clim</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
@@ -642,13 +642,13 @@ mref changed in  31  places
 
 <span class="c1"># Plot Inverted Model Slices (Y)</span>
 <span class="n">normal</span> <span class="o">=</span> <span class="s2">&quot;X&quot;</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inverted_density_model</span></a>
-<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;Den&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Spectral&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="n">model_to_plot</span> <span class="o">=</span> <span class="n">inverted_density_model</span>
+<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <span class="n">actv</span><span class="p">,</span> <span class="n">model_to_plot</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;Den&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Spectral&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 <span class="c1"># Plot Inverted Model Slices (X)</span>
 <span class="n">normal</span> <span class="o">=</span> <span class="s2">&quot;Y&quot;</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inverted_density_model</span></a>
-<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;Den&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Spectral&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="n">model_to_plot</span> <span class="o">=</span> <span class="n">inverted_density_model</span>
+<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <span class="n">actv</span><span class="p">,</span> <span class="n">model_to_plot</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;Den&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Spectral&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
@@ -658,22 +658,22 @@ mref changed in  31  places
 </ul>
 </section>
 <section id="step-13-visualize-the-quasi-geological-model">
-<h2>Step 13: Visualize the Quasi-Geological Model<a class="headerlink" href="#step-13-visualize-the-quasi-geological-model" title="Permalink to this heading">¶</a></h2>
+<h2>Step 13: Visualize the Quasi-Geological Model<a class="headerlink" href="#step-13-visualize-the-quasi-geological-model" title="Link to this heading">¶</a></h2>
 <p>The quasi-geological model (as given by <a class="reference external" href="https://doi.org/10.1190/tle38010060.1">Li et al., 2019</a>) is visualized, showing different rock units classified by the GMM.</p>
 <p>Plot Density Contrast Model (Z)</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">normal</span> <span class="o">=</span> <span class="s2">&quot;Z&quot;</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">quasi_geology_model</span></a>
-<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;QGM&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="n">model_to_plot</span> <span class="o">=</span> <span class="n">quasi_geology_model</span>
+<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <span class="n">actv</span><span class="p">,</span> <span class="n">model_to_plot</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;QGM&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 <span class="c1"># Plot Inverted Model Slices (Y)</span>
 <span class="n">normal</span> <span class="o">=</span> <span class="s2">&quot;X&quot;</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">quasi_geology_model</span></a>
-<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;QGM&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="n">model_to_plot</span> <span class="o">=</span> <span class="n">quasi_geology_model</span>
+<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <span class="n">actv</span><span class="p">,</span> <span class="n">model_to_plot</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;QGM&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 
 <span class="c1"># Plot Inverted Model Slices (X)</span>
 <span class="n">normal</span> <span class="o">=</span> <span class="s2">&quot;Y&quot;</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a> <span class="o">=</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">quasi_geology_model</span></a>
-<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">model_to_plot</span></a><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;QGM&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="n">model_to_plot</span> <span class="o">=</span> <span class="n">quasi_geology_model</span>
+<span class="n">SH</span><span class="o">.</span><span class="n">plot_model_slice</span><span class="p">(</span><span class="n">inv_mesh</span><span class="p">,</span> <span class="n">actv</span><span class="p">,</span> <span class="n">model_to_plot</span><span class="p">,</span> <span class="n">normal</span><span class="p">,</span> <span class="n">ind_plot</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="nb">set</span><span class="p">,</span> <span class="n">sec_loc</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gdlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">which_prop</span><span class="o">=</span><span class="s2">&quot;QGM&quot;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;jet&quot;</span><span class="p">,</span> <span class="n">save_plt</span><span class="o">=</span><span class="n">save_plots</span><span class="p">,</span> <span class="n">path_to_output</span><span class="o">=</span><span class="n">path_to_output</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
@@ -683,26 +683,26 @@ mref changed in  31  places
 </ul>
 </section>
 <section id="step-14-plot-the-updated-1d-gmm">
-<h2>Step 14: Plot the Updated 1D-GMM<a class="headerlink" href="#step-14-plot-the-updated-1d-gmm" title="Permalink to this heading">¶</a></h2>
+<h2>Step 14: Plot the Updated 1D-GMM<a class="headerlink" href="#step-14-plot-the-updated-1d-gmm" title="Link to this heading">¶</a></h2>
 <p>The updated GMM, learned through the inversion, is visualized.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plot the learned GMM</span>
-<a href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="matplotlib.figure.Figure" class="sphx-glr-backref-module-matplotlib-figure sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">fig</span></a> <span class="o">=</span> <a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html#matplotlib.pyplot.figure" title="matplotlib.pyplot.figure" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">figure</span></a><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a> <span class="o">=</span> <span class="n">regularization_term</span><span class="o">.</span><span class="n">objfcts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gmm</span><span class="o">.</span><span class="n">plot_pdf</span><span class="p">(</span><span class="n">flag2d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plotting_precision</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">inverted_density_model</span></a><span class="p">[</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">actv</span></a><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Density contrast (g/cc)&quot;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Probability Density Values&quot;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Learned DelRho Distribution&quot;</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">ax</span></a><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;scientific&quot;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.savefig.html#matplotlib.pyplot.savefig" title="matplotlib.pyplot.savefig" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">savefig</span></a><span class="p">(</span><span class="n">path_to_output</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_Learned_GMM.pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
-<a href="https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.show.html#matplotlib.pyplot.show" title="matplotlib.pyplot.show" class="sphx-glr-backref-module-matplotlib-pyplot sphx-glr-backref-type-py-function"><span class="n">plt</span><span class="o">.</span><span class="n">show</span></a><span class="p">()</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">regularization_term</span><span class="o">.</span><span class="n">objfcts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">gmm</span><span class="o">.</span><span class="n">plot_pdf</span><span class="p">(</span><span class="n">flag2d</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plotting_precision</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">inverted_density_model</span><span class="p">[</span><span class="n">actv</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Density contrast (g/cc)&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Probability Density Values&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span><span class="o">.</span><span class="n">remove</span><span class="p">()</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;Learned DelRho Distribution&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ticklabel_format</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="s2">&quot;scientific&quot;</span><span class="p">,</span> <span class="n">scilimits</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">path_to_output</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_Learned_GMM.pdf&quot;</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 <ul class="sphx-glr-horizontal">
 <li><img src="../../_images/sphx_glr_01_gravity_gradiometry_inversion_pgi_012.png" srcset="../../_images/sphx_glr_01_gravity_gradiometry_inversion_pgi_012.png" alt="01 gravity gradiometry inversion pgi" class = "sphx-glr-multi-img"/></li>
 <li><img src="../../_images/sphx_glr_01_gravity_gradiometry_inversion_pgi_013.png" srcset="../../_images/sphx_glr_01_gravity_gradiometry_inversion_pgi_013.png" alt="Learned DelRho Distribution" class = "sphx-glr-multi-img"/></li>
 </ul>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 10 minutes  14.392 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 10 minutes  3.217 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-03-forward-engines-01-gravity-gradiometry-inversion-pgi-py">
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/4f42b4fbd1192852ada2bb95c8ae557a/01_gravity_gradiometry_inversion_pgi.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">01_gravity_gradiometry_inversion_pgi.py</span></code></a></p>
@@ -793,7 +793,7 @@ mref changed in  31  places
       &copy;2023-2024, Vector Geology Team.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.1.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
       
       |

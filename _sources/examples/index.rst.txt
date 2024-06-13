@@ -178,6 +178,40 @@ Prepare to enhance your understanding and skills in geological modeling with a f
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to construct a 3D geological model of the Model 1 deposit using G...">
+
+.. only:: html
+
+  .. image:: /examples/02_structural_modeling/images/thumb/sphx_glr_03_model_spremberg_import_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_02_structural_modeling_03_model_spremberg_import.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Construct Spremberg: Importing borehole data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates...">
+
+.. only:: html
+
+  .. image:: /examples/02_structural_modeling/images/thumb/sphx_glr_04_model_spremberg_building_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_02_structural_modeling_04_model_spremberg_building.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Construct Spremberg: Building initial model</div>
+    </div>
+
+
+.. raw:: html
+
     </div>
 
 GeoPhysics and Inversion

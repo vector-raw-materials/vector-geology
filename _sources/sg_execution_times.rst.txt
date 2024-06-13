@@ -1,0 +1,73 @@
+
+:orphan:
+
+.. _sphx_glr_sg_execution_times:
+
+
+Computation times
+=================
+**01:09.159** total execution time for 13 files **from all galleries**:
+
+.. container::
+
+  .. raw:: html
+
+    <style scoped>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+    </style>
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" class="init">
+    $(document).ready( function () {
+        $('table.sg-datatable').DataTable({order: [[1, 'desc']]});
+    } );
+    </script>
+
+  .. list-table::
+   :header-rows: 1
+   :class: table table-striped sg-datatable
+
+   * - Example
+     - Time
+     - Mem (MB)
+   * - :ref:`sphx_glr_examples_02_structural_modeling_04_model_spremberg_building.py` (``../../examples/02_structural_modeling/04_model_spremberg_building.py``)
+     - 00:52.865
+     - 0.0
+   * - :ref:`sphx_glr_examples_04_probabilistic_modeling_02_model_1_bayesian.py` (``../../examples/04_probabilistic_modeling/02_model_1_bayesian.py``)
+     - 00:16.294
+     - 0.0
+   * - :ref:`sphx_glr_examples_01_readers_01_read_OMF_sites.py` (``../../examples/01_readers/01_read_OMF_sites.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_01_readers_02_model_1_OMF_to_subsurface.py` (``../../examples/01_readers/02_model_1_OMF_to_subsurface.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_01_readers_03_model_2_OMF_to_subsurface.py` (``../../examples/01_readers/03_model_2_OMF_to_subsurface.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_01_readers_04_model_1_read_gravity.py` (``../../examples/01_readers/04_model_1_read_gravity.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_02_structural_modeling_01_model_1_gempy_step_by_step.py` (``../../examples/02_structural_modeling/01_model_1_gempy_step_by_step.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_02_structural_modeling_02_model_1_gempy.py` (``../../examples/02_structural_modeling/02_model_1_gempy.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_02_structural_modeling_03_model_spremberg_import.py` (``../../examples/02_structural_modeling/03_model_spremberg_import.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_03_forward_engines_01_gravity_gradiometry_inversion_pgi.py` (``../../examples/03_forward_engines/01_gravity_gradiometry_inversion_pgi.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_03_forward_engines_02_model_1_gempy_fw_gravity.py` (``../../examples/03_forward_engines/02_model_1_gempy_fw_gravity.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_03_forward_engines_03_HSI_To_Petrophysics.py` (``../../examples/03_forward_engines/03_HSI_To_Petrophysics.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_04_probabilistic_modeling_01_thickness_problem_gempy.py` (``../../examples/04_probabilistic_modeling/01_thickness_problem_gempy.py``)
+     - 00:00.000
+     - 0.0

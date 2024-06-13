@@ -26,7 +26,7 @@ It utilizes libraries such as GemPy, NumPy, and others to handle and process geo
 
 .. GENERATED FROM PYTHON SOURCE LINES 9-25
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import os
@@ -57,7 +57,7 @@ Start the timer to measure the execution time of the script
 
 .. GENERATED FROM PYTHON SOURCE LINES 27-29
 
-.. code-block:: default
+.. code-block:: Python
 
     start_time = time.time()
 
@@ -75,7 +75,7 @@ This step reads configurations from a .env file, crucial for setting up file pat
 
 .. GENERATED FROM PYTHON SOURCE LINES 32-35
 
-.. code-block:: default
+.. code-block:: Python
 
     config = dotenv_values()
     path = config.get("PATH_TO_MODEL_1_Subsurface")
@@ -94,7 +94,7 @@ These will be used to build the model using GemPy.
 
 .. GENERATED FROM PYTHON SOURCE LINES 38-42
 
-.. code-block:: default
+.. code-block:: Python
 
     structural_elements = []
     global_extent = None
@@ -114,7 +114,7 @@ This loop reads and processes each .nc file to extract necessary data for the mo
 
 .. GENERATED FROM PYTHON SOURCE LINES 45-52
 
-.. code-block:: default
+.. code-block:: Python
 
     for filename in os.listdir(path):
         base, ext = os.path.splitext(filename)
@@ -137,7 +137,7 @@ Here, the model is initialized with the processed data.
 
 .. GENERATED FROM PYTHON SOURCE LINES 55-62
 
-.. code-block:: default
+.. code-block:: Python
 
     geo_model = initialize_geo_model(
         structural_elements=structural_elements,
@@ -154,7 +154,9 @@ Here, the model is initialized with the processed data.
 
  .. code-block:: none
 
-    Active grids: ['regular' 'topography']
+    /home/leguark/gempy/gempy/core/data/structural_frame.py:188: UserWarning: The basement color was already used in the structural elements.Changing the basement color to #015482.
+      warnings.warn(f"The basement color was already used in the structural elements."
+    Active grids: GridTypes.NONE|TOPOGRAPHY|DENSE
 
 
 
@@ -166,7 +168,7 @@ It's always good practice to verify the model's initialization.
 
 .. GENERATED FROM PYTHON SOURCE LINES 65-67
 
-.. code-block:: default
+.. code-block:: Python
 
     print(geo_model)
 
@@ -178,8 +180,39 @@ It's always good practice to verify the model's initialization.
 
  .. code-block:: none
 
-    {'_interpolation_options': InterpolationOptions(kernel_options={'range': 5, 'c_o': 10, 'uni_degree': 1, 'i_res': 4, 'gi_res': 2, 'number_dimensions': 3, 'kernel_function': <AvailableKernelFunctions.cubic: KernelFunction(base_function=<function cubic_function at 0x7ff75ef63d90>, derivative_div_r=<function cubic_function_p_div_r at 0x7ff75ef63e20>, second_derivative=<function cubic_function_a at 0x7ff75ef63eb0>, consume_sq_distance=False)>, 'kernel_solver': <Solvers.DEFAULT: 1>, 'compute_condition_number': False, 'optimizing_condition_number': False, 'condition_number': None}, number_octree_levels=6, current_octree_level=0, compute_scalar_gradient=False, mesh_extraction=True, mesh_extraction_masking_options=MeshExtractionMaskingOptions.INTERSECT, mesh_extraction_fancy=True, debug=True, debug_water_tight=False, sigmoid_slope=50000, _number_octree_levels_surface=4, _model_name=None),
-     'grid': <gempy.core.data.grid.Grid object at 0x7ff6f77a2920>,
+    {'_interpolation_options': InterpolationOptions(kernel_options={'range': 5, 'c_o': 10, 'uni_degree': 1, 'i_res': 4, 'gi_res': 2, 'number_dimensions': 3, 'kernel_function': <AvailableKernelFunctions.cubic: KernelFunction(base_function=<function cubic_function at 0x7f2f106c13f0>, derivative_div_r=<function cubic_function_p_div_r at 0x7f2f106c1480>, second_derivative=<function cubic_function_a at 0x7f2f106c1510>, consume_sq_distance=False)>, 'kernel_solver': <Solvers.DEFAULT: 1>, 'compute_condition_number': False, 'optimizing_condition_number': False, 'condition_number': None}, evaluation_options={'_number_octree_levels': 5, '_number_octree_levels_surface': 4, 'curvature_threshold': -1, 'error_threshold': 1.5, 'min_octree_level': 2, 'mesh_extraction': True, 'mesh_extraction_masking_options': <MeshExtractionMaskingOptions.INTERSECT: 3>, 'mesh_extraction_fancy': True, 'evaluation_chunk_size': 5000000, 'compute_scalar_gradient': False, 'verbose': False}, temp_interpolation_values=<gempy_engine.core.data.options.temp_interpolation_values.TempInterpolationValues object at 0x7f2ea8ec1270>, debug=True, cache_mode=CacheMode.IN_MEMORY_CACHE, cache_model_name=, block_solutions_type=BlockSolutionType.OCTREE, sigmoid_slope=50000, debug_water_tight=False),
+     'grid': Grid(_octree_grid=None,
+                  _dense_grid=RegularGrid(resolution=array([20, 10, 20]),
+                                          extent=array([ 5.59902830e+05,  5.64955682e+05,  6.44278260e+05,  6.50608735e+05,
+           -1.75340000e+03,  1.60326604e+02]),
+                                          values=array([[ 5.60029151e+05,  6.44594784e+05, -1.70555683e+03],
+           [ 5.60029151e+05,  6.44594784e+05, -1.60987050e+03],
+           [ 5.60029151e+05,  6.44594784e+05, -1.51418417e+03],
+           ...,
+           [ 5.64829361e+05,  6.50292212e+05, -7.88892213e+01],
+           [ 5.64829361e+05,  6.50292212e+05,  1.67971089e+01],
+           [ 5.64829361e+05,  6.50292212e+05,  1.12483439e+02]]),
+                                          mask_topo=array([], shape=(0, 3), dtype=bool),
+                                          _transform=None),
+                  _custom_grid=None,
+                  _topography=<gempy.core.data.grid_modules.topography.Topography object at 0x7f2ea8ec3130>,
+                  _sections=None,
+                  _centered_grid=None,
+                  values=array([[ 5.60029151e+05,  6.44594784e+05, -1.70555683e+03],
+           [ 5.60029151e+05,  6.44594784e+05, -1.60987050e+03],
+           [ 5.60029151e+05,  6.44594784e+05, -1.51418417e+03],
+           ...,
+           [ 5.64955682e+05,  6.49201963e+05,  1.06993262e+02],
+           [ 5.64955682e+05,  6.49905349e+05,  8.89864414e+01],
+           [ 5.64955682e+05,  6.50608735e+05,  7.05702308e+01]]),
+                  length=array([], dtype=float64),
+                  _transform=None,
+                  _octree_levels=-1),
+     'input_transform': {'_cached_pivot': None,
+     '_is_default_transform': False,
+     'position': array([-562422.65655014, -647329.31794742,     823.58712106]),
+     'rotation': array([0., 0., 0.]),
+     'scale': array([8.55363115e-05, 8.55363115e-05, 8.55363115e-05])},
      'meta': GeoModelMeta(name='Tutorial_ch1_1_Basics',
                           creation_date=None,
                           last_modification_date=None,
@@ -227,11 +260,7 @@ It's always good practice to verify the model's initialization.
             fault_relations=
     [[False, False],
      [False, False]],
-    ,
-     'transform': {'_is_default_transform': False,
-     'position': array([-562422.65655014, -647329.31794742,     823.58712106]),
-     'rotation': array([0., 0., 0.]),
-     'scale': array([8.55363115e-05, 8.55363115e-05, 8.55363115e-05])}}
+    }
 
 
 
@@ -243,7 +272,7 @@ This data is used for geophysical calculations later in the script.
 
 .. GENERATED FROM PYTHON SOURCE LINES 70-76
 
-.. code-block:: default
+.. code-block:: Python
 
     df = pd.read_csv(
         filepath_or_buffer=config.get("PATH_TO_MODEL_1_BOUGUER"),
@@ -265,7 +294,7 @@ This step ensures we use the relevant subset of the data.
 
 .. GENERATED FROM PYTHON SOURCE LINES 79-82
 
-.. code-block:: default
+.. code-block:: Python
 
     df = df[df['X'] < 565000]
     interesting_columns = df[['X', 'Y', 'Bouguer_267_complete']]
@@ -284,7 +313,7 @@ Configuring interpolation is crucial for accurate geological modeling.
 
 .. GENERATED FROM PYTHON SOURCE LINES 85-91
 
-.. code-block:: default
+.. code-block:: Python
 
     interpolation_options = geo_model.interpolation_options
     interpolation_options.mesh_extraction = True
@@ -306,7 +335,7 @@ This visualization helps in understanding the spatial distribution of the data.
 
 .. GENERATED FROM PYTHON SOURCE LINES 94-105
 
-.. code-block:: default
+.. code-block:: Python
 
     plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
     plot2d.axes[0].scatter(
@@ -338,7 +367,7 @@ Monitoring execution time is useful for performance optimization.
 
 .. GENERATED FROM PYTHON SOURCE LINES 108-112
 
-.. code-block:: default
+.. code-block:: Python
 
     end_time = time.time()
     execution_time = end_time - start_time
@@ -352,7 +381,7 @@ Monitoring execution time is useful for performance optimization.
 
  .. code-block:: none
 
-    The function executed in 2.534396171569824 seconds.
+    The function executed in 2.5401320457458496 seconds.
 
 
 
@@ -364,7 +393,7 @@ This 3D view provides a comprehensive perspective of the model's structure.
 
 .. GENERATED FROM PYTHON SOURCE LINES 115-122
 
-.. code-block:: default
+.. code-block:: Python
 
     gempy_vista = gpv.plot_3d(
         model=geo_model,
@@ -397,7 +426,7 @@ Configuring the data correctly is key for accurate gravity calculations.
 
 .. GENERATED FROM PYTHON SOURCE LINES 125-128
 
-.. code-block:: default
+.. code-block:: Python
 
     device_location = interesting_columns[['X', 'Y']]
     device_location['Z'] = 0  # Add a Z-coordinate
@@ -416,7 +445,7 @@ This grid will be used for gravity gradient calculations.
 
 .. GENERATED FROM PYTHON SOURCE LINES 131-138
 
-.. code-block:: default
+.. code-block:: Python
 
     gp.set_centered_grid(
         grid=geo_model.grid,
@@ -433,7 +462,7 @@ This grid will be used for gravity gradient calculations.
 
  .. code-block:: none
 
-    Active grids: ['regular' 'topography' 'centered']
+    Active grids: GridTypes.NONE|CENTERED|TOPOGRAPHY|DENSE
 
     CenteredGrid(centers=array([[563661.087, 648441.046,      0.   ],
            [563669.585, 648272.032,      0.   ],
@@ -480,7 +509,7 @@ This is necessary for integrating GemPy with PyTorch.
 
 .. GENERATED FROM PYTHON SOURCE LINES 141-143
 
-.. code-block:: default
+.. code-block:: Python
 
     BackendTensor.change_backend_gempy(engine_backend=gp.data.AvailableBackends.PYTORCH, dtype="float64")
 
@@ -504,7 +533,7 @@ Gravity gradient data is critical for geophysical modeling and inversion.
 
 .. GENERATED FROM PYTHON SOURCE LINES 146-148
 
-.. code-block:: default
+.. code-block:: Python
 
     gravity_gradient = gp.calculate_gravity_gradient(geo_model.grid.centered_grid)
 
@@ -522,7 +551,7 @@ Densities are a fundamental part of the gravity modeling process.
 
 .. GENERATED FROM PYTHON SOURCE LINES 151-154
 
-.. code-block:: default
+.. code-block:: Python
 
     densities_tensor = BackendTensor.t.array([2.61, 2.92, 3.1, 2.92, 2.61, 2.61])
     densities_tensor.requires_grad = True
@@ -541,7 +570,7 @@ Configuring this input is crucial for the forward gravity calculation.
 
 .. GENERATED FROM PYTHON SOURCE LINES 157-162
 
-.. code-block:: default
+.. code-block:: Python
 
     geo_model.geophysics_input = gp.data.GeophysicsInput(
         tz=BackendTensor.t.array(gravity_gradient),
@@ -562,7 +591,7 @@ This computation integrates the geological model with gravity data.
 
 .. GENERATED FROM PYTHON SOURCE LINES 165-175
 
-.. code-block:: default
+.. code-block:: Python
 
     sol = gp.compute_model(
         gempy_model=geo_model,
@@ -583,10 +612,7 @@ This computation integrates the geological model with gravity data.
  .. code-block:: none
 
     Setting Backend To: AvailableBackends.PYTORCH
-    /home/leguark/gempy/gempy/core/data/geo_model.py:183: UserWarning: You are using refinement and passing a regular grid. The resolution of the regular grid will be overwritten
-      warnings.warn(
-    Final Iteration 97, Residual Norm: 1.0748418744916176e-07
-    Final Iteration 48, Residual Norm: 6.902783759210787e-08
+    Chunking done: 6 chunks
 
 
 
@@ -598,7 +624,7 @@ The gradient data can provide insights into the density distribution.
 
 .. GENERATED FROM PYTHON SOURCE LINES 178-180
 
-.. code-block:: default
+.. code-block:: Python
 
     print(densities_tensor.grad)
 
@@ -610,7 +636,7 @@ The gradient data can provide insights into the density distribution.
 
  .. code-block:: none
 
-    tensor([7.8962e-03, 1.9249e-01, 1.1377e+00, 8.1251e-01, 1.3353e+01, 1.5283e+02])
+    tensor([7.8962e-03, 1.9249e-01, 1.1455e+00, 9.8152e-01, 1.3207e+01, 1.5280e+02])
 
 
 
@@ -622,7 +648,7 @@ These calculations align the model's gravity data with observed values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 183-188
 
-.. code-block:: default
+.. code-block:: Python
 
     s, c = calculate_scale_shift(
         a=interesting_columns["Bouguer_267_complete"].values,
@@ -643,7 +669,7 @@ Understanding these values is important for interpreting the results.
 
 .. GENERATED FROM PYTHON SOURCE LINES 191-194
 
-.. code-block:: default
+.. code-block:: Python
 
     print("Scale (s):", s)
     print("Shift (c):", c)
@@ -656,8 +682,8 @@ Understanding these values is important for interpreting the results.
 
  .. code-block:: none
 
-    Scale (s): 0.649859429120498
-    Shift (c): 437.07950910565876
+    Scale (s): 0.6781754018106533
+    Shift (c): 436.951602077492
 
 
 
@@ -669,7 +695,7 @@ This step adjusts the model's gravity data to match observed values.
 
 .. GENERATED FROM PYTHON SOURCE LINES 197-200
 
-.. code-block:: default
+.. code-block:: Python
 
     adapted_grav = s * interesting_columns["Bouguer_267_complete"] + c
     diff = adapted_grav - grav.detach().numpy()
@@ -688,7 +714,7 @@ This visualization helps in comparing the model's gravity data with observations
 
 .. GENERATED FROM PYTHON SOURCE LINES 203-214
 
-.. code-block:: default
+.. code-block:: Python
 
     plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
     plot2d.axes[0].scatter(
@@ -714,7 +740,7 @@ This visualization helps in comparing the model's gravity data with observations
 
  .. code-block:: none
 
-    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_2d_sections_api.py:104: UserWarning: Section contacts not implemented yet. We need to pass scalar field for the sections grid
+    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_2d_sections_api.py:105: UserWarning: Section contacts not implemented yet. We need to pass scalar field for the sections grid
       warnings.warn(
 
 
@@ -727,7 +753,7 @@ This step ensures a balanced color representation of positive and negative diffe
 
 .. GENERATED FROM PYTHON SOURCE LINES 217-220
 
-.. code-block:: default
+.. code-block:: Python
 
     max_diff = np.max(np.abs(diff))  # Get the maximum absolute value from diff
     vmin, vmax = -max_diff, max_diff  # Set vmin and vmax
@@ -746,7 +772,7 @@ This plot highlights the discrepancies between the model and observed data.
 
 .. GENERATED FROM PYTHON SOURCE LINES 223-238
 
-.. code-block:: default
+.. code-block:: Python
 
     plot2d = gpv.plot_2d(geo_model, show_topography=True, section_names=["topography"], show=False)
     sc = plot2d.axes[0].scatter(
@@ -776,7 +802,7 @@ This plot highlights the discrepancies between the model and observed data.
 
  .. code-block:: none
 
-    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_2d_sections_api.py:104: UserWarning: Section contacts not implemented yet. We need to pass scalar field for the sections grid
+    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_2d_sections_api.py:105: UserWarning: Section contacts not implemented yet. We need to pass scalar field for the sections grid
       warnings.warn(
 
 
@@ -785,7 +811,7 @@ This plot highlights the discrepancies between the model and observed data.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.933 seconds)
+   **Total running time of the script:** (0 minutes 18.998 seconds)
 
 
 .. _sphx_glr_download_examples_03_forward_engines_02_model_1_gempy_fw_gravity.py:
@@ -794,16 +820,13 @@ This plot highlights the discrepancies between the model and observed data.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: 02_model_1_gempy_fw_gravity.ipynb <02_model_1_gempy_fw_gravity.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 02_model_1_gempy_fw_gravity.py <02_model_1_gempy_fw_gravity.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: 02_model_1_gempy_fw_gravity.ipynb <02_model_1_gempy_fw_gravity.ipynb>`
 
 
 .. only:: html
