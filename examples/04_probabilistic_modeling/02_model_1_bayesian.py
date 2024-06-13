@@ -28,6 +28,13 @@ from vector_geology.bayesian_helpers import calculate_scale_shift, gaussian_kern
 from vector_geology.model_1_builder import initialize_geo_model, setup_geophysics
 from vector_geology.omf_to_gempy import process_file
 
+
+# %%
+# Config
+seed = 123456
+torch.manual_seed(seed)
+pyro.set_rng_seed(seed)
+
 # %%
 # Start the timer for benchmarking purposes
 start_time = time.time()
@@ -166,8 +173,8 @@ def model(y_obs_list, interpolation_input):
 y_obs_list = torch.tensor(adapted_observed_grav.values).view(1, 17)
 interpolation_options.mesh_extraction = False
 interpolation_options.number_octree_levels = 1
-geo_model.grid.set_inactive("topography")
-geo_model.grid.set_inactive("regular")
+geo_model.grid.active_grids ^= gp.data.Grid.GridTypes.TOPOGRAPHY
+geo_model.grid.active_grids ^= gp.data.Grid.GridTypes.DENSE
 
 # %%
 # Perform prior sampling and visualize the results

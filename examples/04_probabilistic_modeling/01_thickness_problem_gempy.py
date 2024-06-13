@@ -24,6 +24,12 @@ from gempy_probability.plot_posterior import default_red, default_blue
 # sphinx_gallery_thumbnail_number = -1
 
 # %%
+# Config
+seed = 123456
+torch.manual_seed(seed)
+pyro.set_rng_seed(seed)
+
+# %%
 # Set the data path
 data_path = os.path.abspath('../')
 
