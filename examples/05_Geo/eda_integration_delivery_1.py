@@ -1,5 +1,6 @@
 """
 Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (1/3)
+===================================================================================
 
 """
 import os
@@ -7,7 +8,6 @@ import os
 import dotenv
 
 # %% md
-# <img src="images\logos.png" style="width:1500px">
 # 
 # Barcelona 25/09/24 </br>
 # GEO3BCN </br>
@@ -288,7 +288,8 @@ for n in den_anomalous_index:
 # %% md
 # ### Compressional Velocity (Vp)
 # 
-# The distribution of the compressional velocity has a wide tail to the left (negative skew), with anomalous values below -3 standard deviations. The observations on these anomalous samples point toward open fractures on the core as responsible for the low Vp values. Below are two reference values of Vp, at 20ºC (source: https://www.engineeringtoolbox.com/sound-speed-water-d_598.html):
+# The distribution of the compressional velocity has a wide tail to the left (negative skew), with anomalous values below -3 standard deviations. The observations on these anomalous samples point toward open fractures on the core as responsible for the low Vp values. 
+# Below are two reference values of Vp, at 20ºC (source: https://www.engineeringtoolbox.com/sound-speed-water-d_598.html):
 # 
 # </br>
 # 
@@ -464,7 +465,7 @@ df[df.Res > 14000].sort_values(by='From')
 # To appreciate the relation between the features, the anomaly of the Mag was excluded. No other elimination or imputation (fill with numbers the NaNs) was performed, therefore the quality of the correlations may change after the imputation.
 # %%
 # All against-all features pair plot
-
+# 
 mat = features[features.Mag < 10].select_dtypes(include=['number'])
 sns.pairplot(mat)
 # plt.savefig('Output/pair.png')
