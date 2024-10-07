@@ -16,6 +16,15 @@
   font-weight: bold;
 }
 
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dataframe {
+  margin: 0 auto;
+}
 /*
 
 - red of pyramid: #de4c13;
