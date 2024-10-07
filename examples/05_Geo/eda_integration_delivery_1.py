@@ -589,8 +589,9 @@ fig.show()
 # %%
 # Whole rock lithogeochemistry data load 
 
+
 whole = pd.read_csv(
-    filepath_or_buffer='Input/collinstown_wholerock_lithogeochemistry.csv',
+    filepath_or_buffer=f'{base_path}/collinstown_wholerock_lithogeochemistry.csv',
     sep=';'
 )
 whole.head()
@@ -659,7 +660,7 @@ plt.show()
 # %%
 # Legacy XRF data load
 
-xrf = pd.read_csv('Input/collinstown_pXRF.csv')
+xrf = pd.read_csv(f'{base_path}/collinstown_pXRF.csv')
 xrf.head()
 # %%
 # xrf columns
@@ -723,7 +724,7 @@ plt.show()
 # %%
 # legacy mag sus data load
 
-mag = pd.read_excel('Input/collinstown_MagSUS.xlsx')
+mag = pd.read_excel(f'{base_path}/collinstown_MagSUS.xlsx')
 mag.head()
 # %%
 # Hole TC-1319-005 legacy mag sus data
@@ -824,7 +825,7 @@ plt.show()
 # %%
 # Legacy GR data load
 
-gr = pd.read_csv('Input/collinstown_Gamma.csv')
+gr = pd.read_csv(f'{base_path}/collinstown_Gamma.csv')
 gr.HOLEID.unique()
 # %%
 # Hole TC-3660-008 GR data
@@ -916,7 +917,12 @@ plt.show()
 # %%
 # Passive Vs, at hole TC-3660-008 location, data load
 
-pas = pd.read_csv('Input/tc-3660-008_Vs.txt', sep=' ', skiprows=1, names=['depth_km', 'vs_km/s'])
+pas = pd.read_csv(
+    filepath_or_buffer=f'{base_path}/tc-3660-008_Vs.txt',
+    sep=' ',
+    skiprows=1,
+    names=['depth_km', 'vs_km/s']
+)
 pas.head()
 # %%
 # Velocity conversion
