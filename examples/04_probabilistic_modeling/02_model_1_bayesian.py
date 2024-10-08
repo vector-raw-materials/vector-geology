@@ -178,7 +178,7 @@ geo_model.grid.active_grids ^= gp.data.Grid.GridTypes.DENSE
 
 # %%
 # Perform prior sampling and visualize the results
-raise NotImplementedError("From this point we need to optimize the code again.")
+# raise NotImplementedError("From this point we need to optimize the code again.")
 if True:
     prior = Predictive(model, num_samples=50)(y_obs_list, interpolation_input=geo_model.interpolation_input_copy)
     data = az.from_pyro(prior=prior)

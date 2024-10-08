@@ -154,7 +154,7 @@ def _read_spremberg_borehole_set() -> ss.core.geological_formats.BoreholeSet:
         },
     )
     df = read_survey(reader)
-    survey: Survey = Survey.from_df(df)
+    survey: Survey = Survey.from_df(df, None)
     survey.update_survey_with_lith(lith)
     reader_collar: GenericReaderFilesHelper = GenericReaderFilesHelper(
         file_or_buffer=os.getenv("PATH_TO_SPREMBERG_COLLAR"),
