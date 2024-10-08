@@ -1,0 +1,19 @@
+1. Introduction
+
+1.1 Background and Objectives
+
+The Vector project is a collaborative initiative aimed at advancing geoscientific research through the development of innovative tools and methodologies. Work Package 4 (WP4) plays a crucial role in this endeavor by focusing on the integration and interpretation of geological, geochemical, and geophysical data. The primary goal of WP4 is to create an open-source toolbox that facilitates 3D modeling of multisource data, thereby enabling more accurate and comprehensive understanding of subsurface structures. This toolbox is intended to serve as a common platform for researchers to store, interpret, and analyze the diverse data produced in other work packages, particularly WP2.
+
+Open-source tools are fundamental to geoscientific research, as they promote transparency, reproducibility, and accessibility—key principles that align with the objectives of Horizon Europe. By providing tools that are freely available to the scientific community, the Vector project aims to foster collaboration and innovation, ultimately contributing to the broader goals of open science.
+
+Task 4.1 specifically aims to develop an integrative platform that can store and interpret geological, geochemical, and geophysical data produced in WP2. The end goal is to create reproducible scripts that generate 3D "common earth models" for each case study within WP2. These models are quantitative representations of the subsurface that are consistent with multiple data sources, providing a unified view of geological formations and petrophysical properties. Such models are crucial for advancing our understanding of complex geological settings.
+
+However, the development of this toolbox has faced certain challenges. Data licensing has emerged as a significant issue, limiting the ability to share some datasets openly. Additionally, some workflows in the Vector project rely on proprietary software, which cannot be included in the open-source repository. These limitations have created barriers to fully embracing open science principles and underscore the need for a stronger commitment to open data standards in future work.
+
+1.2 Commitment to Open Science
+
+Open science is at the heart of the Vector project, as it fosters greater transparency, reproducibility, and collaboration in research. By making our tools open-source, we align with the European Union's policies promoting accessible research, thereby enhancing the societal impact of our work. The commitment to open science not only ensures that the developed tools are available to all members of the Vector consortium but also extends their benefits to the wider scientific community. This approach encourages collaboration, iterative improvement, and the dissemination of high-quality, reusable tools for geological research.
+
+To facilitate open access, we have ensured that all software packages within the toolbox are licensed under one of three well-established open-source licenses: the European Union Public License (EUPL), Apache License 2.0, or MIT License. These licenses were chosen to balance openness with the necessary protections for both developers and users. The EUPL is particularly well-suited for ensuring compatibility with European open science initiatives, while the Apache and MIT licenses provide flexibility that encourages reuse and contribution from the community.
+
+The open-source approach adopted by the Vector project not only enables the sharing of tools and methodologies but also invites contributions from the broader geoscientific community. This collaborative model supports an iterative cycle of improvement, where researchers and practitioners can enhance the tools based on their specific needs and experiences. By making these tools freely available, we aim to create a robust and extensible foundation for geological research, ultimately contributing to a more open and collaborative scientific ecosystem.
