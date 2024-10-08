@@ -52,7 +52,8 @@ In the latter part of the report, “work description”, we will introduce each
 software package, detailing its development and integration within the toolbox's
 framework.
 ## Overview
-- Repository goals
+- Repository goals (WP4 goals around geology)
+  - Reading data, geomodeling, geophysics
 - Multiple packages from different partners. Coordination hell
 
 
