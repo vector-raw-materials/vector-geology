@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**01:09.159** total execution time for 13 files **from all galleries**:
+**00:02.965** total execution time for 12 files **from all galleries**:
 
 .. container::
 
@@ -32,11 +32,11 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_examples_02_structural_modeling_04_model_spremberg_building.py` (``../../examples/02_structural_modeling/04_model_spremberg_building.py``)
-     - 00:52.865
+   * - :ref:`sphx_glr_examples_02_structural_modeling_03_model_spremberg_import.py` (``../../examples/02_structural_modeling/03_model_spremberg_import.py``)
+     - 00:01.881
      - 0.0
-   * - :ref:`sphx_glr_examples_04_probabilistic_modeling_02_model_1_bayesian.py` (``../../examples/04_probabilistic_modeling/02_model_1_bayesian.py``)
-     - 00:16.294
+   * - :ref:`sphx_glr_examples_02_structural_modeling_04_model_spremberg_building.py` (``../../examples/02_structural_modeling/04_model_spremberg_building.py``)
+     - 00:01.084
      - 0.0
    * - :ref:`sphx_glr_examples_01_readers_01_read_OMF_sites.py` (``../../examples/01_readers/01_read_OMF_sites.py``)
      - 00:00.000
@@ -56,9 +56,6 @@ Computation times
    * - :ref:`sphx_glr_examples_02_structural_modeling_02_model_1_gempy.py` (``../../examples/02_structural_modeling/02_model_1_gempy.py``)
      - 00:00.000
      - 0.0
-   * - :ref:`sphx_glr_examples_02_structural_modeling_03_model_spremberg_import.py` (``../../examples/02_structural_modeling/03_model_spremberg_import.py``)
-     - 00:00.000
-     - 0.0
    * - :ref:`sphx_glr_examples_03_forward_engines_01_gravity_gradiometry_inversion_pgi.py` (``../../examples/03_forward_engines/01_gravity_gradiometry_inversion_pgi.py``)
      - 00:00.000
      - 0.0
@@ -68,6 +65,6 @@ Computation times
    * - :ref:`sphx_glr_examples_03_forward_engines_03_HSI_To_Petrophysics.py` (``../../examples/03_forward_engines/03_HSI_To_Petrophysics.py``)
      - 00:00.000
      - 0.0
-   * - :ref:`sphx_glr_examples_04_probabilistic_modeling_01_thickness_problem_gempy.py` (``../../examples/04_probabilistic_modeling/01_thickness_problem_gempy.py``)
+   * - :ref:`sphx_glr_examples_05_Geo_eda_integration_delivery_1.py` (``../../examples/05_Geo/eda_integration_delivery_1.py``)
      - 00:00.000
      - 0.0

@@ -23,12 +23,12 @@ Construct Spremberg: Building initial model
 
 This example demonstrates...
 
-.. GENERATED FROM PYTHON SOURCE LINES 8-17
+# sphinx_gallery_thumbnail_number = -1
 
-.. code-block:: Python
+.. GENERATED FROM PYTHON SOURCE LINES 9-16
 
+.. code-block:: default
 
-    # sphinx_gallery_thumbnail_number = -2
     import numpy as np
 
     import gempy as gp
@@ -40,12 +40,22 @@ This example demonstrates...
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Python-dotenv could not parse statement starting at line 13
+    Python-dotenv could not parse statement starting at line 14
+    Python-dotenv could not parse statement starting at line 15
+    Python-dotenv could not parse statement starting at line 16
+    Python-dotenv could not parse statement starting at line 17
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 18-48
 
-.. code-block:: Python
+.. GENERATED FROM PYTHON SOURCE LINES 17-47
+
+.. code-block:: default
 
     elements_to_gempy = {
             "Buntsandstein"       : {
@@ -95,35 +105,58 @@ This example demonstrates...
 
  .. code-block:: none
 
-    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:116: SettingWithCopyWarning: 
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+      d = reader(
+    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:130: SettingWithCopyWarning: 
     A value is trying to be set on a copy of a slice from a DataFrame.
     Try using .loc[row_indexer,col_indexer] = value instead
 
     See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      lith_df['top'] = -np.abs(lith_df['top'])
-    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:117: SettingWithCopyWarning: 
+      lith_df['top'] = np.abs(lith_df['top'])
+    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:131: SettingWithCopyWarning: 
     A value is trying to be set on a copy of a slice from a DataFrame.
     Try using .loc[row_indexer,col_indexer] = value instead
 
     See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      lith_df['base'] = -np.abs(lith_df['base'])
-    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:80: UserWarning: inc and/or azi columns are not present in the file. The boreholes will be straight.
-      warnings.warn(
-    Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
-    Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
-    Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
+      lith_df['base'] = np.abs(lith_df['base'])
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+      d = reader(
+    Well '13E_56' does not exist in the attributes DataFrame.
+    Well '4_56' does not exist in the attributes DataFrame.
+    Well '64_59' does not exist in the attributes DataFrame.
+    Well 'DOE104_63' does not exist in the attributes DataFrame.
+    Well 'H3_71' does not exist in the attributes DataFrame.
+    Well 'H4_71' does not exist in the attributes DataFrame.
+    Well 'H5_71' does not exist in the attributes DataFrame.
+    Well 'H6_71' does not exist in the attributes DataFrame.
+    Well 'H7_71' does not exist in the attributes DataFrame.
+    Well 'MUSK1_00' does not exist in the attributes DataFrame.
+    Well 'MUSK1_62' does not exist in the attributes DataFrame.
+    Well 'N1_71' does not exist in the attributes DataFrame.
+    Well 'N10_71' does not exist in the attributes DataFrame.
+    Well 'N11_71' does not exist in the attributes DataFrame.
+    Well 'N2_71' does not exist in the attributes DataFrame.
+    Well 'N3_71' does not exist in the attributes DataFrame.
+    Well 'N8_71' does not exist in the attributes DataFrame.
+    Well 'N9_71' does not exist in the attributes DataFrame.
     ('cell',) are not coordinates with an index xarray dataset must include 'cell' key (KeyError) or xarray 'cell' has no index (ValueError).
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+      d = reader(
+    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy/core/data/grid_modules/grid_types.py:248: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+      plt.show()
+    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_3d_API.py:213: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+      plt.show(block=False)
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-50
+.. GENERATED FROM PYTHON SOURCE LINES 48-49
 
 Add one orientation to the model
 
-.. GENERATED FROM PYTHON SOURCE LINES 50-63
+.. GENERATED FROM PYTHON SOURCE LINES 49-62
 
-.. code-block:: Python
+.. code-block:: default
 
     rotliegend: gp.data.StructuralElement = geo_model.structural_frame.get_element_by_name("Rotliegend")
     gp.add_orientations(
@@ -191,9 +224,9 @@ Add one orientation to the model
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 64-74
+.. GENERATED FROM PYTHON SOURCE LINES 63-73
 
-.. code-block:: Python
+.. code-block:: default
 
     pivot = [5_478_256.5, 5_698_528.946534388]
     point_2 = [5_483_077.527386775, 5_710_030.2446156405]
@@ -212,9 +245,9 @@ Add one orientation to the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 75-78
+.. GENERATED FROM PYTHON SOURCE LINES 74-77
 
-.. code-block:: Python
+.. code-block:: default
 
     gp.set_section_grid(geo_model.grid, section_dict)
     gpv.plot_section_traces(geo_model)
@@ -233,14 +266,16 @@ Add one orientation to the model
  .. code-block:: none
 
     Active grids: GridTypes.NONE|SECTIONS|OCTREE
+    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_2d_API.py:200: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+      plot.fig.show()
 
-    <function plot_section_traces at 0x7f14ae14f760>
+    <function plot_section_traces at 0x7f797772e440>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-93
+.. GENERATED FROM PYTHON SOURCE LINES 78-92
 
-.. code-block:: Python
+.. code-block:: default
 
     _ = gpv.plot_3d(
         model=geo_model,
@@ -270,21 +305,28 @@ Add one orientation to the model
    :class: sphx-glr-single-img
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_3d_API.py:213: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+      plt.show(block=False)
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-113
 
-.. code-block:: Python
+.. GENERATED FROM PYTHON SOURCE LINES 93-112
+
+.. code-block:: default
 
 
     # * Ignore curvature for now
     geo_model.interpolation_options.kernel_options.range = 3
     geo_model.interpolation_options.compute_scalar_gradient = False
-    geo_model.interpolation_options.evaluation_options.curvature_threshold = 0.4
+    geo_model.interpolation_options.evaluation_options.octree_curvature_threshold = 0.4
     geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 5
 
-    geo_model.interpolation_options.evaluation_options.error_threshold = 1
+    geo_model.interpolation_options.evaluation_options.octree_error_threshold = 1
     geo_model.interpolation_options.evaluation_options.verbose = True
 
 
@@ -322,19 +364,22 @@ Add one orientation to the model
  .. code-block:: none
 
     Setting Backend To: AvailableBackends.PYTORCH
-    Chunking done: 17 chunks
-    Number of voxels marked by stats: 407 of torch.Size([512]).
-     Number of voxels marked by corners : 245
-    Total voxels: 407
+    Chunking done: 9 chunks
+    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_engine/modules/octrees_topology/_octree_internals.py:205: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+      plt.show()
+    Number of voxels marked by stats: 353 of torch.Size([512]).
+     Number of voxels marked by corners : 248
+    Total voxels: 353
     Dense Grid would be 512 voxels
-    Chunking done: 15 chunks
-    Number of voxels marked by stats: 1677 of torch.Size([3472]).
-     Number of voxels marked by corners : 1308
-    Total voxels: 1677
-    Dense Grid would be 4096 voxels
     Chunking done: 8 chunks
-    Chunking done: 63 chunks
-    Chunking done: 26 chunks
+    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_engine/modules/octrees_topology/_octree_internals.py:205: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+      plt.show()
+    Number of voxels marked by stats: 1681 of torch.Size([3024]).
+     Number of voxels marked by corners : 1306
+    Total voxels: 1681
+    Dense Grid would be 4096 voxels
+    Chunking done: 35 chunks
+    Chunking done: 14 chunks
 
 
 .. raw:: html
@@ -345,9 +390,9 @@ Add one orientation to the model
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 114-121
+.. GENERATED FROM PYTHON SOURCE LINES 113-120
 
-.. code-block:: Python
+.. code-block:: default
 
     gpv.plot_2d(
         model=geo_model,
@@ -369,16 +414,18 @@ Add one orientation to the model
 
  .. code-block:: none
 
-    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_2d_sections_api.py:105: UserWarning: Section contacts not implemented yet. We need to pass scalar field for the sections grid
+    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_2d_sections_api.py:105: UserWarning: Section contacts not implemented yet. We need to pass scalar field for the sections grid
       warnings.warn(
+    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_2d_API.py:174: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+      p.fig.show()
 
-    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f14501aab60>
+    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f790b5aad10>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 122-170
+.. GENERATED FROM PYTHON SOURCE LINES 121-169
 
-.. code-block:: Python
+.. code-block:: default
 
     gempy_plot = gpv.plot_3d(
         model=geo_model,
@@ -440,7 +487,7 @@ Add one orientation to the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 171-179
+.. GENERATED FROM PYTHON SOURCE LINES 170-178
 
 LiquidEarth Integration
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -451,13 +498,13 @@ This makes it an excellent tool for sharing your models with others and viewing 
 To upload a model to LiquidEarth, you must have an account and a user token. Once your model is uploaded, 
 you can easily share the link with anyone.
 
-.. GENERATED FROM PYTHON SOURCE LINES 179-191
+.. GENERATED FROM PYTHON SOURCE LINES 178-190
 
-.. code-block:: Python
+.. code-block:: default
 
 
     # # %%
-    if True:
+    if False:
         link = gpv.plot_to_liquid_earth(
             geo_model=geo_model,
             space_name="Spremberg",
@@ -471,19 +518,13 @@ you can easily share the link with anyone.
 
 
 
-.. rst-class:: sphx-glr-script-out
-
- .. code-block:: none
-
-    Generated Link: https://liquidearth.app.link/4a7b5726-6ccd-4453-94d7-a9bbe72152a8
-
 
 
 
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 52.865 seconds)
+   **Total running time of the script:** ( 0 minutes  11.808 seconds)
 
 
 .. _sphx_glr_download_examples_02_structural_modeling_04_model_spremberg_building.py:
@@ -492,13 +533,16 @@ you can easily share the link with anyone.
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-      :download:`Download Jupyter notebook: 04_model_spremberg_building.ipynb <04_model_spremberg_building.ipynb>`
+
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: 04_model_spremberg_building.py <04_model_spremberg_building.py>`
+
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
+
+      :download:`Download Jupyter notebook: 04_model_spremberg_building.ipynb <04_model_spremberg_building.ipynb>`
 
 
 .. only:: html

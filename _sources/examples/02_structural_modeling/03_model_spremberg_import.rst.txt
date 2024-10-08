@@ -50,6 +50,585 @@ sphinx_gallery_thumbnail_number = -1
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.1.1 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/02_structural_modeling/03_model_spremberg_import.py", line 17, in <module>
+        from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
+      File "/home/leguark/subsurface/subsurface/__init__.py", line 1, in <module>
+        import subsurface.modules.reader
+      File "/home/leguark/subsurface/subsurface/modules/reader/__init__.py", line 5, in <module>
+        from .topography.topo_core import read_structured_topography, read_unstructured_topography
+      File "/home/leguark/subsurface/subsurface/modules/reader/topography/topo_core.py", line 5, in <module>
+        from ....core.structs.structured_elements.structured_grid import StructuredGrid
+      File "/home/leguark/subsurface/subsurface/core/__init__.py", line 1, in <module>
+        from . import geological_formats
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/__init__.py", line 1, in <module>
+        from .boreholes.boreholes import BoreholeSet, Collars, Survey
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/boreholes.py", line 6, in <module>
+        from ._combine_trajectories import create_combined_trajectory, MergeOptions
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/_combine_trajectories.py", line 5, in <module>
+        from .collars import Collars
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/collars.py", line 4, in <module>
+        from ...structs.base_structures import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/__init__.py", line 1, in <module>
+        from .base_structures import StructuredData, UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/__init__.py", line 1, in <module>
+        from .unstructured_data import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/unstructured_data.py", line 6, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 56, in <module>
+        from xarray.coding.cftimeindex import CFTimeIndex, _parse_iso8601_with_reso
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftimeindex.py", line 54, in <module>
+        from xarray.coding.times import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/times.py", line 14, in <module>
+        from xarray.coding.variables import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/variables.py", line 13, in <module>
+        from xarray.core import dtypes, duck_array_ops, indexing
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/indexing.py", line 20, in <module>
+        from xarray.core.types import T_Xarray
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/types.py", line 106, in <module>
+        from cftime import datetime as CFTimeDatetime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.1.1 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/02_structural_modeling/03_model_spremberg_import.py", line 17, in <module>
+        from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
+      File "/home/leguark/subsurface/subsurface/__init__.py", line 1, in <module>
+        import subsurface.modules.reader
+      File "/home/leguark/subsurface/subsurface/modules/reader/__init__.py", line 5, in <module>
+        from .topography.topo_core import read_structured_topography, read_unstructured_topography
+      File "/home/leguark/subsurface/subsurface/modules/reader/topography/topo_core.py", line 5, in <module>
+        from ....core.structs.structured_elements.structured_grid import StructuredGrid
+      File "/home/leguark/subsurface/subsurface/core/__init__.py", line 1, in <module>
+        from . import geological_formats
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/__init__.py", line 1, in <module>
+        from .boreholes.boreholes import BoreholeSet, Collars, Survey
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/boreholes.py", line 6, in <module>
+        from ._combine_trajectories import create_combined_trajectory, MergeOptions
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/_combine_trajectories.py", line 5, in <module>
+        from .collars import Collars
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/collars.py", line 4, in <module>
+        from ...structs.base_structures import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/__init__.py", line 1, in <module>
+        from .base_structures import StructuredData, UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/__init__.py", line 1, in <module>
+        from .unstructured_data import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/unstructured_data.py", line 6, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 56, in <module>
+        from xarray.coding.cftimeindex import CFTimeIndex, _parse_iso8601_with_reso
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftimeindex.py", line 54, in <module>
+        from xarray.coding.times import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/times.py", line 14, in <module>
+        from xarray.coding.variables import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/variables.py", line 14, in <module>
+        from xarray.core.variable import Variable
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/variable.py", line 20, in <module>
+        from xarray.core import common, dtypes, duck_array_ops, indexing, nputils, ops, utils
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/common.py", line 28, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.1.1 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/02_structural_modeling/03_model_spremberg_import.py", line 17, in <module>
+        from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
+      File "/home/leguark/subsurface/subsurface/__init__.py", line 1, in <module>
+        import subsurface.modules.reader
+      File "/home/leguark/subsurface/subsurface/modules/reader/__init__.py", line 5, in <module>
+        from .topography.topo_core import read_structured_topography, read_unstructured_topography
+      File "/home/leguark/subsurface/subsurface/modules/reader/topography/topo_core.py", line 5, in <module>
+        from ....core.structs.structured_elements.structured_grid import StructuredGrid
+      File "/home/leguark/subsurface/subsurface/core/__init__.py", line 1, in <module>
+        from . import geological_formats
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/__init__.py", line 1, in <module>
+        from .boreholes.boreholes import BoreholeSet, Collars, Survey
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/boreholes.py", line 6, in <module>
+        from ._combine_trajectories import create_combined_trajectory, MergeOptions
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/_combine_trajectories.py", line 5, in <module>
+        from .collars import Collars
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/collars.py", line 4, in <module>
+        from ...structs.base_structures import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/__init__.py", line 1, in <module>
+        from .base_structures import StructuredData, UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/__init__.py", line 1, in <module>
+        from .unstructured_data import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/unstructured_data.py", line 6, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 56, in <module>
+        from xarray.coding.cftimeindex import CFTimeIndex, _parse_iso8601_with_reso
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftimeindex.py", line 54, in <module>
+        from xarray.coding.times import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/times.py", line 35, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.1.1 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/02_structural_modeling/03_model_spremberg_import.py", line 17, in <module>
+        from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
+      File "/home/leguark/subsurface/subsurface/__init__.py", line 1, in <module>
+        import subsurface.modules.reader
+      File "/home/leguark/subsurface/subsurface/modules/reader/__init__.py", line 5, in <module>
+        from .topography.topo_core import read_structured_topography, read_unstructured_topography
+      File "/home/leguark/subsurface/subsurface/modules/reader/topography/topo_core.py", line 5, in <module>
+        from ....core.structs.structured_elements.structured_grid import StructuredGrid
+      File "/home/leguark/subsurface/subsurface/core/__init__.py", line 1, in <module>
+        from . import geological_formats
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/__init__.py", line 1, in <module>
+        from .boreholes.boreholes import BoreholeSet, Collars, Survey
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/boreholes.py", line 6, in <module>
+        from ._combine_trajectories import create_combined_trajectory, MergeOptions
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/_combine_trajectories.py", line 5, in <module>
+        from .collars import Collars
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/collars.py", line 4, in <module>
+        from ...structs.base_structures import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/__init__.py", line 1, in <module>
+        from .base_structures import StructuredData, UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/__init__.py", line 1, in <module>
+        from .unstructured_data import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/unstructured_data.py", line 6, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 56, in <module>
+        from xarray.coding.cftimeindex import CFTimeIndex, _parse_iso8601_with_reso
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftimeindex.py", line 64, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.1.1 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/02_structural_modeling/03_model_spremberg_import.py", line 17, in <module>
+        from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
+      File "/home/leguark/subsurface/subsurface/__init__.py", line 1, in <module>
+        import subsurface.modules.reader
+      File "/home/leguark/subsurface/subsurface/modules/reader/__init__.py", line 5, in <module>
+        from .topography.topo_core import read_structured_topography, read_unstructured_topography
+      File "/home/leguark/subsurface/subsurface/modules/reader/topography/topo_core.py", line 5, in <module>
+        from ....core.structs.structured_elements.structured_grid import StructuredGrid
+      File "/home/leguark/subsurface/subsurface/core/__init__.py", line 1, in <module>
+        from . import geological_formats
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/__init__.py", line 1, in <module>
+        from .boreholes.boreholes import BoreholeSet, Collars, Survey
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/boreholes.py", line 6, in <module>
+        from ._combine_trajectories import create_combined_trajectory, MergeOptions
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/_combine_trajectories.py", line 5, in <module>
+        from .collars import Collars
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/collars.py", line 4, in <module>
+        from ...structs.base_structures import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/__init__.py", line 1, in <module>
+        from .base_structures import StructuredData, UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/__init__.py", line 1, in <module>
+        from .unstructured_data import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/unstructured_data.py", line 6, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 73, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.1.1 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/02_structural_modeling/03_model_spremberg_import.py", line 17, in <module>
+        from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
+      File "/home/leguark/subsurface/subsurface/__init__.py", line 1, in <module>
+        import subsurface.modules.reader
+      File "/home/leguark/subsurface/subsurface/modules/reader/__init__.py", line 5, in <module>
+        from .topography.topo_core import read_structured_topography, read_unstructured_topography
+      File "/home/leguark/subsurface/subsurface/modules/reader/topography/topo_core.py", line 5, in <module>
+        from ....core.structs.structured_elements.structured_grid import StructuredGrid
+      File "/home/leguark/subsurface/subsurface/core/__init__.py", line 1, in <module>
+        from . import geological_formats
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/__init__.py", line 1, in <module>
+        from .boreholes.boreholes import BoreholeSet, Collars, Survey
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/boreholes.py", line 6, in <module>
+        from ._combine_trajectories import create_combined_trajectory, MergeOptions
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/_combine_trajectories.py", line 5, in <module>
+        from .collars import Collars
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/collars.py", line 4, in <module>
+        from ...structs.base_structures import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/__init__.py", line 1, in <module>
+        from .base_structures import StructuredData, UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/__init__.py", line 1, in <module>
+        from .unstructured_data import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/unstructured_data.py", line 6, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 20, in <module>
+        from xarray.core.dataarray import DataArray
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/dataarray.py", line 29, in <module>
+        from xarray.coding.calendar_ops import convert_calendar, interp_calendar
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/calendar_ops.py", line 20, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.1.1 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/02_structural_modeling/03_model_spremberg_import.py", line 17, in <module>
+        from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
+      File "/home/leguark/subsurface/subsurface/__init__.py", line 1, in <module>
+        import subsurface.modules.reader
+      File "/home/leguark/subsurface/subsurface/modules/reader/__init__.py", line 5, in <module>
+        from .topography.topo_core import read_structured_topography, read_unstructured_topography
+      File "/home/leguark/subsurface/subsurface/modules/reader/topography/topo_core.py", line 5, in <module>
+        from ....core.structs.structured_elements.structured_grid import StructuredGrid
+      File "/home/leguark/subsurface/subsurface/core/__init__.py", line 1, in <module>
+        from . import geological_formats
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/__init__.py", line 1, in <module>
+        from .boreholes.boreholes import BoreholeSet, Collars, Survey
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/boreholes.py", line 6, in <module>
+        from ._combine_trajectories import create_combined_trajectory, MergeOptions
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/_combine_trajectories.py", line 5, in <module>
+        from .collars import Collars
+      File "/home/leguark/subsurface/subsurface/core/geological_formats/boreholes/collars.py", line 4, in <module>
+        from ...structs.base_structures import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/__init__.py", line 1, in <module>
+        from .base_structures import StructuredData, UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/__init__.py", line 1, in <module>
+        from .unstructured_data import UnstructuredData
+      File "/home/leguark/subsurface/subsurface/core/structs/base_structures/unstructured_data.py", line 6, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 20, in <module>
+        from xarray.core.dataarray import DataArray
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/dataarray.py", line 49, in <module>
+        from xarray.core.dataset import Dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/dataset.py", line 131, in <module>
+        from xarray.plot.accessor import DatasetPlotAccessor
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/plot/__init__.py", line 10, in <module>
+        from xarray.plot.dataarray_plot import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/plot/dataarray_plot.py", line 13, in <module>
+        from xarray.plot.facetgrid import _easy_facetgrid
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/plot/facetgrid.py", line 13, in <module>
+        from xarray.plot.utils import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/plot/utils.py", line 30, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+    Python-dotenv could not parse statement starting at line 13
+    Python-dotenv could not parse statement starting at line 14
+    Python-dotenv could not parse statement starting at line 15
+    Python-dotenv could not parse statement starting at line 16
+
 
 
 
@@ -84,18 +663,24 @@ Initialize the reader for the lithological data. Specify the file path and colum
 
  .. code-block:: none
 
-    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:116: SettingWithCopyWarning: 
+    Python-dotenv could not parse statement starting at line 13
+    Python-dotenv could not parse statement starting at line 14
+    Python-dotenv could not parse statement starting at line 15
+    Python-dotenv could not parse statement starting at line 16
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+      d = reader(
+    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:130: SettingWithCopyWarning: 
     A value is trying to be set on a copy of a slice from a DataFrame.
     Try using .loc[row_indexer,col_indexer] = value instead
 
     See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      lith_df['top'] = -np.abs(lith_df['top'])
-    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:117: SettingWithCopyWarning: 
+      lith_df['top'] = np.abs(lith_df['top'])
+    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:131: SettingWithCopyWarning: 
     A value is trying to be set on a copy of a slice from a DataFrame.
     Try using .loc[row_indexer,col_indexer] = value instead
 
     See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
-      lith_df['base'] = -np.abs(lith_df['base'])
+      lith_df['base'] = np.abs(lith_df['base'])
 
 
 
@@ -128,8 +713,8 @@ Initialize the reader for the survey data. Specify the file path and column mapp
 
  .. code-block:: none
 
-    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:80: UserWarning: inc and/or azi columns are not present in the file. The boreholes will be straight.
-      warnings.warn(
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+      d = reader(
 
 
 
@@ -138,11 +723,14 @@ Initialize the reader for the survey data. Specify the file path and column mapp
 
 Create a Survey object from the DataFrame and update it with lithological data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 57-60
+.. GENERATED FROM PYTHON SOURCE LINES 57-63
 
 .. code-block:: Python
 
-    survey: Survey = Survey.from_df(df)
+    survey: Survey = Survey.from_df(
+        survey_df=df,
+        attr_df=None
+    )
     survey.update_survey_with_lith(lith)
 
 
@@ -153,19 +741,34 @@ Create a Survey object from the DataFrame and update it with lithological data.
 
  .. code-block:: none
 
-    Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
-    Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
-    Well ID 6E_58 not found in survey trajectory. Skipping lithology assignment.
+    Well '13E_56' does not exist in the attributes DataFrame.
+    Well '4_56' does not exist in the attributes DataFrame.
+    Well '64_59' does not exist in the attributes DataFrame.
+    Well 'DOE104_63' does not exist in the attributes DataFrame.
+    Well 'H3_71' does not exist in the attributes DataFrame.
+    Well 'H4_71' does not exist in the attributes DataFrame.
+    Well 'H5_71' does not exist in the attributes DataFrame.
+    Well 'H6_71' does not exist in the attributes DataFrame.
+    Well 'H7_71' does not exist in the attributes DataFrame.
+    Well 'MUSK1_00' does not exist in the attributes DataFrame.
+    Well 'MUSK1_62' does not exist in the attributes DataFrame.
+    Well 'N1_71' does not exist in the attributes DataFrame.
+    Well 'N10_71' does not exist in the attributes DataFrame.
+    Well 'N11_71' does not exist in the attributes DataFrame.
+    Well 'N2_71' does not exist in the attributes DataFrame.
+    Well 'N3_71' does not exist in the attributes DataFrame.
+    Well 'N8_71' does not exist in the attributes DataFrame.
+    Well 'N9_71' does not exist in the attributes DataFrame.
     ('cell',) are not coordinates with an index xarray dataset must include 'cell' key (KeyError) or xarray 'cell' has no index (ValueError).
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 61-62
+.. GENERATED FROM PYTHON SOURCE LINES 64-65
 
 Initialize the reader for the collar data. Specify the file path, header, and column mappings.
 
-.. GENERATED FROM PYTHON SOURCE LINES 62-78
+.. GENERATED FROM PYTHON SOURCE LINES 65-81
 
 .. code-block:: Python
 
@@ -189,14 +792,21 @@ Initialize the reader for the collar data. Specify the file path, header, and co
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+      d = reader(
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 79-80
+
+.. GENERATED FROM PYTHON SOURCE LINES 82-83
 
 Combine the collar and survey data into a BoreholeSet.
 
-.. GENERATED FROM PYTHON SOURCE LINES 80-86
+.. GENERATED FROM PYTHON SOURCE LINES 83-89
 
 .. code-block:: Python
 
@@ -213,11 +823,11 @@ Combine the collar and survey data into a BoreholeSet.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 87-88
+.. GENERATED FROM PYTHON SOURCE LINES 90-91
 
 Visualize the borehole trajectories and collars using PyVista.
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-119
+.. GENERATED FROM PYTHON SOURCE LINES 91-120
 
 .. code-block:: Python
 
@@ -227,9 +837,7 @@ Visualize the borehole trajectories and collars using PyVista.
         radius=10
     )
 
-    collars = to_pyvista_points(
-        borehole_set.collars.collar_loc,
-    )
+    collars = to_pyvista_points(borehole_set.collars.collar_loc)
 
     # Initialize the PyVista plotter.
     pyvista_plotter = init_plotter()
@@ -264,11 +872,11 @@ Visualize the borehole trajectories and collars using PyVista.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-121
+.. GENERATED FROM PYTHON SOURCE LINES 121-122
 
 Create structural elements from the borehole set for different lithological units.
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-147
+.. GENERATED FROM PYTHON SOURCE LINES 122-148
 
 .. code-block:: Python
 
@@ -305,11 +913,11 @@ Create structural elements from the borehole set for different lithological unit
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 148-149
+.. GENERATED FROM PYTHON SOURCE LINES 149-150
 
 Group the structural elements into a StructuralGroup and create a StructuralFrame.
 
-.. GENERATED FROM PYTHON SOURCE LINES 149-159
+.. GENERATED FROM PYTHON SOURCE LINES 150-160
 
 .. code-block:: Python
 
@@ -330,11 +938,11 @@ Group the structural elements into a StructuralGroup and create a StructuralFram
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 160-161
+.. GENERATED FROM PYTHON SOURCE LINES 161-162
 
 Determine the extent of the geological model from the surface points coordinates.
 
-.. GENERATED FROM PYTHON SOURCE LINES 161-164
+.. GENERATED FROM PYTHON SOURCE LINES 162-165
 
 .. code-block:: Python
 
@@ -348,11 +956,11 @@ Determine the extent of the geological model from the surface points coordinates
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 165-166
+.. GENERATED FROM PYTHON SOURCE LINES 166-167
 
 Create a GeoModel with the specified extent, grid resolution, and interpolation options.
 
-.. GENERATED FROM PYTHON SOURCE LINES 166-181
+.. GENERATED FROM PYTHON SOURCE LINES 167-182
 
 .. code-block:: Python
 
@@ -378,11 +986,11 @@ Create a GeoModel with the specified extent, grid resolution, and interpolation 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 182-183
+.. GENERATED FROM PYTHON SOURCE LINES 183-184
 
 Visualize the 3D geological model using GemPy's plot_3d function.
 
-.. GENERATED FROM PYTHON SOURCE LINES 183-193
+.. GENERATED FROM PYTHON SOURCE LINES 184-194
 
 .. code-block:: Python
 
@@ -413,11 +1021,11 @@ Visualize the 3D geological model using GemPy's plot_3d function.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 194-195
+.. GENERATED FROM PYTHON SOURCE LINES 195-196
 
 Combine all visual elements and display them together.
 
-.. GENERATED FROM PYTHON SOURCE LINES 195-223
+.. GENERATED FROM PYTHON SOURCE LINES 196-224
 
 .. code-block:: Python
 
@@ -464,7 +1072,7 @@ Combine all visual elements and display them together.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 2.784 seconds)
+   **Total running time of the script:** (0 minutes 1.881 seconds)
 
 
 .. _sphx_glr_download_examples_02_structural_modeling_03_model_spremberg_import.py:

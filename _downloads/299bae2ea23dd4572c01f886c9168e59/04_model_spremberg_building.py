@@ -4,9 +4,8 @@ Construct Spremberg: Building initial model
 
 This example demonstrates...
 
+# sphinx_gallery_thumbnail_number = -1
 """
-
-# sphinx_gallery_thumbnail_number = -2
 import numpy as np
 
 import gempy as gp
@@ -95,10 +94,10 @@ _ = gpv.plot_3d(
 # * Ignore curvature for now
 geo_model.interpolation_options.kernel_options.range = 3
 geo_model.interpolation_options.compute_scalar_gradient = False
-geo_model.interpolation_options.evaluation_options.curvature_threshold = 0.4
+geo_model.interpolation_options.evaluation_options.octree_curvature_threshold = 0.4
 geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 5
 
-geo_model.interpolation_options.evaluation_options.error_threshold = 1
+geo_model.interpolation_options.evaluation_options.octree_error_threshold = 1
 geo_model.interpolation_options.evaluation_options.verbose = True
 
 
@@ -178,7 +177,7 @@ gempy_plot.p.show()
 # you can easily share the link with anyone.
 
 # # %%
-if True:
+if False:
     link = gpv.plot_to_liquid_earth(
         geo_model=geo_model,
         space_name="Spremberg",

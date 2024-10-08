@@ -54,7 +54,10 @@ df = read_survey(reader)
 
 # %% [markdown]
 # Create a Survey object from the DataFrame and update it with lithological data.
-survey: Survey = Survey.from_df(df)
+survey: Survey = Survey.from_df(
+    survey_df=df,
+    attr_df=None
+)
 survey.update_survey_with_lith(lith)
 
 # %% [markdown]
@@ -91,9 +94,7 @@ well_mesh = to_pyvista_line(
     radius=10
 )
 
-collars = to_pyvista_points(
-    borehole_set.collars.collar_loc,
-)
+collars = to_pyvista_points(borehole_set.collars.collar_loc)
 
 # Initialize the PyVista plotter.
 pyvista_plotter = init_plotter()
