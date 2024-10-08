@@ -53,7 +53,6 @@ extensions = [
         "sphinx_design",
         'sphinx_automodapi.automodapi',
         'sphinx_automodapi.smart_resolver',
-        'plotly.io.kaleido'  # Alternatively, use this for static image generation
 ]
 
 linkcheck_retries = 3

@@ -519,7 +519,7 @@ df[df.Res > 14000].sort_values(by='From')
 
 # %%
 # Stratigraphic Data Observations
-# ------------------------------
+# ----------------------_--------
 # Only the stratigraphic data has observations of pyrite in hole TC-1319-005, but at shallower depths, around 146 & 193 m.
 
 # %%
