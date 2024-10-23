@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file:////wsl.localhost/Ubuntu-22.04/home/leguark/gempy_engine/.idea/gempy_engine.iml" filepath="//wsl.localhost/Ubuntu-22.04/home/leguark/gempy_engine/.idea/gempy_engine.iml" />
+      <module fileurl="file:////wsl.localhost/Ubuntu-22.04/home/leguark/gempy_viewer/.idea/gempy_viewer.iml" filepath="//wsl.localhost/Ubuntu-22.04/home/leguark/gempy_viewer/.idea/gempy_viewer.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/vector-geology.iml" filepath="$PROJECT_DIR$/.idea/vector-geology.iml" />
     </modules>
   </component>

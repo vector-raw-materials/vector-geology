@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="$PROJECT_DIR$/../subsurface" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="" vcs="Git" />
+    <mapping directory="//wsl.localhost/Ubuntu-22.04/home/leguark/gempy_engine" vcs="Git" />
+    <mapping directory="//wsl.localhost/Ubuntu-22.04/home/leguark/gempy_viewer" vcs="Git" />
   </component>
 </project>

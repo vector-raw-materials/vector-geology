@@ -1,25 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
-    <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
-      <excludeFolder url="file://$MODULE_DIR$/docs/build" />
-      <excludeFolder url="file://$MODULE_DIR$/docs/source/examples" />
-      <excludeFolder url="file://$MODULE_DIR$/docs/source/gen_modules" />
-      <excludeFolder url="file://$MODULE_DIR$/vector_geology/Packages" />
-      <excludeFolder url="file://$MODULE_DIR$/venv" />
-    </content>
-    <orderEntry type="jdk" jdkName="Python 3.10.12 WSL (Ubuntu-22.04): (/home/leguark/.virtualenvs/gempy_dependencies/bin/python)" jdkType="Python SDK" />
+    <content url="file://$MODULE_DIR$" />
+    <orderEntry type="jdk" jdkName="Python 3.10.12 WSL (Ubuntu-22.04): (/home/leguark/.virtualenvs/gempy_2024.2/bin/python)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="gempy_engine" />
-    <orderEntry type="module" module-name="gempy_plugins" />
-    <orderEntry type="module" module-name="gempy" />
-    <orderEntry type="module" module-name="gempy_probability" />
     <orderEntry type="module" module-name="gempy_viewer" />
-    <orderEntry type="module" module-name="subsurface" />
   </component>
   <component name="PyDocumentationSettings">
-    <option name="renderExternalDocumentation" value="true" />
+    <option name="format" value="PLAIN" />
+    <option name="myDocStringFormat" value="Plain" />
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="py.test" />
