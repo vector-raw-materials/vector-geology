@@ -257,3 +257,42 @@ cython_debug/
 /docs/source/errors.txt
 /vector_geology/Packages/
 *.Identifier
+/.idea_/inspectionProfiles/profiles_settings.xml
+/.idea_/inspectionProfiles/Project_Default.xml
+/.idea_/.gitignore
+/.idea_/material_theme_project_new.xml
+/.idea_/misc.xml
+/.idea_/modules.xml
+/.idea_/other.xml
+/.idea_/vcs.xml
+/.idea_/vector-geology.iml
+/docs/source/sg_execution_times.rst
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/001-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/002-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/003-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/004-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/005-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/006-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/007-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/008-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/009-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/010-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/011-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/012-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Model Iterations/013-Ireland_FTG-2024-06-12-11-31.npy
+/examples/03_forward_engines/Ireland_FTG/Output/1_Ireland_FTG_Den_X_1.62E+05.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/1_Ireland_FTG_Den_Y_1.46E+05.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/1_Ireland_FTG_Den_Z_-2.12E+02.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/1_Ireland_FTG_QGM_X_1.62E+05.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/1_Ireland_FTG_QGM_Y_1.46E+05.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/1_Ireland_FTG_QGM_Z_-2.12E+02.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/Ireland_FTG_FTG.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/Ireland_FTG_Init_GMM.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/Ireland_FTG_Learned_GMM.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/Ireland_FTG_Topo.pdf
+/examples/03_forward_engines/Ireland_FTG/Output/Ireland_FTG_TreeMeshSlice.pdf
+/examples/03_forward_engines/Ireland_FTG-2024-06-12-11-31.txt
+/examples/05_Geo/Output/features.csv
+/examples/05_Geo/Output/gr_form.png
+/examples/05_Geo/Output/vs.png
+/examples/05_Geo/plotly_example.png

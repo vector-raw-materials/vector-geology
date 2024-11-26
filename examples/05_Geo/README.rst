@@ -1,12 +1,11 @@
-GeoSomething Modeling
-======================
+Petrophysical Data Integration and Modeling  
+===========================================  
 
-In the dynamic and often uncertain realm of subsurface exploration, probabilistic modeling emerges as a key tool. This section delves into the application of Bayesian Statistics and probabilistic approaches to address the inherent uncertainties in subsurface data. Here’s what you’ll learn:
+The scarcity and uneven distribution of petrophysical data pose significant challenges in the mining industry, affecting exploration and resource development efforts. This section introduces workflows designed to address these challenges using open-source Python tools for data exploration, integration, and modeling. Through a detailed case study of cores from Collinstown, Ireland, we showcase how these tools enable researchers to work with diverse data types, including legacy datasets and modern petrophysical measurements.  
 
-- **Embracing Uncertainty**: Gain an understanding of how to quantify and incorporate uncertainty in geological models. We focus on aleatoric uncertainty, which represents the inherent variability in subsurface data.
+Here’s what you’ll learn:  
+- **Exploratory Data Analysis (EDA)**: Gain insights into the process of integrating and analyzing petrophysical data alongside related datasets such as geochemistry, stratigraphy, and geophysical surveys.  
+- **Data Gap Filling**: Learn techniques for addressing missing or incomplete data using standard and machine-learning-based approaches.  
+- **Practical Application**: Explore how these workflows are applied to real-world data to enhance understanding of geological anomalies and support subsurface modeling efforts.  
 
-- **Bayesian Methods with Pyro**: Discover how to apply Bayesian statistical methods using Pyro, a powerful probabilistic programming framework. These tutorials will guide you through the process of encoding uncertainty in your models, offering a robust way to handle complex geological data.
-
-- **Integrating Structural Uncertainty**: Learn to integrate structural uncertainty into your models using GemPy. This approach enhances the realism and reliability of your geological interpretations.
-
-- **Probabilistic Inversions**: Explore how geophysical data can be used as observational constraints in probabilistic inversions. This technique allows for a more comprehensive understanding of subsurface structures by incorporating both geophysical measurements and geological knowledge.
+By the end of this section, you’ll understand how to leverage these tools to tackle the challenges of sparse and incomplete data in mining, driving more accurate and informed decision-making.

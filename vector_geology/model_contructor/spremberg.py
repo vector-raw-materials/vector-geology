@@ -146,7 +146,7 @@ def _read_spremberg_borehole_set() -> ss.core.geological_formats.BoreholeSet:
     )
     lith: pd.DataFrame = read_lith(reader)
     reader: GenericReaderFilesHelper = GenericReaderFilesHelper(
-        file_or_buffer=os.getenv("PATH_TO_SPREMBERG_SURVEY"),
+        file_or_buffer= os.getenv("PATH_TO_SPREMBERG_SURVEY"),
         columns_map={
                 'depth'  : 'md',
                 'dip'    : 'dip',
@@ -165,7 +165,7 @@ def _read_spremberg_borehole_set() -> ss.core.geological_formats.BoreholeSet:
                 "X_GK5_incl_inserted": "x",
                 "Y__incl_inserted"   : "y",
                 "Z_GK"               : "z"
-        }
+        } 
     )
 
     df_collar = read_collar(reader_collar)
