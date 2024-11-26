@@ -1,3 +1,14 @@
+"""
+Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (1/3)
+===================================================================================
+**Exploratory Data Analysis and Data Integration**
+
+Barcelona 25/09/24
+GEO3BCN
+Manuel David Soto, Juan Alcalde, Adrià Hernàndez-Pineda, Ramón Carbonel
+
+"""
+
 #%% md
 # <img src="images\logos.png" style="width:1500px">
 # 
@@ -93,11 +104,6 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 #%% md
 # ## Settings
 #%%
-# Activation of qt GUI
-
-# %matplotlib qt
-%matplotlib inline
-# %matplotlib notebook
 
 # Seed of random process
 seed = 123

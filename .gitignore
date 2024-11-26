@@ -292,7 +292,7 @@ cython_debug/
 /examples/03_forward_engines/Ireland_FTG/Output/Ireland_FTG_Topo.pdf
 /examples/03_forward_engines/Ireland_FTG/Output/Ireland_FTG_TreeMeshSlice.pdf
 /examples/03_forward_engines/Ireland_FTG-2024-06-12-11-31.txt
-/examples/05_Geo/Output/features.csv
-/examples/05_Geo/Output/gr_form.png
-/examples/05_Geo/Output/vs.png
-/examples/05_Geo/plotly_example.png
+/examples/05_petrophysics/Output/features.csv
+/examples/05_petrophysics/Output/gr_form.png
+/examples/05_petrophysics/Output/vs.png
+/examples/05_petrophysics/plotly_example.png
