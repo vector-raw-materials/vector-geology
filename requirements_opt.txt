@@ -2,6 +2,11 @@ git+https://github.com/terranigma-solutions/subsurface.git#egg=subsurface
 omfvista
 pyvista
 
-
 simpeg
 discretize
+
+# petrophysics
+tabulate
+seaborn
+scikit-learn
+xgboost
