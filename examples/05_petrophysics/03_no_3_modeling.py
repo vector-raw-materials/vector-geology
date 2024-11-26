@@ -1,3 +1,15 @@
+"""
+Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (1/3)
+===================================================================================
+**Exploratory Data Analysis and Data Integration**
+
+Barcelona 25/09/24
+GEO3BCN
+Manuel David Soto, Juan Alcalde, Adrià Hernàndez-Pineda, Ramón Carbonel
+
+"""
+import dotenv
+import os
 #%% md
 # <img src="images\logos.png" style="width:1500px">
 # 
@@ -55,9 +67,7 @@ import sys
 import warnings
 
 #UDL
-sys.path.insert(1, 'UDL/')
-import basic_stat
-import geo
+from vector_geology import basic_stat, geo
 
 # PEL- Basic
 import numpy as np
@@ -91,11 +101,6 @@ from sklearn.metrics import make_scorer, mean_absolute_error, mean_squared_error
 # ## Settings
 #%%
 # Activation of qt GUI
-
-# %matplotlib qt
-%matplotlib inline
-# %matplotlib notebook
-
 # Seed of random process
 seed = 123
 
@@ -138,8 +143,9 @@ for i in range(len(features3_8) - 1):
 print('Mean step: {:.2f}'.format(np.mean(steps)))
 #%%
 # Legacy GR data of different holes
-
-gr = pd.read_csv('Input/collinstown_Gamma.csv')
+dotenv.load_dotenv()
+base_path = os.getenv("PATH_TO_COLLINSTOWN_PETRO")
+gr = pd.read_csv(f'{base_path}/collinstown_Gamma.csv')
 gr.head()
 #%%
 # Different holes in the legacy GR dataframe
@@ -522,7 +528,7 @@ plt.tight_layout;
 # Load of tops from borehole TC-3660-008
 
 # Leer el archivo JSON
-with open('Output/tops_list_8.json', 'r') as json_file:
+with open(f'{base_path}/tops_list_8.json', 'r') as json_file:
     tops_list_8 = json.load(json_file)
 
 tops_list_8

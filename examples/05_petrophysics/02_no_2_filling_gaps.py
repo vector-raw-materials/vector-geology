@@ -66,7 +66,6 @@ import sys
 import warnings
 
 # UDL
-sys.path.insert(1, 'UDL/')
 from vector_geology import basic_stat, geo
 
 # PEL- Basic
