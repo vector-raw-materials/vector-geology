@@ -26,11 +26,11 @@ After the EDA and integration of the petrophysical dataset of Collinstown (noteb
 As with the previous notebook, these tasks are performed with open-source Python tools that are easily accessible by any researcher through a Python installation connected to the Internet.
 """
 
+# %%
 # Variables
 # ---------
-
 # The dataset used in this notebook is the 'features' dataset from the previous notebook (1/3). It contains the modelable petrophysical features with their respective anomalies. 'Hole' (text object) and 'Len' (float) variables are for reference, 'Form' (text object) is a categorical variable representing the major formations:
-
+#
 # +------+------------------------------------------------+--------+
 # | Name | Explanation                                    | Unit   |
 # +======+================================================+========+
@@ -59,6 +59,7 @@ As with the previous notebook, these tasks are performed with open-source Python
 # Libraries
 # --------
 # The following are the Python libraries used along this notebook. PSL are Python Standard Libraries, UDL are User Defined Libraries, and PEL are Python External Libraries:
+
 # %%
 # PLS
 import sys
@@ -131,18 +132,25 @@ features.columns
 # -----------------
 # The plots below show the anomalous values of the four affected variables. Then, along the section, we will register the position of the anomalies and then delete them, according to the findings of the previous notebook (1/3):
 # 
-# </br>
-# 
-#  | Features | Deliting Anomalies |
-#  | -------- | ------------------ |
-#  | Den      | Values above 4 g/cm$^3$ are related to bad measurements in core samples longer than 11.2 cm.|
-#  | Vp       | Values below 3000 m/s are related to fractures in the core samples. |
-#  | Vs       | Values less than 1000 m/s are also related to core fractures. |
-#  | Mag      | The anomaly of 93.9 is above the range of the measuring equipment |
-#  | Ip       | We see no reasons to discard outliers |
-#  | Res      | We see no reasons to discard outliers |
-# 
-# </br>
+# +------+--------------------------------------------------------------+
+# | Feat.| Deliting Anomalies                                           |
+# +======+==============================================================+
+# | Den  | Values above 4 g/cm³ are related to bad measurements in core |
+# |      | samples longer than 11.2 cm.                                 |
+# +------+--------------------------------------------------------------+
+# | Vp   | Values below 3000 m/s are related to fractures in the core   |
+# |      | samples.                                                     |
+# +------+--------------------------------------------------------------+
+# | Vs   | Values less than 1000 m/s are also related to core fractures.|
+# +------+--------------------------------------------------------------+
+# | Mag  | The anomaly of 93.9 is above the range of the measuring      |
+# |      | equipment.                                                   |
+# +------+--------------------------------------------------------------+
+# | Ip   | We see no reasons to discard outliers.                       |
+# +------+--------------------------------------------------------------+
+# | Res  | We see no reasons to discard outliers.                       |
+# +------+--------------------------------------------------------------+
+
 # %%
 #  Bad data areas in Vp, Vs, Mag vs. Den
 
