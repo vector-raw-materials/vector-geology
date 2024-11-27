@@ -108,6 +108,8 @@ sphinx_gallery_conf = {
         "examples_dirs"          : [
                 "../../examples/",
         ],
+        # path to ignore like ../../examples/04_probabilistic_modeling
+        "ignore_pattern"         : r"../../examples/04_probabilistic_modeling",
         # path where to save gallery generated examples
         "gallery_dirs"           : [
                 "examples",

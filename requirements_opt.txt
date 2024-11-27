@@ -10,3 +10,6 @@ tabulate
 seaborn
 scikit-learn
 xgboost
+
+# geophysics
+git+https://github.com/hifexplo/hylite.git

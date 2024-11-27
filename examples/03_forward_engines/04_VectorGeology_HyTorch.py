@@ -10,8 +10,8 @@ import hylite
 from hylite import io
 from scipy.spatial.distance import cosine
 from sklearn.cluster import HDBSCAN 
-import hycore
-import hklearn
+# import hycore
+# import hklearn
 import lasio
 import matplotlib.pyplot as plt
 import matplotlib as mpl
