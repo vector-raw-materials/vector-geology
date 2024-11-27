@@ -1,61 +1,49 @@
 """
-Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (1/3)
-===================================================================================
-**Exploratory Data Analysis and Data Integration**
+Modeling and Propagation of Petrophysical Data for Mining Exploration (2/3)
+==========================================================================
+**Cleaning and Filling the Gaps**
 
 Barcelona 25/09/24
 GEO3BCN
 Manuel David Soto, Juan Alcalde, Adrià Hernàndez-Pineda, Ramón Carbonel
+Introduction
+-------------
 
+The dispersion and scarcity of petrophysical data are well-known challenges in the mining sector. These issues are primarily driven by economic factors, but also by geological factors such as sedimentary cover, weathering, erosion, or the depth of targets, geotechnical issues (e.g., slope or borehole stability), and even technical limitations or availability that have been resolved in other industries (for instance, sonic logs were not previously acquired due to a lack of interest in velocity field data).
+
+To address the challenge of sparse and incomplete petrophysical data in the mining sector, we have developed three Jupyter notebooks that tackle these issues through a suite of open-source Python tools. These tools support researchers in the initial exploration, visualization, and integration of data from diverse sources, filling gaps caused by technical limitations and ultimately enabling the complete modeling of missing properties (through standard and more advanced ML-based models). We applied these tools to both recently acquired and legacy petrophysical data of two cores northwest of Collinstown (County Westmeath, Province of Leinster), Ireland, located 26 km west-northwest of the Navan mine. However, these tools are adaptable and applicable to mining data from any location.
+
+After the EDA and integration of the petrophysical dataset of Collinstown (notebook 1/3), this second notebook gathers different tasks that can be grouped into what is called, in data science, data mining. These tasks are:
+
+* Record the positions of the original NaNs.
+* Record the positions and the values of the anomalies to be deleted.
+* Delete the anomalies.
+* Fill out all NaNs, both original and those resulting from deleting the anomalies, using different means (imputations, empirical formulas, simple ML models).
+* Compare the effectiveness of the different filling gap methods.
+* Use the better option to fill in the gaps and deliver the corrected petrophysical data for further investigation.
+
+As with the previous notebook, these tasks are performed with open-source Python tools that are easily accessible by any researcher through a Python installation connected to the Internet.
 """
 
-# %% md
-# <img src="images\logos.png" style="width:1500px">
-# 
-# Barcelona 25/09/24 </br>
-# GEO3BCN </br>
-# Manuel David Soto, Juan Alcalde, Adrià Hernàndez-Pineda, Ramón Carbonel.
-# </br>
-# <h1><center> Modeling and Propagation of Petrophysical Data for Mining Exploration </h1></center>
-# <h1><center> 2/3 - Cleaning and Filling the Gaps</h1></center>
-# %% md
-# ## Introduction
-# 
-# The dispersion and scarcity of petrophysical data are well-known challenges in the mining sector. These issues are primarily driven by economic factors, but also by geological (such as sedimentary cover, weathering, erosion, or the depth of targets), geotechnical (e.g., slope or borehole stability), and even technical limitations or availability that have been resolved in other industries (for instance, sonic logs were not previously acquired due to a lack of interest in velocity field data).
-# 
-# To address the challenge of sparse and incomplete petrophysical data in the mining sector we have developed three Jupyter notebooks that tackle these issues through a suite of open-source Python tools. These tools support researchers in the initial exploration, visualization, and integration of data from diverse sources, filling gaps caused by technical limitations and ultimately enabling the complete modeling of missing properties (through standard and more advanced ML-based models). We applied these tools to both, recently acquired and legacy petrophysical data of two cores northwest of Collinstown (County Westmeath, Province of Leinster), Ireland, located 26 km west-northwest of the Navan mine. However, these tools are adaptable and applicable to mining data from any location.
-# 
-# After the EDA and integration of the petrophysical dataset of Collinstown (notebook 1/3), this second notebook gathers different tasks that can be grouped into what is called, in data science, data mining. These tasks are:
-# 
-# * Record the positions of the original NaNs.
-# * Record the positions and the values of the anomalies to be deleted.
-# * Delete the anomalies.
-# * Fill out all NaNs, both original and those resulting from deleting the anomalies, using different means (imputations, empirical formulas, simple ML models).
-# * Compare the effectiveness of the different filling gap methods.
-# * Use the better option to fill in the gaps and deliver the corrected petrophysical data for further investigation.
-# 
-# As with the previous notebook, these tasks are performed with open-source Python tools that are easily accessible by any researcher through a Python installation connected to the Internet.
-# %% md
-# ## Variables
-# 
-# The dataset used in this notebook is the 'features' dataset from the previous notebook (1/3). It contains the modelable petrophysical features with their respective anomalies. Hole (text object) and Len (float) variables are for reference, Form (text object) is a categorical variable representing the Major Formations:
-# 
-# </br>
-# 
-# | Name | Explanation | Unit |
-# | --- | --- | --- |
-# | Hole | Hole name | - |
-# | From | Top of the sample | m |
-# | Len | Lenght of the core sample | cm |
-# | Den | Density | g/cm3 
-# | Vp | Compressional velocity| m/s |
-# | Vs | Shear velocity | m/s |
-# | Mag | Magnetic susceptibility | - |
-# | Ip | Chargeability or induced polarization | mv/V |
-# | Res | Resistivity | ohm·m |
-# | Form | Major formations or zone along the hole |
-# 
-# </br>
+# Variables
+# ---------
+
+# The dataset used in this notebook is the 'features' dataset from the previous notebook (1/3). It contains the modelable petrophysical features with their respective anomalies. 'Hole' (text object) and 'Len' (float) variables are for reference, 'Form' (text object) is a categorical variable representing the major formations:
+
+# | Name | Explanation                                    | Unit   |
+# |------|------------------------------------------------|--------|
+# | Hole | Hole name                                      | -      |
+# | From | Top of the sample                              | m      |
+# | Len  | Length of the core sample                      | cm     |
+# | Den  | Density                                        | g/cm³  |
+# | Vp   | Compressional velocity                         | m/s    |
+# | Vs   | Shear velocity                                 | m/s    |
+# | Mag  | Magnetic susceptibility                        | -      |
+# | Ip   | Chargeability or induced polarization          | mv/V   |
+# | Res  | Resistivity                                    | ohm·m  |
+# | Form | Major formations or zone along the hole        | -      |
+
+
 # %% md
 # ## Libraries
 # 

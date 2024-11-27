@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ~/.virtualenvs/gempy_2024.2/bin/activate
+source ~/.virtualenvs/gempy_dependencies/bin/activate
 
 cd ../docs || exit
 #make clean

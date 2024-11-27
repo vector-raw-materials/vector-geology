@@ -21,8 +21,7 @@ from plotly.subplots import make_subplots
 from scipy.signal import butter, filtfilt
 
 # Custom Libraries (_aux)
-from _aux import basic_stat
-from _aux import geo
+from vector_geology import basic_stat, geo
 
 # sphinx_gallery_thumbnail_number = 19
 # %%
