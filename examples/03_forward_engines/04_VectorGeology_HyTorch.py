@@ -1,34 +1,34 @@
-#%% md
-# # Multiphysics property prediction from hyperspectral drill core data
-# 
-# This notebook uses drill core data to train a model that predicts petrophysical properties from hyperspectral data.
+"""
+Multiphysics property prediction from hyperspectral drill core data
+===================================================================
+This notebook uses drill core data to train a model that predicts petrophysical properties from hyperspectral data.j
+"""
+
 #%%
-import numpy as np
-import pandas as pd
-from scipy.interpolate import CubicSpline as CS
-import hylite
-from hylite import io
-from scipy.spatial.distance import cosine
-from sklearn.cluster import HDBSCAN 
-# import hycore
-# import hklearn
-import lasio
+import dotenv
 import matplotlib.pyplot as plt
-import matplotlib as mpl
-from tqdm import tqdm
-from sklearn.neighbors import KDTree
-import matplotlib.font_manager as font_manager
-import sklearn.cluster as cluster
-from sklearn.model_selection import train_test_split, StratifiedShuffleSplit
+import numpy as np
+import os
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+from sklearn.cluster import HDBSCAN
+from sklearn.model_selection import StratifiedShuffleSplit
+from tqdm import tqdm
+
+import hklearn
+
 #%%
 # We have prepared a Stack object with the hyperspectral and petrophysical data integrated into it
 # Load the Stack
-S = hklearn.Stack.load("./Training_Stack")
+dotenv.load_dotenv()
+base_path = os.getenv("PATH_TO_HyTorch")
+
+S = hklearn.Stack.load(f"{base_path}/Training_Stack")
+
 #%%
 # Get the spectra and properties (hklearn filters out the NaNs)
 X = S.X() # Spectra
 y = S.y() # Properties and their standard deviations
+
 #%%
 # Visualize a single spectrum
 plt.figure(figsize=(4, 3))
@@ -39,33 +39,40 @@ plt.xlabel(r"Wavelength $(\mu m)$")
 plt.legend(["VNIR-SWIR", "MWIR", "LWIR"])
 plt.tight_layout()
 plt.show()
+
 #%% md
-# ### Step 1: Filtering
-# 
+# Step 1: Filtering
+# -----------------
 # We do two steps of filtering:
 # 1. We use the standard deviations to eliminate points with lithological contacts.
 # 2. We use HDBSCAN to generate clusters based on the PCA of the spectra, which eliminates 'noisy' spectra that aren't spectrally abundant
+
 #%%
 # High variance filtering
 # Remove the high variance points (Using the rolling standard deviations)
 keep_idx = np.logical_and(S.y()[:, 4] < 5, np.logical_and(S.y()[:, 5] < 5e-2, S.y()[:, -1] < 1000))
 X = X[keep_idx]
 y = y[keep_idx, :4]
+
 #%%
 # Clustering
 # Fit a PCA
 from hylite.filter import PCA
-pca, loadings = PCA(X, bands=30)
+pca, loadings, _ = PCA(X, bands=30)
 pca.data = pca.data/np.max(np.abs(pca.data), axis=0)[None, :]
+
 # Init
 clustering = HDBSCAN(10, 10)
+
 # Fit + Predict
 labels = clustering.fit_predict(np.c_[y[:, 0] * 1e-2, pca.data])
 un_l, un_cts = np.unique(labels, return_counts=True)
+
 #%% md
 # Using `matplotlib.pyplot` to visualize the effect of the filtering and clustering
+
 #%%
-## Plot the properties
+# Plot the properties
 fig, axs = plt.subplot_mosaic([['A)', 'B)', 'C)']], layout='constrained', sharey=True, sharex=True, figsize=(8, 4))
 
 # Original Data
@@ -80,7 +87,7 @@ cbaxes.tick_params(labelsize=8)
 plt.colorbar(cax=cbaxes, mappable=m)
 cbaxes.set_ylabel(r"Depths $(km)$", fontsize=8)
 
-## Cleaned data
+# Cleaned data
 m1 = ax[1].scatter(y[:, 1], y[:, 2], c=y[:, -1], s=3, cmap="cool")
 ax[1].set_title(r"Cleaned Data" + "\n" + r"$(N = %d)$" % y.shape[0])
 ax[1].set_xlabel(r"Slowness $(\mu s.m^{-1})$")
@@ -93,15 +100,17 @@ cbaxes.set_ylabel(r"$\gamma$ $(API)$", fontsize=8)
 # Labeled data
 m2 = ax[2].scatter(y[labels >= 0., 1], y[labels >= 0., 2], c=labels[labels >= 0.], s=3, cmap="turbo")
 ax[2].set_title(r"Clustered Data" + "\n" + r"$(N = %d, N_c = %d)$" % (np.sum(labels >= 0.), un_l.shape[0] - 1))
-#ax[2].set_xlabel(r"Slowness $(\mu s.m^{-1})$")
 ax[2].set_title(label[2], loc='left', fontsize='medium')
 cbaxes = inset_axes(ax[2], width="3%", height="37%", loc=3)
 cbaxes.tick_params(labelsize=8)
 plt.colorbar(cax=cbaxes, mappable=m2)
 cbaxes.set_ylabel(r"Class", fontsize=8)
 plt.show()
+
 #%% md
-# ### Step 2: Extract the hyperspectral data
+# Step 2: Extract the hyperspectral data
+# --------------------------------------
+
 #%%
 # Save the labeled data (Drop the NaNs)
 fin_idx = labels >= 0.
@@ -117,8 +126,11 @@ fin_lwir = 1 - S.X(sensor="LWIR")[keep_idx][fin_idx]
 fin_y = S.y()[keep_idx][fin_idx, 1:4] * np.array([1e-3, 1e-1, 1e-3])[None, :]
 # Labels
 fin_lbls = labels[fin_idx].astype(int)
+
 #%% md
-# ### Step 3: Define a shuffled Train + Validation split
+# Step 3: Define a shuffled Train + Validation split
+# --------------------------------------------------
+
 #%%
 # Use stratified shuffle splitting
 n_splits = 6
@@ -138,15 +150,16 @@ for train_idx, valid_idx in sss.split(idxs, fin_lbls):
 # Stack
 train_idxs = np.vstack(train_idxs)
 valid_idxs = np.vstack(valid_idxs)
+
 #%% md
-# ### Step 4: Define a `pytorch` model
+# Step 4: Define a `pytorch` model
+# ------------------------------------
+
 #%%
 # Torch
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torch.optim as optim
-from torch.utils.data import DataLoader, Dataset
 from torcheval.metrics import R2Score, MeanSquaredError
 import copy
 from torch.utils.data import Dataset, DataLoader
@@ -251,8 +264,10 @@ class MultiHeadedMLP(nn.Module):
         output = self.shared_layer(combined)
 
         return output
+    
 #%% md
 # Initialize the model and prepare for training
+
 #%%
 # Make datasets
 batch_size = 10
@@ -285,8 +300,11 @@ best_mse = np.inf
 best_weights = None
 train_history = []
 history = []
+
 #%% md
 # Training
+#---------
+
 #%%
 # Begin Training
 for j in range(n_splits):  
@@ -359,13 +377,16 @@ for j in range(n_splits):
         
 # Restore model with best weights
 model.load_state_dict(best_weights)
+
 #%% md
-# ### Step 5: Compare the predictions
-# 
+# Step 5: Compare the predictions
+# -------------------------------
 # To ensure reproducibility, we have included the best performing model from our study.
+
 #%%
 # Load the pre-trained model
-model.load_state_dict(torch.load("./KSL_MultiFold_SixFold.pth"))
+model.load_state_dict(torch.load(f"{base_path}/KSL_MultiFold_SixFold.pth"))
+
 #%%
 # Check the predictions
 input_swir = torch.Tensor(fin_swir)
@@ -382,6 +403,7 @@ with torch.no_grad():
 # Inverse scaler
 meas_ = fin_y * np.array([1e3, 1e1, 1e3])[None, :]
 pred_ = predictions * np.array([1e3, 1e1, 1e3])[None, :]
+
 #%%
 # Plot scatter
 lowlims = [130, 1.75, -10]
@@ -395,8 +417,6 @@ props = dict(boxstyle='round', facecolor='lightblue', edgecolor="lightblue", alp
 # Original Data
 label = list(axs.keys())
 cax = list(axs.values())
-
-# fig.suptitle(r"Training Set [ N = %d ]" % pred_.shape[0])
 
 for i in range(pred_.shape[1]):
     meas = meas_[:, i]
@@ -433,4 +453,3 @@ for i in range(pred_.shape[1]):
     ax.set_aspect("equal")
 
 plt.show()
-#%%
