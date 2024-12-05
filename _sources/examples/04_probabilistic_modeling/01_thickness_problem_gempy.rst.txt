@@ -24,7 +24,7 @@
 Complex probabilistic model
 ---------------------------
 
-.. GENERATED FROM PYTHON SOURCE LINES 8-26
+.. GENERATED FROM PYTHON SOURCE LINES 8-29
 
 .. code-block:: Python
 
@@ -44,20 +44,486 @@ Complex probabilistic model
     from gempy_engine.core.backend_tensor import BackendTensor
     import arviz as az
     from gempy_probability.plot_posterior import default_red, default_blue
+
+    from gempy_viewer.modules.plot_2d.drawer_contours_2d import plot_regular_grid_contacts
+
     # sphinx_gallery_thumbnail_number = -1
 
 
 
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/04_probabilistic_modeling/01_thickness_problem_gempy.py", line 22, in <module>
+        import arviz as az
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/__init__.py", line 33, in <module>
+        from .data import *
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/__init__.py", line 3, in <module>
+        from .base import CoordSpec, DimSpec, dict_to_dataset, numpy_to_data_array, pytree_to_dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/base.py", line 13, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 56, in <module>
+        from xarray.coding.cftimeindex import CFTimeIndex, _parse_iso8601_with_reso
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftimeindex.py", line 54, in <module>
+        from xarray.coding.times import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/times.py", line 14, in <module>
+        from xarray.coding.variables import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/variables.py", line 13, in <module>
+        from xarray.core import dtypes, duck_array_ops, indexing
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/indexing.py", line 20, in <module>
+        from xarray.core.types import T_Xarray
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/types.py", line 106, in <module>
+        from cftime import datetime as CFTimeDatetime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/04_probabilistic_modeling/01_thickness_problem_gempy.py", line 22, in <module>
+        import arviz as az
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/__init__.py", line 33, in <module>
+        from .data import *
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/__init__.py", line 3, in <module>
+        from .base import CoordSpec, DimSpec, dict_to_dataset, numpy_to_data_array, pytree_to_dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/base.py", line 13, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 56, in <module>
+        from xarray.coding.cftimeindex import CFTimeIndex, _parse_iso8601_with_reso
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftimeindex.py", line 54, in <module>
+        from xarray.coding.times import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/times.py", line 14, in <module>
+        from xarray.coding.variables import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/variables.py", line 14, in <module>
+        from xarray.core.variable import Variable
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/variable.py", line 20, in <module>
+        from xarray.core import common, dtypes, duck_array_ops, indexing, nputils, ops, utils
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/common.py", line 28, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/04_probabilistic_modeling/01_thickness_problem_gempy.py", line 22, in <module>
+        import arviz as az
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/__init__.py", line 33, in <module>
+        from .data import *
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/__init__.py", line 3, in <module>
+        from .base import CoordSpec, DimSpec, dict_to_dataset, numpy_to_data_array, pytree_to_dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/base.py", line 13, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 56, in <module>
+        from xarray.coding.cftimeindex import CFTimeIndex, _parse_iso8601_with_reso
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftimeindex.py", line 54, in <module>
+        from xarray.coding.times import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/times.py", line 35, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/04_probabilistic_modeling/01_thickness_problem_gempy.py", line 22, in <module>
+        import arviz as az
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/__init__.py", line 33, in <module>
+        from .data import *
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/__init__.py", line 3, in <module>
+        from .base import CoordSpec, DimSpec, dict_to_dataset, numpy_to_data_array, pytree_to_dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/base.py", line 13, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 56, in <module>
+        from xarray.coding.cftimeindex import CFTimeIndex, _parse_iso8601_with_reso
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftimeindex.py", line 64, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/04_probabilistic_modeling/01_thickness_problem_gempy.py", line 22, in <module>
+        import arviz as az
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/__init__.py", line 33, in <module>
+        from .data import *
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/__init__.py", line 3, in <module>
+        from .base import CoordSpec, DimSpec, dict_to_dataset, numpy_to_data_array, pytree_to_dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/base.py", line 13, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 17, in <module>
+        from xarray.coding.cftime_offsets import BaseCFTimeOffset, _new_to_legacy_freq
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/cftime_offsets.py", line 73, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/04_probabilistic_modeling/01_thickness_problem_gempy.py", line 22, in <module>
+        import arviz as az
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/__init__.py", line 33, in <module>
+        from .data import *
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/__init__.py", line 3, in <module>
+        from .base import CoordSpec, DimSpec, dict_to_dataset, numpy_to_data_array, pytree_to_dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/base.py", line 13, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 20, in <module>
+        from xarray.core.dataarray import DataArray
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/dataarray.py", line 29, in <module>
+        from xarray.coding.calendar_ops import convert_calendar, interp_calendar
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/coding/calendar_ops.py", line 20, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
+
+    A module that was compiled using NumPy 1.x cannot be run in
+    NumPy 2.0.2 as it may crash. To support both 1.x and 2.x
+    versions of NumPy, modules must be compiled with NumPy 2.0.
+    Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+
+    If you are a user of the module, the easiest solution will be to
+    downgrade to 'numpy<2' or try to upgrade the affected module.
+    We expect that some modules will need time to support NumPy 2.
+
+    Traceback (most recent call last):  File "/home/leguark/.virtualenvs/gempy_dependencies/bin/sphinx-build", line 8, in <module>
+        sys.exit(main())
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 339, in main
+        return make_main(argv)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 213, in make_main
+        return make_mode.run_make_mode(argv[1:])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 181, in run_make_mode
+        return make.run_generic_build(args[0])
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/make_mode.py", line 169, in run_generic_build
+        return build_main(args + opts)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/cmd/build.py", line 293, in build_main
+        app = Sphinx(args.sourcedir, args.confdir, args.outputdir,
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 272, in __init__
+        self._init_builder()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/application.py", line 343, in _init_builder
+        self.events.emit('builder-inited')
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx/events.py", line 97, in emit
+        results.append(listener.handler(self.app, *args))
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 632, in generate_gallery_rst
+        ) = generate_dir_rst(src_dir, target_dir, gallery_conf, seen_backrefs)
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 531, in generate_dir_rst
+        intro, title, (t, mem) = generate_file_rst(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1203, in generate_file_rst
+        output_blocks, time_elapsed = execute_script(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 1108, in execute_script
+        execute_code_block(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 970, in execute_code_block
+        is_last_expr, mem_max = _exec_and_get_memory(
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 818, in _exec_and_get_memory
+        mem_max, _ = gallery_conf["call_memory"](
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_gallery.py", line 244, in call_memory
+        return 0.0, func()
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/sphinx_gallery/gen_rst.py", line 722, in __call__
+        exec(self.code, self.fake_main.__dict__)
+      File "/home/leguark/vector-geology/examples/04_probabilistic_modeling/01_thickness_problem_gempy.py", line 22, in <module>
+        import arviz as az
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/__init__.py", line 33, in <module>
+        from .data import *
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/__init__.py", line 3, in <module>
+        from .base import CoordSpec, DimSpec, dict_to_dataset, numpy_to_data_array, pytree_to_dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/arviz/data/base.py", line 13, in <module>
+        import xarray as xr
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/__init__.py", line 3, in <module>
+        from xarray import groupers, testing, tutorial
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/groupers.py", line 20, in <module>
+        from xarray.core.dataarray import DataArray
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/dataarray.py", line 49, in <module>
+        from xarray.core.dataset import Dataset
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/core/dataset.py", line 131, in <module>
+        from xarray.plot.accessor import DatasetPlotAccessor
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/plot/__init__.py", line 10, in <module>
+        from xarray.plot.dataarray_plot import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/plot/dataarray_plot.py", line 13, in <module>
+        from xarray.plot.facetgrid import _easy_facetgrid
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/plot/facetgrid.py", line 13, in <module>
+        from xarray.plot.utils import (
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/xarray/plot/utils.py", line 30, in <module>
+        import cftime
+      File "/home/leguark/.virtualenvs/gempy_dependencies/lib/python3.10/site-packages/cftime/__init__.py", line 1, in <module>
+        from ._cftime import (datetime, real_datetime,
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 27-28
+
+.. GENERATED FROM PYTHON SOURCE LINES 30-31
 
 Config
 
-.. GENERATED FROM PYTHON SOURCE LINES 28-32
+.. GENERATED FROM PYTHON SOURCE LINES 31-35
 
 .. code-block:: Python
 
@@ -72,11 +538,11 @@ Config
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 33-34
+.. GENERATED FROM PYTHON SOURCE LINES 36-37
 
 Set the data path
 
-.. GENERATED FROM PYTHON SOURCE LINES 34-37
+.. GENERATED FROM PYTHON SOURCE LINES 37-40
 
 .. code-block:: Python
 
@@ -90,15 +556,15 @@ Set the data path
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 38-39
+.. GENERATED FROM PYTHON SOURCE LINES 41-42
 
 Define a function for plotting geological settings with wells
 
-.. GENERATED FROM PYTHON SOURCE LINES 39-65
+.. GENERATED FROM PYTHON SOURCE LINES 42-76
 
 .. code-block:: Python
 
-    def plot_geo_setting_well(geo_model):
+    def plot_geo_setting_well(geo_model, alpha=1., show_lith=True):
         """
         This function plots the geological settings along with the well locations.
         It uses gempy_viewer to create 2D plots of the model.
@@ -109,7 +575,14 @@ Define a function for plotting geological settings with wells
         well_2 = 3.6e3
 
         # Create a 2D plot
-        p2d = gpv.plot_2d(geo_model, show_topography=False, legend=False, show=False)
+        p2d = gpv.plot_2d(
+            geo_model,
+            show_topography=False,
+            legend=False,
+            show=False,
+            show_lith=show_lith,
+            kwargs_boundaries={'alpha': alpha}
+        )
 
         # Add well and device markers to the plot
         p2d.axes[0].scatter([3e3], [well_1], marker='^', s=400, c='#71a4b3', zorder=10)
@@ -122,6 +595,7 @@ Define a function for plotting geological settings with wells
 
         # Show the plot
         p2d.fig.show()
+        return p2d
 
 
 
@@ -131,17 +605,16 @@ Define a function for plotting geological settings with wells
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 66-70
+.. GENERATED FROM PYTHON SOURCE LINES 77-81
 
 Creating the Geological Model
 -----------------------------
 Here we create a geological model using GemPy. The model defines the spatial extent,
 resolution, and geological information derived from orientations and surface points data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 70-83
+.. GENERATED FROM PYTHON SOURCE LINES 81-92
 
 .. code-block:: Python
-
 
     geo_model = gp.create_geomodel(
         project_name='Wells',
@@ -161,22 +634,21 @@ resolution, and geological information derived from orientations and surface poi
 
 
 
-
-.. GENERATED FROM PYTHON SOURCE LINES 84-88
+.. GENERATED FROM PYTHON SOURCE LINES 93-97
 
 Configuring the Model
 ---------------------
 We configure the interpolation options for the geological model. 
 These options determine how the model interpolates between data points.
 
-.. GENERATED FROM PYTHON SOURCE LINES 88-93
+.. GENERATED FROM PYTHON SOURCE LINES 97-102
 
 .. code-block:: Python
 
 
-    geo_model.interpolation_options.uni_degree = 0
+    geo_model.interpolation_options.uni_degree = 1
     geo_model.interpolation_options.mesh_extraction = False
-    geo_model.interpolation_options.sigmoid_slope = -1  # ! Temporary fix to set the hard sigmoid 
+    geo_model.interpolation_options.sigmoid_slope = 1000  # ! Temporary fix to set the hard sigmoid 
 
 
 
@@ -185,14 +657,14 @@ These options determine how the model interpolates between data points.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 94-98
+.. GENERATED FROM PYTHON SOURCE LINES 103-107
 
 Setting up a Custom Grid
 ------------------------
 A custom grid is set for the model, defining specific points in space
 where geological formations will be evaluated.
 
-.. GENERATED FROM PYTHON SOURCE LINES 98-105
+.. GENERATED FROM PYTHON SOURCE LINES 107-114
 
 .. code-block:: Python
 
@@ -213,18 +685,18 @@ where geological formations will be evaluated.
 
     Active grids: GridTypes.NONE|CUSTOM|DENSE
 
-    <gempy.core.data.grid_modules.grid_types.CustomGrid object at 0x7f3657603190>
+    <gempy.core.data.grid_modules.grid_types.CustomGrid object at 0x7f27af42b850>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 106-110
+.. GENERATED FROM PYTHON SOURCE LINES 115-119
 
 Plotting the Initial Geological Setting
 ---------------------------------------
 Before running any probabilistic analysis, we first visualize the initial geological setting.
 This step ensures that our model is correctly set up with the initial data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 110-115
+.. GENERATED FROM PYTHON SOURCE LINES 119-123
 
 .. code-block:: Python
 
@@ -235,24 +707,29 @@ This step ensures that our model is correctly set up with the initial data.
 
 
 
-
 .. image-sg:: /examples/04_probabilistic_modeling/images/sphx_glr_01_thickness_problem_gempy_001.png
    :alt: Cell Number: mid Direction: y
    :srcset: /examples/04_probabilistic_modeling/images/sphx_glr_01_thickness_problem_gempy_001.png
    :class: sphx-glr-single-img
 
 
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+
+    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f280b0e6f80>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 116-120
+.. GENERATED FROM PYTHON SOURCE LINES 124-128
 
 Interpolating the Initial Guess
 -------------------------------
 The model interpolates an initial guess for the geological formations.
 This step is crucial to provide a starting point for further probabilistic analysis.
 
-.. GENERATED FROM PYTHON SOURCE LINES 120-128
+.. GENERATED FROM PYTHON SOURCE LINES 128-135
 
 .. code-block:: Python
 
@@ -262,7 +739,6 @@ This step is crucial to provide a starting point for further probabilistic analy
         engine_config=gp.data.GemPyEngineConfig(backend=gp.data.AvailableBackends.numpy)
     )
     plot_geo_setting_well(geo_model=geo_model)
-
 
 
 
@@ -279,10 +755,11 @@ This step is crucial to provide a starting point for further probabilistic analy
 
     Setting Backend To: AvailableBackends.numpy
 
+    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f27ad1b15a0>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 129-134
+.. GENERATED FROM PYTHON SOURCE LINES 136-141
 
 Probabilistic Geomodeling with Pyro
 -----------------------------------
@@ -290,7 +767,7 @@ In this section, we introduce a probabilistic approach to geological modeling.
 By using Pyro, a probabilistic programming language, we define a model that integrates
 geological data with uncertainty quantification.
 
-.. GENERATED FROM PYTHON SOURCE LINES 134-140
+.. GENERATED FROM PYTHON SOURCE LINES 141-147
 
 .. code-block:: Python
 
@@ -313,7 +790,7 @@ geological data with uncertainty quantification.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 141-146
+.. GENERATED FROM PYTHON SOURCE LINES 148-153
 
 Defining the Probabilistic Model
 --------------------------------
@@ -321,7 +798,7 @@ The Pyro model represents the probabilistic aspects of the geological model.
 It defines a prior distribution for the top layer's location and computes the thickness
 of the geological layer as an observed variable.
 
-.. GENERATED FROM PYTHON SOURCE LINES 146-180
+.. GENERATED FROM PYTHON SOURCE LINES 153-190
 
 .. code-block:: Python
 
@@ -334,7 +811,10 @@ of the geological layer as an observed variable.
         """
         # Define prior for the top layer's location
         prior_mean = sp_coords_copy[0, 2]
-        mu_top = pyro.sample(r'$\mu_{top}$', dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64)))
+        mu_top = pyro.sample(
+            name=r'$\mu_{top}$',
+            fn=dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64))
+        )
 
         # Update the model with the new top layer's location
         interpolation_input = geo_model.interpolation_input_copy
@@ -366,18 +846,18 @@ of the geological layer as an observed variable.
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 181-185
+.. GENERATED FROM PYTHON SOURCE LINES 191-195
 
 Running Prior Sampling and Visualization
 ----------------------------------------
 Prior sampling is an essential step in probabilistic modeling. 
 It helps in understanding the distribution of our prior assumptions before observing any data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 187-188
+.. GENERATED FROM PYTHON SOURCE LINES 197-198
 
 Prepare observation data
 
-.. GENERATED FROM PYTHON SOURCE LINES 188-190
+.. GENERATED FROM PYTHON SOURCE LINES 198-200
 
 .. code-block:: Python
 
@@ -390,11 +870,11 @@ Prepare observation data
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 191-192
+.. GENERATED FROM PYTHON SOURCE LINES 201-202
 
 Run prior sampling and visualization
 
-.. GENERATED FROM PYTHON SOURCE LINES 192-197
+.. GENERATED FROM PYTHON SOURCE LINES 202-207
 
 .. code-block:: Python
 
@@ -415,7 +895,7 @@ Run prior sampling and visualization
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 198-203
+.. GENERATED FROM PYTHON SOURCE LINES 208-213
 
 Sampling from the Posterior using MCMC
 --------------------------------------
@@ -423,20 +903,25 @@ We use Markov Chain Monte Carlo (MCMC) with the NUTS (No-U-Turn Sampler) algorit
 to sample from the posterior distribution. This gives us an understanding of the 
 distribution of our model parameters after considering the observed data.
 
-.. GENERATED FROM PYTHON SOURCE LINES 205-206
+.. GENERATED FROM PYTHON SOURCE LINES 215-216
 
 Run MCMC using NUTS to sample from the posterior
 
-.. GENERATED FROM PYTHON SOURCE LINES 206-218
+.. GENERATED FROM PYTHON SOURCE LINES 216-233
 
 .. code-block:: Python
 
 
     # Magic sauce
     from gempy_engine.core.backend_tensor import BackendTensor
+
     # import gempy_engine.config
     # config.DEFAULT_PYKEOPS = False
-    BackendTensor._change_backend(engine_backend=gp.data.AvailableBackends.PYTORCH, dtype="float64", pykeops_enabled=False)
+    BackendTensor._change_backend(
+        engine_backend=gp.data.AvailableBackends.PYTORCH,
+        dtype="float64",
+        pykeops_enabled=False
+    )
 
     pyro.primitives.enable_validation(is_validate=True)
     nuts_kernel = NUTS(model, step_size=0.0085, adapt_step_size=True, target_accept_prob=0.9, max_tree_depth=10, init_strategy=init_to_mean)
@@ -452,24 +937,24 @@ Run MCMC using NUTS to sample from the posterior
  .. code-block:: none
 
     Setting Backend To: AvailableBackends.PYTORCH
-    Warmup:   0%|          | 0/250 [00:00, ?it/s]    Warmup:   0%|          | 1/250 [00:01,  1.16s/it, step size=1.93e-01, acc. prob=0.970]    Warmup:   2%|▏         | 5/250 [00:01,  4.75it/s, step size=1.12e-02, acc. prob=0.718]    Warmup:   3%|▎         | 7/250 [00:01,  5.65it/s, step size=9.70e-03, acc. prob=0.769]    Warmup:   4%|▎         | 9/250 [00:01,  5.55it/s, step size=6.16e-03, acc. prob=0.783]    Warmup:   4%|▍         | 10/250 [00:02,  5.38it/s, step size=2.96e-03, acc. prob=0.772]    Warmup:   4%|▍         | 11/250 [00:02,  3.67it/s, step size=4.08e-03, acc. prob=0.793]    Warmup:   5%|▌         | 13/250 [00:03,  4.24it/s, step size=6.41e-03, acc. prob=0.820]    Warmup:   6%|▌         | 14/250 [00:03,  4.10it/s, step size=8.27e-03, acc. prob=0.831]    Warmup:   6%|▌         | 15/250 [00:03,  3.43it/s, step size=1.06e-02, acc. prob=0.840]    Warmup:   6%|▋         | 16/250 [00:04,  3.72it/s, step size=7.28e-03, acc. prob=0.836]    Warmup:   7%|▋         | 18/250 [00:04,  4.46it/s, step size=1.09e-02, acc. prob=0.850]    Warmup:   8%|▊         | 19/250 [00:04,  4.81it/s, step size=1.50e-02, acc. prob=0.858]    Warmup:   8%|▊         | 21/250 [00:05,  2.94it/s, step size=3.33e-03, acc. prob=0.837]    Warmup:   9%|▉         | 22/250 [00:05,  2.85it/s, step size=4.14e-03, acc. prob=0.842]    Warmup:   9%|▉         | 23/250 [00:06,  3.01it/s, step size=4.21e-03, acc. prob=0.845]    Warmup:  10%|█         | 25/250 [00:06,  3.85it/s, step size=6.50e-03, acc. prob=0.854]    Warmup:  10%|█         | 26/250 [00:06,  4.00it/s, step size=2.82e-03, acc. prob=0.844]    Warmup:  11%|█         | 27/250 [00:07,  3.90it/s, step size=1.21e-03, acc. prob=0.835]    Warmup:  11%|█         | 28/250 [00:07,  2.71it/s, step size=1.28e-03, acc. prob=0.837]    Warmup:  12%|█▏        | 29/250 [00:09,  1.56it/s, step size=1.45e-03, acc. prob=0.840]    Warmup:  12%|█▏        | 30/250 [00:10,  1.29it/s, step size=1.83e-03, acc. prob=0.845]    Warmup:  12%|█▏        | 31/250 [00:11,  1.23it/s, step size=2.49e-03, acc. prob=0.850]    Warmup:  13%|█▎        | 32/250 [00:12,  1.20it/s, step size=3.38e-03, acc. prob=0.855]    Warmup:  13%|█▎        | 33/250 [00:12,  1.38it/s, step size=3.21e-03, acc. prob=0.855]    Warmup:  14%|█▎        | 34/250 [00:13,  1.48it/s, step size=3.82e-03, acc. prob=0.858]    Warmup:  14%|█▍        | 35/250 [00:13,  1.81it/s, step size=3.74e-03, acc. prob=0.859]    Warmup:  14%|█▍        | 36/250 [00:14,  1.49it/s, step size=3.88e-03, acc. prob=0.860]    Warmup:  15%|█▍        | 37/250 [00:14,  1.95it/s, step size=5.13e-03, acc. prob=0.863]    Warmup:  15%|█▌        | 38/250 [00:14,  2.27it/s, step size=6.00e-03, acc. prob=0.866]    Warmup:  16%|█▌        | 39/250 [00:14,  2.70it/s, step size=7.95e-03, acc. prob=0.869]    Warmup:  16%|█▋        | 41/250 [00:15,  4.14it/s, step size=1.04e-02, acc. prob=0.873]    Warmup:  17%|█▋        | 42/250 [00:15,  4.52it/s, step size=1.36e-02, acc. prob=0.876]    Warmup:  18%|█▊        | 44/250 [00:15,  3.62it/s, step size=1.97e+00, acc. prob=0.871]    Warmup:  18%|█▊        | 46/250 [00:16,  5.10it/s, step size=2.99e+00, acc. prob=0.855]    Warmup:  19%|█▉        | 48/250 [00:16,  6.74it/s, step size=2.72e-01, acc. prob=0.843]    Warmup:  20%|██        | 50/250 [00:16,  4.90it/s, step size=6.43e-01, acc. prob=0.844]    Warmup:  20%|██        | 51/250 [00:16,  5.18it/s, step size=6.43e-01, acc. prob=1.000]    Sample:  21%|██        | 53/250 [00:17,  6.85it/s, step size=6.43e-01, acc. prob=0.962]    Sample:  22%|██▏       | 55/250 [00:17,  7.38it/s, step size=6.43e-01, acc. prob=0.955]    Sample:  23%|██▎       | 57/250 [00:17,  7.21it/s, step size=6.43e-01, acc. prob=0.943]    Sample:  23%|██▎       | 58/250 [00:17,  6.61it/s, step size=6.43e-01, acc. prob=0.933]    Sample:  24%|██▍       | 60/250 [00:17,  8.43it/s, step size=6.43e-01, acc. prob=0.941]    Sample:  25%|██▍       | 62/250 [00:18,  7.22it/s, step size=6.43e-01, acc. prob=0.914]    Sample:  25%|██▌       | 63/250 [00:18,  7.11it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  26%|██▌       | 65/250 [00:18,  7.07it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  27%|██▋       | 67/250 [00:18,  7.52it/s, step size=6.43e-01, acc. prob=0.927]    Sample:  27%|██▋       | 68/250 [00:19,  6.72it/s, step size=6.43e-01, acc. prob=0.927]    Sample:  28%|██▊       | 69/250 [00:19,  6.19it/s, step size=6.43e-01, acc. prob=0.931]    Sample:  28%|██▊       | 70/250 [00:19,  6.31it/s, step size=6.43e-01, acc. prob=0.928]    Sample:  29%|██▉       | 72/250 [00:19,  7.73it/s, step size=6.43e-01, acc. prob=0.931]    Sample:  29%|██▉       | 73/250 [00:19,  7.45it/s, step size=6.43e-01, acc. prob=0.933]    Sample:  30%|██▉       | 74/250 [00:20,  6.62it/s, step size=6.43e-01, acc. prob=0.935]    Sample:  30%|███       | 75/250 [00:20,  5.93it/s, step size=6.43e-01, acc. prob=0.936]    Sample:  30%|███       | 76/250 [00:20,  5.56it/s, step size=6.43e-01, acc. prob=0.935]    Sample:  31%|███       | 78/250 [00:20,  5.97it/s, step size=6.43e-01, acc. prob=0.939]    Sample:  32%|███▏      | 79/250 [00:20,  6.13it/s, step size=6.43e-01, acc. prob=0.932]    Sample:  32%|███▏      | 81/250 [00:21,  7.45it/s, step size=6.43e-01, acc. prob=0.935]    Sample:  33%|███▎      | 83/250 [00:21,  8.53it/s, step size=6.43e-01, acc. prob=0.936]    Sample:  34%|███▎      | 84/250 [00:21,  7.29it/s, step size=6.43e-01, acc. prob=0.930]    Sample:  34%|███▍      | 85/250 [00:21,  7.22it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  34%|███▍      | 86/250 [00:21,  6.37it/s, step size=6.43e-01, acc. prob=0.923]    Sample:  35%|███▍      | 87/250 [00:22,  5.84it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  35%|███▌      | 88/250 [00:22,  5.55it/s, step size=6.43e-01, acc. prob=0.922]    Sample:  36%|███▌      | 90/250 [00:22,  6.05it/s, step size=6.43e-01, acc. prob=0.922]    Sample:  36%|███▋      | 91/250 [00:22,  6.20it/s, step size=6.43e-01, acc. prob=0.924]    Sample:  37%|███▋      | 92/250 [00:22,  5.76it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  38%|███▊      | 94/250 [00:23,  7.95it/s, step size=6.43e-01, acc. prob=0.928]    Sample:  38%|███▊      | 95/250 [00:23,  7.68it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  39%|███▉      | 97/250 [00:23,  8.79it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  39%|███▉      | 98/250 [00:23,  8.95it/s, step size=6.43e-01, acc. prob=0.927]    Sample:  40%|███▉      | 99/250 [00:23,  8.17it/s, step size=6.43e-01, acc. prob=0.928]    Sample:  40%|████      | 100/250 [00:23,  6.82it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  41%|████      | 102/250 [00:24,  7.43it/s, step size=6.43e-01, acc. prob=0.924]    Sample:  41%|████      | 103/250 [00:24,  6.72it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  42%|████▏     | 104/250 [00:24,  6.05it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  42%|████▏     | 105/250 [00:24,  6.25it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  42%|████▏     | 106/250 [00:24,  6.40it/s, step size=6.43e-01, acc. prob=0.922]    Sample:  43%|████▎     | 107/250 [00:24,  5.84it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  43%|████▎     | 108/250 [00:25,  5.45it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  44%|████▎     | 109/250 [00:25,  5.86it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  44%|████▍     | 111/250 [00:25,  6.71it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  45%|████▍     | 112/250 [00:25,  6.11it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  46%|████▌     | 114/250 [00:25,  8.32it/s, step size=6.43e-01, acc. prob=0.923]    Sample:  47%|████▋     | 117/250 [00:26,  9.51it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  48%|████▊     | 119/250 [00:26,  7.74it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  48%|████▊     | 120/250 [00:26,  7.51it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  49%|████▉     | 122/250 [00:26,  7.21it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  50%|████▉     | 124/250 [00:27,  7.50it/s, step size=6.43e-01, acc. prob=0.925]    Sample:  50%|█████     | 125/250 [00:27,  7.40it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  50%|█████     | 126/250 [00:27,  6.65it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  51%|█████     | 127/250 [00:27,  6.71it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  52%|█████▏    | 129/250 [00:27,  8.07it/s, step size=6.43e-01, acc. prob=0.926]    Sample:  52%|█████▏    | 131/250 [00:28,  9.08it/s, step size=6.43e-01, acc. prob=0.924]    Sample:  53%|█████▎    | 132/250 [00:28,  8.50it/s, step size=6.43e-01, acc. prob=0.924]    Sample:  54%|█████▎    | 134/250 [00:28,  8.47it/s, step size=6.43e-01, acc. prob=0.923]    Sample:  54%|█████▍    | 136/250 [00:28,  9.16it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  55%|█████▍    | 137/250 [00:28,  8.55it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  55%|█████▌    | 138/250 [00:28,  7.31it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  56%|█████▌    | 140/250 [00:29,  8.46it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  57%|█████▋    | 142/250 [00:29,  8.48it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  58%|█████▊    | 144/250 [00:29,  9.31it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  58%|█████▊    | 145/250 [00:29,  7.90it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  58%|█████▊    | 146/250 [00:29,  6.83it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  59%|█████▉    | 147/250 [00:30,  6.80it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  60%|█████▉    | 149/250 [00:30,  8.95it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  60%|██████    | 151/250 [00:30,  9.68it/s, step size=6.43e-01, acc. prob=0.915]    Sample:  61%|██████    | 153/250 [00:30, 10.29it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  62%|██████▏   | 155/250 [00:30,  8.71it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  62%|██████▏   | 156/250 [00:31,  7.73it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  63%|██████▎   | 158/250 [00:31,  8.59it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  64%|██████▍   | 160/250 [00:31,  7.94it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  65%|██████▍   | 162/250 [00:31,  8.76it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  66%|██████▌   | 164/250 [00:32,  8.05it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  66%|██████▌   | 165/250 [00:32,  7.15it/s, step size=6.43e-01, acc. prob=0.915]    Sample:  66%|██████▋   | 166/250 [00:32,  6.52it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  67%|██████▋   | 168/250 [00:32,  7.74it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  68%|██████▊   | 170/250 [00:32,  8.64it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  68%|██████▊   | 171/250 [00:33,  7.71it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  69%|██████▉   | 172/250 [00:33,  6.96it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  69%|██████▉   | 173/250 [00:33,  6.99it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  70%|███████   | 175/250 [00:33,  7.78it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  70%|███████   | 176/250 [00:33,  7.55it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  71%|███████   | 178/250 [00:33,  8.71it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  72%|███████▏  | 180/250 [00:34,  8.65it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  73%|███████▎  | 182/250 [00:34, 10.54it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  74%|███████▎  | 184/250 [00:34,  8.42it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  75%|███████▍  | 187/250 [00:34, 10.41it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  76%|███████▌  | 189/250 [00:35,  8.58it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  76%|███████▋  | 191/250 [00:35,  8.71it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  77%|███████▋  | 193/250 [00:35,  9.39it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  78%|███████▊  | 195/250 [00:35, 10.03it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  79%|███████▉  | 197/250 [00:35, 10.50it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  80%|███████▉  | 199/250 [00:35, 11.90it/s, step size=6.43e-01, acc. prob=0.915]    Sample:  80%|████████  | 201/250 [00:36,  8.37it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  81%|████████  | 203/250 [00:36,  9.14it/s, step size=6.43e-01, acc. prob=0.916]    Sample:  82%|████████▏ | 205/250 [00:36,  7.74it/s, step size=6.43e-01, acc. prob=0.917]    Sample:  83%|████████▎ | 207/250 [00:37,  8.61it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  84%|████████▎ | 209/250 [00:37,  7.52it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  84%|████████▍ | 210/250 [00:37,  7.37it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  84%|████████▍ | 211/250 [00:37,  7.27it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  85%|████████▍ | 212/250 [00:37,  6.60it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  86%|████████▌ | 214/250 [00:38,  7.25it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  86%|████████▋ | 216/250 [00:38,  8.44it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  87%|████████▋ | 218/250 [00:38,  7.70it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  88%|████████▊ | 219/250 [00:38,  6.87it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  88%|████████▊ | 220/250 [00:38,  6.39it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  89%|████████▉ | 222/250 [00:39,  7.70it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  90%|████████▉ | 224/250 [00:39,  7.41it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  90%|█████████ | 225/250 [00:39,  6.79it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  90%|█████████ | 226/250 [00:39,  6.78it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  91%|█████████ | 227/250 [00:39,  6.75it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  91%|█████████ | 228/250 [00:40,  6.90it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  92%|█████████▏| 230/250 [00:40,  8.20it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  92%|█████████▏| 231/250 [00:40,  7.90it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  93%|█████████▎| 232/250 [00:40,  6.83it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  94%|█████████▎| 234/250 [00:40,  7.52it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  94%|█████████▍| 236/250 [00:41,  8.02it/s, step size=6.43e-01, acc. prob=0.918]    Sample:  95%|█████████▍| 237/250 [00:41,  7.12it/s, step size=6.43e-01, acc. prob=0.919]    Sample:  96%|█████████▋| 241/250 [00:41, 11.39it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  97%|█████████▋| 243/250 [00:41, 10.62it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  98%|█████████▊| 245/250 [00:41,  9.19it/s, step size=6.43e-01, acc. prob=0.920]    Sample:  98%|█████████▊| 246/250 [00:42,  7.98it/s, step size=6.43e-01, acc. prob=0.921]    Sample:  99%|█████████▉| 247/250 [00:42,  7.21it/s, step size=6.43e-01, acc. prob=0.919]    Sample: 100%|█████████▉| 249/250 [00:42,  7.77it/s, step size=6.43e-01, acc. prob=0.920]    Sample: 100%|██████████| 250/250 [00:42,  5.86it/s, step size=6.43e-01, acc. prob=0.920]
+    Warmup:   0%|          | 0/250 [00:00, ?it/s]    Warmup:   0%|          | 1/250 [00:00,  1.31it/s, step size=1.32e-01, acc. prob=0.000]    Warmup:   2%|▏         | 4/250 [00:01,  3.83it/s, step size=6.85e-03, acc. prob=0.498]    Warmup:   2%|▏         | 5/250 [00:01,  3.50it/s, step size=6.86e-03, acc. prob=0.592]    Warmup:   2%|▏         | 6/250 [00:01,  4.21it/s, step size=8.19e-03, acc. prob=0.659]    Warmup:   3%|▎         | 7/250 [00:01,  4.15it/s, step size=9.21e-03, acc. prob=0.703]    Warmup:   3%|▎         | 8/250 [00:02,  4.95it/s, step size=9.81e-03, acc. prob=0.731]    Warmup:   4%|▎         | 9/250 [00:02,  5.77it/s, step size=1.27e-02, acc. prob=0.760]    Warmup:   4%|▍         | 10/250 [00:02,  5.12it/s, step size=1.70e-02, acc. prob=0.783]    Warmup:   4%|▍         | 11/250 [00:02,  4.73it/s, step size=2.34e-02, acc. prob=0.803]    Warmup:   5%|▍         | 12/250 [00:02,  5.56it/s, step size=1.94e-02, acc. prob=0.806]    Warmup:   5%|▌         | 13/250 [00:02,  6.17it/s, step size=1.92e-02, acc. prob=0.813]    Warmup:   6%|▋         | 16/250 [00:02, 10.85it/s, step size=1.80e-02, acc. prob=0.826]    Warmup:   8%|▊         | 19/250 [00:03, 14.95it/s, step size=2.88e-02, acc. prob=0.845]    Warmup:   9%|▉         | 22/250 [00:03, 18.46it/s, step size=3.42e-03, acc. prob=0.818]    Warmup:  10%|█         | 25/250 [00:04,  5.78it/s, step size=8.64e-03, acc. prob=0.839]    Warmup:  11%|█         | 27/250 [00:04,  6.82it/s, step size=1.45e-02, acc. prob=0.849]    Warmup:  12%|█▏        | 29/250 [00:04,  5.82it/s, step size=1.89e-02, acc. prob=0.855]    Warmup:  12%|█▏        | 31/250 [00:05,  6.61it/s, step size=3.36e-02, acc. prob=0.864]    Warmup:  13%|█▎        | 33/250 [00:05,  7.81it/s, step size=9.68e-03, acc. prob=0.852]    Warmup:  14%|█▍        | 35/250 [00:05,  8.99it/s, step size=1.74e-02, acc. prob=0.860]    Warmup:  15%|█▍        | 37/250 [00:05,  7.80it/s, step size=1.31e-02, acc. prob=0.859]    Warmup:  16%|█▌        | 39/250 [00:06,  7.76it/s, step size=2.29e-02, acc. prob=0.866]    Warmup:  16%|█▌        | 40/250 [00:06,  8.03it/s, step size=3.03e-02, acc. prob=0.869]    Warmup:  17%|█▋        | 42/250 [00:06,  7.73it/s, step size=9.41e-03, acc. prob=0.859]    Warmup:  17%|█▋        | 43/250 [00:06,  6.77it/s, step size=1.22e-02, acc. prob=0.862]    Warmup:  18%|█▊        | 44/250 [00:07,  3.86it/s, step size=2.01e+00, acc. prob=0.865]    Warmup:  19%|█▉        | 47/250 [00:07,  5.39it/s, step size=3.15e-01, acc. prob=0.834]    Warmup:  19%|█▉        | 48/250 [00:07,  4.98it/s, step size=3.07e-01, acc. prob=0.838]    Warmup:  20%|█▉        | 49/250 [00:07,  5.46it/s, step size=4.44e-01, acc. prob=0.841]    Warmup:  20%|██        | 50/250 [00:08,  4.97it/s, step size=4.44e-01, acc. prob=0.843]    Warmup:  20%|██        | 51/250 [00:08,  4.62it/s, step size=4.44e-01, acc. prob=0.967]    Sample:  21%|██        | 52/250 [00:08,  4.19it/s, step size=4.44e-01, acc. prob=0.983]    Sample:  21%|██        | 53/250 [00:09,  3.84it/s, step size=4.44e-01, acc. prob=0.971]    Sample:  22%|██▏       | 54/250 [00:09,  4.49it/s, step size=4.44e-01, acc. prob=0.978]    Sample:  22%|██▏       | 55/250 [00:09,  5.22it/s, step size=4.44e-01, acc. prob=0.981]    Sample:  22%|██▏       | 56/250 [00:09,  4.80it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  23%|██▎       | 57/250 [00:09,  4.77it/s, step size=4.44e-01, acc. prob=0.983]    Sample:  23%|██▎       | 58/250 [00:10,  4.28it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  24%|██▎       | 59/250 [00:10,  4.91it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  24%|██▍       | 60/250 [00:10,  5.41it/s, step size=4.44e-01, acc. prob=0.988]    Sample:  24%|██▍       | 61/250 [00:10,  4.37it/s, step size=4.44e-01, acc. prob=0.979]    Sample:  26%|██▌       | 64/250 [00:10,  7.32it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  26%|██▌       | 65/250 [00:11,  7.48it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  26%|██▋       | 66/250 [00:11,  6.24it/s, step size=4.44e-01, acc. prob=0.985]    Sample:  27%|██▋       | 67/250 [00:11,  6.77it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  27%|██▋       | 68/250 [00:11,  5.77it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  28%|██▊       | 69/250 [00:11,  6.46it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  28%|██▊       | 70/250 [00:12,  5.49it/s, step size=4.44e-01, acc. prob=0.985]    Sample:  28%|██▊       | 71/250 [00:12,  6.22it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  29%|██▉       | 73/250 [00:12,  8.28it/s, step size=4.44e-01, acc. prob=0.985]    Sample:  30%|███       | 75/250 [00:12,  9.76it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  31%|███       | 77/250 [00:12,  7.69it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  31%|███       | 78/250 [00:12,  7.99it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  32%|███▏      | 79/250 [00:13,  6.42it/s, step size=4.44e-01, acc. prob=0.982]    Sample:  32%|███▏      | 80/250 [00:13,  5.61it/s, step size=4.44e-01, acc. prob=0.983]    Sample:  32%|███▏      | 81/250 [00:13,  6.31it/s, step size=4.44e-01, acc. prob=0.983]    Sample:  33%|███▎      | 82/250 [00:13,  5.43it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  33%|███▎      | 83/250 [00:13,  6.16it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  34%|███▎      | 84/250 [00:14,  5.45it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  34%|███▍      | 85/250 [00:14,  5.46it/s, step size=4.44e-01, acc. prob=0.984]    Sample:  34%|███▍      | 86/250 [00:14,  4.84it/s, step size=4.44e-01, acc. prob=0.985]    Sample:  35%|███▍      | 87/250 [00:14,  5.61it/s, step size=4.44e-01, acc. prob=0.985]    Sample:  36%|███▌      | 89/250 [00:14,  6.09it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  36%|███▌      | 90/250 [00:15,  5.90it/s, step size=4.44e-01, acc. prob=0.985]    Sample:  36%|███▋      | 91/250 [00:15,  5.23it/s, step size=4.44e-01, acc. prob=0.985]    Sample:  37%|███▋      | 92/250 [00:15,  5.92it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  37%|███▋      | 93/250 [00:15,  6.57it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  38%|███▊      | 94/250 [00:15,  5.53it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  38%|███▊      | 95/250 [00:16,  5.43it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  39%|███▉      | 97/250 [00:16,  5.89it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  39%|███▉      | 98/250 [00:16,  5.27it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  40%|███▉      | 99/250 [00:16,  4.89it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  40%|████      | 100/250 [00:17,  4.54it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  40%|████      | 101/250 [00:17,  4.77it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  41%|████      | 102/250 [00:17,  4.98it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  41%|████      | 103/250 [00:17,  5.72it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  42%|████▏     | 104/250 [00:17,  5.69it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  42%|████▏     | 105/250 [00:18,  4.98it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  43%|████▎     | 108/250 [00:18,  9.15it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  44%|████▍     | 111/250 [00:18, 11.43it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  45%|████▌     | 113/250 [00:18,  8.63it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  46%|████▌     | 115/250 [00:19,  5.90it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  46%|████▋     | 116/250 [00:19,  6.30it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  47%|████▋     | 117/250 [00:19,  5.55it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  48%|████▊     | 120/250 [00:19,  7.96it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  48%|████▊     | 121/250 [00:20,  6.74it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  49%|████▉     | 122/250 [00:20,  5.83it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  49%|████▉     | 123/250 [00:20,  5.79it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  50%|████▉     | 124/250 [00:20,  5.64it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  50%|█████     | 125/250 [00:20,  5.02it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  50%|█████     | 126/250 [00:21,  3.41it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  51%|█████     | 128/250 [00:21,  4.35it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  52%|█████▏    | 129/250 [00:21,  4.95it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  52%|█████▏    | 130/250 [00:22,  4.62it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  52%|█████▏    | 131/250 [00:22,  4.45it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  53%|█████▎    | 132/250 [00:22,  4.36it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  53%|█████▎    | 133/250 [00:22,  4.32it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  54%|█████▎    | 134/250 [00:23,  5.13it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  54%|█████▍    | 135/250 [00:23,  5.90it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  55%|█████▍    | 137/250 [00:23,  6.32it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  55%|█████▌    | 138/250 [00:23,  5.54it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  56%|█████▌    | 139/250 [00:23,  6.14it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  56%|█████▌    | 140/250 [00:23,  6.71it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  56%|█████▋    | 141/250 [00:24,  5.61it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  57%|█████▋    | 142/250 [00:24,  4.99it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  57%|█████▋    | 143/250 [00:24,  4.63it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  58%|█████▊    | 144/250 [00:24,  5.42it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  58%|█████▊    | 145/250 [00:24,  5.42it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  58%|█████▊    | 146/250 [00:25,  4.82it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  59%|█████▉    | 147/250 [00:25,  5.57it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  59%|█████▉    | 148/250 [00:25,  4.94it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  60%|█████▉    | 149/250 [00:25,  5.72it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  60%|██████    | 150/250 [00:25,  6.41it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  61%|██████    | 152/250 [00:26,  7.40it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  61%|██████    | 153/250 [00:26,  6.02it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  62%|██████▏   | 154/250 [00:26,  5.29it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  62%|██████▏   | 156/250 [00:26,  5.78it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  63%|██████▎   | 157/250 [00:27,  5.69it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  63%|██████▎   | 158/250 [00:27,  5.13it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  64%|██████▎   | 159/250 [00:27,  4.74it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  64%|██████▍   | 160/250 [00:27,  4.90it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  64%|██████▍   | 161/250 [00:27,  4.53it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  65%|██████▍   | 162/250 [00:28,  5.29it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  65%|██████▌   | 163/250 [00:28,  6.01it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  66%|██████▌   | 164/250 [00:28,  3.58it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  66%|██████▌   | 165/250 [00:28,  3.99it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  67%|██████▋   | 167/250 [00:29,  4.92it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  67%|██████▋   | 168/250 [00:29,  4.60it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  68%|██████▊   | 169/250 [00:29,  4.43it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  68%|██████▊   | 170/250 [00:29,  4.31it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  68%|██████▊   | 171/250 [00:30,  4.21it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  69%|██████▉   | 172/250 [00:30,  4.12it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  69%|██████▉   | 173/250 [00:30,  4.91it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  70%|██████▉   | 174/250 [00:30,  5.68it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  70%|███████   | 175/250 [00:30,  6.36it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  70%|███████   | 176/250 [00:30,  6.97it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  71%|███████   | 177/250 [00:31,  6.45it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  71%|███████   | 178/250 [00:31,  5.41it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  72%|███████▏  | 179/250 [00:31,  5.44it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  73%|███████▎  | 182/250 [00:31,  6.98it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  73%|███████▎  | 183/250 [00:32,  6.57it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  74%|███████▎  | 184/250 [00:32,  5.72it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  74%|███████▍  | 185/250 [00:32,  5.15it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  74%|███████▍  | 186/250 [00:32,  5.87it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  75%|███████▍  | 187/250 [00:32,  5.25it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  75%|███████▌  | 188/250 [00:33,  5.92it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  76%|███████▌  | 189/250 [00:33,  6.40it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  76%|███████▌  | 190/250 [00:33,  5.43it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  76%|███████▋  | 191/250 [00:33,  6.20it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  77%|███████▋  | 192/250 [00:33,  5.36it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  78%|███████▊  | 194/250 [00:33,  7.44it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  78%|███████▊  | 195/250 [00:34,  6.04it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  78%|███████▊  | 196/250 [00:34,  5.31it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  79%|███████▉  | 197/250 [00:34,  5.38it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  80%|███████▉  | 199/250 [00:34,  7.31it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  80%|████████  | 200/250 [00:35,  6.07it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  80%|████████  | 201/250 [00:35,  6.67it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  81%|████████  | 202/250 [00:35,  7.20it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  82%|████████▏ | 204/250 [00:35,  9.08it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  82%|████████▏ | 205/250 [00:35,  6.95it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  82%|████████▏ | 206/250 [00:35,  7.41it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  83%|████████▎ | 207/250 [00:35,  6.74it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  83%|████████▎ | 208/250 [00:36,  5.62it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  84%|████████▎ | 209/250 [00:36,  4.98it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  84%|████████▍ | 210/250 [00:36,  3.34it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  84%|████████▍ | 211/250 [00:37,  4.11it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  85%|████████▍ | 212/250 [00:37,  4.88it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  85%|████████▌ | 213/250 [00:37,  4.49it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  86%|████████▋ | 216/250 [00:37,  7.46it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  87%|████████▋ | 217/250 [00:37,  7.72it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  87%|████████▋ | 218/250 [00:37,  8.04it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  88%|████████▊ | 219/250 [00:37,  8.30it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  88%|████████▊ | 220/250 [00:38,  7.43it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  88%|████████▊ | 221/250 [00:38,  7.82it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  89%|████████▉ | 222/250 [00:38,  8.12it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  89%|████████▉ | 223/250 [00:38,  7.12it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  90%|█████████ | 226/250 [00:39,  5.49it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  91%|█████████ | 227/250 [00:39,  5.04it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  91%|█████████ | 228/250 [00:39,  4.73it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  92%|█████████▏| 229/250 [00:39,  5.37it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  92%|█████████▏| 230/250 [00:40,  5.32it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  92%|█████████▏| 231/250 [00:40,  4.86it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  93%|█████████▎| 232/250 [00:40,  4.51it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  93%|█████████▎| 233/250 [00:40,  4.32it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  94%|█████████▎| 234/250 [00:41,  4.27it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  94%|█████████▍| 235/250 [00:41,  4.65it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  94%|█████████▍| 236/250 [00:41,  4.51it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  95%|█████████▍| 237/250 [00:41,  5.38it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  95%|█████████▌| 238/250 [00:41,  6.16it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  96%|█████████▌| 240/250 [00:41,  6.41it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  96%|█████████▋| 241/250 [00:42,  5.90it/s, step size=4.44e-01, acc. prob=0.987]    Sample:  97%|█████████▋| 242/250 [00:42,  5.57it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  97%|█████████▋| 243/250 [00:42,  4.91it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  98%|█████████▊| 244/250 [00:42,  4.49it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  98%|█████████▊| 245/250 [00:43,  3.86it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  98%|█████████▊| 246/250 [00:43,  3.41it/s, step size=4.44e-01, acc. prob=0.986]    Sample:  99%|█████████▉| 248/250 [00:43,  4.25it/s, step size=4.44e-01, acc. prob=0.986]    Sample: 100%|█████████▉| 249/250 [00:44,  4.19it/s, step size=4.44e-01, acc. prob=0.986]    Sample: 100%|██████████| 250/250 [00:44,  4.12it/s, step size=4.44e-01, acc. prob=0.986]    Sample: 100%|██████████| 250/250 [00:44,  5.62it/s, step size=4.44e-01, acc. prob=0.986]
 
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 219-223
+.. GENERATED FROM PYTHON SOURCE LINES 234-238
 
 Posterior Predictive Checks
 ---------------------------
 After obtaining the posterior samples, we perform posterior predictive checks.
 This step is crucial to evaluate the performance and validity of our probabilistic model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 225-226
+.. GENERATED FROM PYTHON SOURCE LINES 240-241
 
 Sample from posterior predictive and visualize
 
-.. GENERATED FROM PYTHON SOURCE LINES 226-233
+.. GENERATED FROM PYTHON SOURCE LINES 241-247
 
 .. code-block:: Python
 
@@ -478,7 +963,6 @@ Sample from posterior predictive and visualize
     data = az.from_pyro(posterior=mcmc, prior=prior, posterior_predictive=posterior_predictive)
     az.plot_trace(data)
     plt.show()
-
 
 
 
@@ -499,7 +983,7 @@ Sample from posterior predictive and visualize
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 234-239
+.. GENERATED FROM PYTHON SOURCE LINES 248-253
 
 Density Plot of Posterior Predictive
 ------------------------------------
@@ -507,11 +991,11 @@ A density plot provides a visual representation of the distribution of the
 posterior predictive checks. It helps in comparing the prior and posterior distributions 
 and in assessing the impact of our observed data on the model.
 
-.. GENERATED FROM PYTHON SOURCE LINES 241-242
+.. GENERATED FROM PYTHON SOURCE LINES 255-256
 
 Plot density of posterior predictive and prior predictive
 
-.. GENERATED FROM PYTHON SOURCE LINES 242-252
+.. GENERATED FROM PYTHON SOURCE LINES 256-265
 
 .. code-block:: Python
 
@@ -524,7 +1008,6 @@ Plot density of posterior predictive and prior predictive
     )
     plt.show()
 
-    # sphinx_gallery_thumbnail_number = 2
 
 
 
@@ -537,10 +1020,98 @@ Plot density of posterior predictive and prior predictive
 
 
 
+.. GENERATED FROM PYTHON SOURCE LINES 266-267
+
+Plot spagetti
+
+.. GENERATED FROM PYTHON SOURCE LINES 267-290
+
+.. code-block:: Python
+
+    p2d = plot_geo_setting_well(geo_model, alpha=0.1, show_lith=False)
+    for i in range(0,199,5):
+        gp.modify_surface_points(
+            geo_model=geo_model,
+            slice=0,
+            Z= geo_model.input_transform.apply_inverse(
+                points=np.array([[0, 0, data.posterior[r'$\mu_{top}$'][0][i].item()]]))[0,2]
+        )
+
+        gp.compute_model(geo_model)
+
+        plot_regular_grid_contacts(
+            gempy_model=geo_model,
+            ax=p2d.axes[0],
+            slicer_data=p2d.section_data_list[0].slicer_data,
+            resolution=geo_model.grid.regular_grid.resolution,
+            only_faults=False,
+            kwargs={'alpha': 0.1}
+        )
+
+    p2d.fig.show()
+
+    # sphinx_gallery_thumbnail_number = 2
+
+
+
+.. image-sg:: /examples/04_probabilistic_modeling/images/sphx_glr_01_thickness_problem_gempy_006.png
+   :alt: Cell Number: mid Direction: y
+   :srcset: /examples/04_probabilistic_modeling/images/sphx_glr_01_thickness_problem_gempy_006.png
+   :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ .. code-block:: none
+
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+    Setting Backend To: AvailableBackends.numpy
+
+
+
+
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** (0 minutes 47.845 seconds)
+   **Total running time of the script:** (0 minutes 56.217 seconds)
 
 
 .. _sphx_glr_download_examples_04_probabilistic_modeling_01_thickness_problem_gempy.py:

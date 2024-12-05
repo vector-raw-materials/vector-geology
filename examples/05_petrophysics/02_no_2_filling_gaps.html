@@ -1,0 +1,3567 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Modeling and Propagation of Petrophysical Data for Mining Exploration (2/3) &#8212; Vector Geology 0.3.dev17+g93b9dad.d20241008 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=649a27d8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=039e1c02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
+    <link rel="stylesheet" type="text/css" href="../../_static/style.css?v=0ca0a429" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery.css?v=61a4c737" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-binder.css?v=f4aeca0c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-dataframe.css?v=2082cf3c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sg_gallery-rendered-html.css?v=1277b6f3" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+    <script src="../../_static/documentation_options.js?v=8b60b743"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/design-tabs.js?v=36754332"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="icon" href="../../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (3/3)" href="03_no_3_modeling.html" />
+    <link rel="prev" title="Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (1/3)" href="01_eda_integration_delivery_1.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#sphx-glr-download-examples-05-petrophysics-02-no-2-filling-gaps-py"><span class="std std-ref">Go to the end</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="modeling-and-propagation-of-petrophysical-data-for-mining-exploration-2-3">
+<span id="sphx-glr-examples-05-petrophysics-02-no-2-filling-gaps-py"></span><h1>Modeling and Propagation of Petrophysical Data for Mining Exploration (2/3)<a class="headerlink" href="#modeling-and-propagation-of-petrophysical-data-for-mining-exploration-2-3" title="Link to this heading">¶</a></h1>
+<p><strong>Cleaning and Filling the Gaps</strong></p>
+<p>Barcelona 25/09/24
+GEO3BCN
+Manuel David Soto, Juan Alcalde, Adrià Hernàndez-Pineda, Ramón Carbonel</p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h2>
+<p>The dispersion and scarcity of petrophysical data are well-known challenges in the mining sector. These issues are primarily driven by economic factors, but also by geological factors such as sedimentary cover, weathering, erosion, or the depth of targets, geotechnical issues (e.g., slope or borehole stability), and even technical limitations or availability that have been resolved in other industries (for instance, sonic logs were not previously acquired due to a lack of interest in velocity field data).</p>
+<p>To address the challenge of sparse and incomplete petrophysical data in the mining sector, we have developed three Jupyter notebooks that tackle these issues through a suite of open-source Python tools. These tools support researchers in the initial exploration, visualization, and integration of data from diverse sources, filling gaps caused by technical limitations and ultimately enabling the complete modeling of missing properties (through standard and more advanced ML-based models). We applied these tools to both recently acquired and legacy petrophysical data of two cores northwest of Collinstown (County Westmeath, Province of Leinster), Ireland, located 26 km west-northwest of the Navan mine. However, these tools are adaptable and applicable to mining data from any location.</p>
+<p>After the EDA and integration of the petrophysical dataset of Collinstown (notebook 1/3), this second notebook gathers different tasks that can be grouped into what is called, in data science, data mining. These tasks are:</p>
+<ul class="simple">
+<li><p>Record the positions of the original NaNs.</p></li>
+<li><p>Record the positions and the values of the anomalies to be deleted.</p></li>
+<li><p>Delete the anomalies.</p></li>
+<li><p>Fill out all NaNs, both original and those resulting from deleting the anomalies, using different means (imputations, empirical formulas, simple ML models).</p></li>
+<li><p>Compare the effectiveness of the different filling gap methods.</p></li>
+<li><p>Use the better option to fill in the gaps and deliver the corrected petrophysical data for further investigation.</p></li>
+</ul>
+<p>As with the previous notebook, these tasks are performed with open-source Python tools that are easily accessible by any researcher through a Python installation connected to the Internet.</p>
+</section>
+<section id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Link to this heading">¶</a></h2>
+<p>The dataset used in this notebook is the ‘features’ dataset from the previous notebook (1/3). It contains the modelable petrophysical features with their respective anomalies. ‘Hole’ (text object) and ‘Len’ (float) variables are for reference, ‘Form’ (text object) is a categorical variable representing the major formations:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Explanation</p></th>
+<th class="head"><p>Unit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Hole</p></td>
+<td><p>Hole name</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>From</p></td>
+<td><p>Top of the sample</p></td>
+<td><p>m</p></td>
+</tr>
+<tr class="row-even"><td><p>Len</p></td>
+<td><p>Length of the core sample</p></td>
+<td><p>cm</p></td>
+</tr>
+<tr class="row-odd"><td><p>Den</p></td>
+<td><p>Density</p></td>
+<td><p>g/cm³</p></td>
+</tr>
+<tr class="row-even"><td><p>Vp</p></td>
+<td><p>Compressional velocity</p></td>
+<td><p>m/s</p></td>
+</tr>
+<tr class="row-odd"><td><p>Vs</p></td>
+<td><p>Shear velocity</p></td>
+<td><p>m/s</p></td>
+</tr>
+<tr class="row-even"><td><p>Mag</p></td>
+<td><p>Magnetic susceptibility</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Ip</p></td>
+<td><p>Chargeability or induced polarization</p></td>
+<td><p>mv/V</p></td>
+</tr>
+<tr class="row-even"><td><p>Res</p></td>
+<td><p>Resistivity</p></td>
+<td><p>ohm·m</p></td>
+</tr>
+<tr class="row-odd"><td><p>Form</p></td>
+<td><p>Major formations or zone along the hole</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="libraries">
+<h2>Libraries<a class="headerlink" href="#libraries" title="Link to this heading">¶</a></h2>
+<p>The following are the Python libraries used along this notebook. PSL are Python Standard Libraries, UDL are User Defined Libraries, and PEL are Python External Libraries:</p>
+<p>PLS</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+
+<span class="c1"># UDL</span>
+<span class="kn">from</span> <span class="nn">vector_geology</span> <span class="kn">import</span> <span class="n">basic_stat</span><span class="p">,</span> <span class="n">geo</span>
+
+<span class="c1"># PEL- Basic</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tabulate</span> <span class="kn">import</span> <span class="n">tabulate</span>
+
+<span class="c1"># PEL - Plotting</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="c1"># PEL - Data selection, transformation, preprocessing</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">PolynomialFeatures</span>
+
+<span class="c1"># PEL - Imputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">KNNImputer</span><span class="p">,</span> <span class="n">SimpleImputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.experimental</span> <span class="kn">import</span> <span class="n">enable_iterative_imputer</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">IterativeImputer</span>
+
+<span class="c1"># PEL- ML algorithms</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LinearRegression</span><span class="p">,</span> <span class="n">Lasso</span><span class="p">,</span> <span class="n">Ridge</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVR</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="kn">import</span> <span class="n">KNeighborsRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span><span class="p">,</span> <span class="n">GradientBoostingRegressor</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">tree</span>
+<span class="kn">import</span> <span class="nn">xgboost</span> <span class="k">as</span> <span class="nn">xgb</span>
+
+<span class="c1"># PEL - Metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span><span class="p">,</span> <span class="n">r2_score</span>
+</pre></div>
+</div>
+</section>
+<section id="settings">
+<h2>Settings<a class="headerlink" href="#settings" title="Link to this heading">¶</a></h2>
+<p>Seed of random process</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="mi">123</span>
+
+<span class="c1"># Warning suppression</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="data-loading">
+<h2>Data Loading<a class="headerlink" href="#data-loading" title="Link to this heading">¶</a></h2>
+<p>Features data load</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Output/features.csv&#39;</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">features</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Hole</th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+      <th>Form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>TC-1319-005</td>
+      <td>265.77</td>
+      <td>11.2</td>
+      <td>2.610</td>
+      <td>2179.0</td>
+      <td>NaN</td>
+      <td>0.108</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>TC-1319-005</td>
+      <td>271.66</td>
+      <td>11.8</td>
+      <td>4.318</td>
+      <td>5514.0</td>
+      <td>2222.0</td>
+      <td>0.108</td>
+      <td>26.06</td>
+      <td>4600.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>TC-1319-005</td>
+      <td>277.05</td>
+      <td>10.3</td>
+      <td>3.399</td>
+      <td>5754.0</td>
+      <td>2085.0</td>
+      <td>0.237</td>
+      <td>17.52</td>
+      <td>10200.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>TC-1319-005</td>
+      <td>282.55</td>
+      <td>11.2</td>
+      <td>4.342</td>
+      <td>5773.0</td>
+      <td>2011.0</td>
+      <td>0.151</td>
+      <td>28.13</td>
+      <td>5800.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>TC-1319-005</td>
+      <td>287.20</td>
+      <td>10.8</td>
+      <td>3.293</td>
+      <td>6034.0</td>
+      <td>2122.0</td>
+      <td>0.176</td>
+      <td>6.88</td>
+      <td>15500.0</td>
+      <td>CALP</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>329.000000</td>
+      <td>321.000000</td>
+      <td>327.000000</td>
+      <td>310.000000</td>
+      <td>289.000000</td>
+      <td>326.000000</td>
+      <td>303.000000</td>
+      <td>303.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>543.279696</td>
+      <td>10.223364</td>
+      <td>2.761664</td>
+      <td>5441.990323</td>
+      <td>2772.937716</td>
+      <td>0.430543</td>
+      <td>49.738548</td>
+      <td>3283.762376</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>262.864370</td>
+      <td>1.070127</td>
+      <td>0.293938</td>
+      <td>700.858075</td>
+      <td>653.446129</td>
+      <td>5.192919</td>
+      <td>25.145208</td>
+      <td>3714.851096</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>9.600000</td>
+      <td>7.500000</td>
+      <td>2.420000</td>
+      <td>992.000000</td>
+      <td>0.000000</td>
+      <td>0.001000</td>
+      <td>5.390000</td>
+      <td>156.900000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>355.580000</td>
+      <td>9.700000</td>
+      <td>2.678500</td>
+      <td>5196.000000</td>
+      <td>2294.000000</td>
+      <td>0.064000</td>
+      <td>31.555000</td>
+      <td>1100.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>547.800000</td>
+      <td>10.000000</td>
+      <td>2.706000</td>
+      <td>5575.000000</td>
+      <td>3041.000000</td>
+      <td>0.114500</td>
+      <td>47.040000</td>
+      <td>2100.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>750.000000</td>
+      <td>10.400000</td>
+      <td>2.731000</td>
+      <td>5857.000000</td>
+      <td>3248.000000</td>
+      <td>0.205250</td>
+      <td>67.190000</td>
+      <td>3850.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1049.200000</td>
+      <td>18.000000</td>
+      <td>5.074000</td>
+      <td>6478.000000</td>
+      <td>3740.000000</td>
+      <td>93.886000</td>
+      <td>171.730000</td>
+      <td>23900.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Columns in the features dataframe</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Index([&#39;Hole&#39;, &#39;From&#39;, &#39;Len&#39;, &#39;Den&#39;, &#39;Vp&#39;, &#39;Vs&#39;, &#39;Mag&#39;, &#39;Ip&#39;, &#39;Res&#39;, &#39;Form&#39;], dtype=&#39;object&#39;)
+</pre></div>
+</div>
+</section>
+<section id="features-cleaning">
+<h2>Features Cleaning<a class="headerlink" href="#features-cleaning" title="Link to this heading">¶</a></h2>
+<p>The plots below show the anomalous values of the four affected variables. Then, along the section, we will register the position of the anomalies and then delete them, according to the findings of the previous notebook (1/3):</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Feat.</p></th>
+<th class="head"><p>Deliting Anomalies</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Den</p></td>
+<td><p>Values above 4 g/cm³ are related to bad measurements in core
+samples longer than 11.2 cm.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Vp</p></td>
+<td><p>Values below 3000 m/s are related to fractures in the core
+samples.</p></td>
+</tr>
+<tr class="row-even"><td><p>Vs</p></td>
+<td><p>Values less than 1000 m/s are also related to core fractures.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Mag</p></td>
+<td><p>The anomaly of 93.9 is above the range of the measuring
+equipment.</p></td>
+</tr>
+<tr class="row-even"><td><p>Ip</p></td>
+<td><p>We see no reasons to discard outliers.</p></td>
+</tr>
+<tr class="row-odd"><td><p>Res</p></td>
+<td><p>We see no reasons to discard outliers.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Bad data areas in Vp, Vs, Mag vs. Den</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># len vs. Den</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">Den</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">5.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">1100</span><span class="p">,</span> <span class="mf">4.7</span><span class="p">,</span> <span class="s1">&#39;Bad Data Area&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">500</span><span class="p">,</span> <span class="mi">7000</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">5.25</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Vp (m/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Den (g/cm3)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="c1"># Den vs. Vs bad data area</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Vs</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">Den</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">5.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mf">4.7</span><span class="p">,</span> <span class="s1">&#39;Bad Data Area&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">5.25</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Vs (m/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Den (g/cm3)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="c1"># Den vs. Vs bad data area</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Mag</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">Den</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;skyblue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">5.25</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mf">4.7</span><span class="p">,</span> <span class="s1">&#39;Bad Data Area&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">5.25</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Magnetic Susceptibility&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Den (g/cm3)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Variable with Anomalies in the Keywells&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_001.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_001.png" alt="Variable with Anomalies in the Keywells" class = "sphx-glr-single-img"/></section>
+<section id="nan-and-anomalies-preservation">
+<h2>NaN and Anomalies Preservation<a class="headerlink" href="#nan-and-anomalies-preservation" title="Link to this heading">¶</a></h2>
+<p>The folowing dataframes preserves the location of original NaN (1) and anomalies (2):</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nan_ano_loc</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Fill the datafreme with 1 and 2</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">features</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+    <span class="n">nan_ano_loc</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">features</span><span class="p">[</span><span class="n">column</span><span class="p">]),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">nan_ano_loc</span><span class="o">.</span><span class="n">Den</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Den</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">nan_ano_loc</span><span class="o">.</span><span class="n">Vp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&lt;</span> <span class="mi">3000</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">nan_ano_loc</span><span class="o">.</span><span class="n">Vs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Vs</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">nan_ano_loc</span><span class="o">.</span><span class="n">Mag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Mag</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">nan_ano_loc</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Hole</th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+      <th>Form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nan_ano_loc</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Hole</th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+      <th>Form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>329.0</td>
+      <td>329.0</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.0</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.024316</td>
+      <td>0.048632</td>
+      <td>0.030395</td>
+      <td>0.030395</td>
+      <td>0.006079</td>
+      <td>0.079027</td>
+      <td>0.079027</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.154263</td>
+      <td>0.308527</td>
+      <td>0.245049</td>
+      <td>0.245049</td>
+      <td>0.110264</td>
+      <td>0.270192</td>
+      <td>0.270192</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>1.000000</td>
+      <td>2.000000</td>
+      <td>2.000000</td>
+      <td>2.000000</td>
+      <td>2.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Save the locations of nans and anomalies</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nan_ano_loc</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;Output/nan_ano_loc.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Preservation of the anomalies</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">anomalies</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">features</span><span class="o">.</span><span class="n">Den</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">]</span>
+<span class="n">anomalies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">anomalies</span><span class="p">,</span> <span class="n">features</span><span class="p">[</span><span class="n">features</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&lt;</span> <span class="mi">3000</span><span class="p">]])</span>
+<span class="n">anomalies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">anomalies</span><span class="p">,</span> <span class="n">features</span><span class="p">[</span><span class="n">features</span><span class="o">.</span><span class="n">Vs</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">]])</span>
+<span class="n">anomalies</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">anomalies</span><span class="p">,</span> <span class="n">features</span><span class="p">[</span><span class="n">features</span><span class="o">.</span><span class="n">Mag</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]])</span>
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">anomalies</span> <span class="o">=</span> <span class="n">anomalies</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+<span class="n">anomalies</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Hole</th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+      <th>Form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>TC-1319-005</td>
+      <td>265.77</td>
+      <td>11.2</td>
+      <td>2.610</td>
+      <td>2179.0</td>
+      <td>NaN</td>
+      <td>0.108</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>TC-1319-005</td>
+      <td>271.66</td>
+      <td>11.8</td>
+      <td>4.318</td>
+      <td>5514.0</td>
+      <td>2222.0</td>
+      <td>0.108</td>
+      <td>26.06</td>
+      <td>4600.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>TC-1319-005</td>
+      <td>282.55</td>
+      <td>11.2</td>
+      <td>4.342</td>
+      <td>5773.0</td>
+      <td>2011.0</td>
+      <td>0.151</td>
+      <td>28.13</td>
+      <td>5800.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>TC-1319-005</td>
+      <td>301.50</td>
+      <td>11.6</td>
+      <td>4.251</td>
+      <td>5686.0</td>
+      <td>2755.0</td>
+      <td>0.132</td>
+      <td>14.77</td>
+      <td>6000.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>TC-1319-005</td>
+      <td>313.65</td>
+      <td>11.4</td>
+      <td>4.193</td>
+      <td>5588.0</td>
+      <td>2039.0</td>
+      <td>0.068</td>
+      <td>20.37</td>
+      <td>5400.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>TC-1319-005</td>
+      <td>334.65</td>
+      <td>11.3</td>
+      <td>4.079</td>
+      <td>5678.0</td>
+      <td>2198.0</td>
+      <td>0.036</td>
+      <td>34.51</td>
+      <td>2000.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>TC-1319-005</td>
+      <td>340.00</td>
+      <td>11.9</td>
+      <td>4.444</td>
+      <td>5561.0</td>
+      <td>2581.0</td>
+      <td>0.024</td>
+      <td>14.92</td>
+      <td>4800.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>TC-1319-005</td>
+      <td>344.77</td>
+      <td>11.2</td>
+      <td>4.123</td>
+      <td>5359.0</td>
+      <td>NaN</td>
+      <td>0.041</td>
+      <td>45.93</td>
+      <td>1000.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>24</th>
+      <td>TC-1319-005</td>
+      <td>400.10</td>
+      <td>13.9</td>
+      <td>5.074</td>
+      <td>5367.0</td>
+      <td>2422.0</td>
+      <td>0.066</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>77</th>
+      <td>TC-1319-005</td>
+      <td>645.30</td>
+      <td>11.0</td>
+      <td>2.725</td>
+      <td>992.0</td>
+      <td>NaN</td>
+      <td>0.308</td>
+      <td>98.11</td>
+      <td>293.3</td>
+      <td>LABL</td>
+    </tr>
+    <tr>
+      <th>79</th>
+      <td>TC-1319-005</td>
+      <td>653.95</td>
+      <td>12.0</td>
+      <td>2.936</td>
+      <td>2321.0</td>
+      <td>1929.0</td>
+      <td>0.342</td>
+      <td>88.45</td>
+      <td>443.4</td>
+      <td>LABL</td>
+    </tr>
+    <tr>
+      <th>159</th>
+      <td>TC-1319-005</td>
+      <td>1046.35</td>
+      <td>10.6</td>
+      <td>2.455</td>
+      <td>2325.0</td>
+      <td>NaN</td>
+      <td>0.158</td>
+      <td>44.44</td>
+      <td>1300.0</td>
+      <td>LIS</td>
+    </tr>
+    <tr>
+      <th>174</th>
+      <td>TC-3660-008</td>
+      <td>64.54</td>
+      <td>9.4</td>
+      <td>2.677</td>
+      <td>2802.0</td>
+      <td>0.0</td>
+      <td>0.038</td>
+      <td>35.19</td>
+      <td>2500.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>198</th>
+      <td>TC-3660-008</td>
+      <td>188.03</td>
+      <td>9.4</td>
+      <td>2.679</td>
+      <td>5345.0</td>
+      <td>0.0</td>
+      <td>0.098</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>243</th>
+      <td>TC-3660-008</td>
+      <td>432.95</td>
+      <td>9.7</td>
+      <td>2.779</td>
+      <td>4641.0</td>
+      <td>178.0</td>
+      <td>NaN</td>
+      <td>69.69</td>
+      <td>515.7</td>
+      <td>FLT</td>
+    </tr>
+    <tr>
+      <th>248</th>
+      <td>TC-3660-008</td>
+      <td>452.30</td>
+      <td>10.4</td>
+      <td>2.686</td>
+      <td>5652.0</td>
+      <td>0.0</td>
+      <td>0.053</td>
+      <td>27.54</td>
+      <td>4000.0</td>
+      <td>FLT</td>
+    </tr>
+    <tr>
+      <th>305</th>
+      <td>TC-3660-008</td>
+      <td>734.80</td>
+      <td>9.5</td>
+      <td>2.708</td>
+      <td>5026.0</td>
+      <td>2914.0</td>
+      <td>93.886</td>
+      <td>71.63</td>
+      <td>1200.0</td>
+      <td>SP</td>
+    </tr>
+    <tr>
+      <th>312</th>
+      <td>TC-3660-008</td>
+      <td>774.21</td>
+      <td>9.6</td>
+      <td>2.787</td>
+      <td>6173.0</td>
+      <td>0.0</td>
+      <td>0.123</td>
+      <td>73.08</td>
+      <td>373.2</td>
+      <td>SP</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Number and % of anomalies by boreholes</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total anomalies:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">anomalies</span><span class="p">),</span> <span class="s1">&#39;(</span><span class="si">{:.1f}</span><span class="s1">%)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">anomalies</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+<span class="n">anomalies</span><span class="o">.</span><span class="n">Hole</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Total anomalies: 18 (0.5%)
+
+Hole
+TC-1319-005    12
+TC-3660-008     6
+Name: count, dtype: int64
+</pre></div>
+</div>
+<p>Save the anomalies</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">anomalies</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;Output/anomalies.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Rows with anomalies</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">list</span><span class="p">(</span><span class="n">anomalies</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0, 1, 3, 6, 7, 11, 12, 13, 24, 77, 79, 159, 174, 198, 243, 248, 305, 312]
+</pre></div>
+</div>
+</section>
+<section id="anomalies-deletion">
+<h2>Anomalies Deletion<a class="headerlink" href="#anomalies-deletion" title="Link to this heading">¶</a></h2>
+<p>features2, new features dataframe without anomalies</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="n">features2</span><span class="p">[</span><span class="s1">&#39;Den&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Den</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">Den</span><span class="p">)</span>
+<span class="n">features2</span><span class="p">[</span><span class="s1">&#39;Vp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&lt;</span> <span class="mi">3000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">Vp</span><span class="p">)</span>
+<span class="n">features2</span><span class="p">[</span><span class="s1">&#39;Vs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Vs</span> <span class="o">&lt;</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">Vs</span><span class="p">)</span>
+<span class="n">features2</span><span class="p">[</span><span class="s1">&#39;Mag&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">Mag</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">features</span><span class="o">.</span><span class="n">Mag</span><span class="p">)</span>
+
+<span class="n">features2</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Hole</th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+      <th>Form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>TC-1319-005</td>
+      <td>265.77</td>
+      <td>11.2</td>
+      <td>2.610</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.108</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>TC-1319-005</td>
+      <td>271.66</td>
+      <td>11.8</td>
+      <td>NaN</td>
+      <td>5514.0</td>
+      <td>2222.0</td>
+      <td>0.108</td>
+      <td>26.06</td>
+      <td>4600.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>TC-1319-005</td>
+      <td>277.05</td>
+      <td>10.3</td>
+      <td>3.399</td>
+      <td>5754.0</td>
+      <td>2085.0</td>
+      <td>0.237</td>
+      <td>17.52</td>
+      <td>10200.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>TC-1319-005</td>
+      <td>282.55</td>
+      <td>11.2</td>
+      <td>NaN</td>
+      <td>5773.0</td>
+      <td>2011.0</td>
+      <td>0.151</td>
+      <td>28.13</td>
+      <td>5800.0</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>TC-1319-005</td>
+      <td>287.20</td>
+      <td>10.8</td>
+      <td>3.293</td>
+      <td>6034.0</td>
+      <td>2122.0</td>
+      <td>0.176</td>
+      <td>6.88</td>
+      <td>15500.0</td>
+      <td>CALP</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>329.000000</td>
+      <td>321.000000</td>
+      <td>319.000000</td>
+      <td>305.000000</td>
+      <td>284.000000</td>
+      <td>325.000000</td>
+      <td>303.000000</td>
+      <td>303.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>543.279696</td>
+      <td>10.223364</td>
+      <td>2.721755</td>
+      <td>5496.386885</td>
+      <td>2821.130282</td>
+      <td>0.142988</td>
+      <td>49.738548</td>
+      <td>3283.762376</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>262.864370</td>
+      <td>1.070127</td>
+      <td>0.145217</td>
+      <td>556.077848</td>
+      <td>547.476118</td>
+      <td>0.100706</td>
+      <td>25.145208</td>
+      <td>3714.851096</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>9.600000</td>
+      <td>7.500000</td>
+      <td>2.420000</td>
+      <td>3009.000000</td>
+      <td>1295.000000</td>
+      <td>0.001000</td>
+      <td>5.390000</td>
+      <td>156.900000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>355.580000</td>
+      <td>9.700000</td>
+      <td>2.678000</td>
+      <td>5220.000000</td>
+      <td>2368.250000</td>
+      <td>0.064000</td>
+      <td>31.555000</td>
+      <td>1100.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>547.800000</td>
+      <td>10.000000</td>
+      <td>2.705000</td>
+      <td>5581.000000</td>
+      <td>3041.000000</td>
+      <td>0.114000</td>
+      <td>47.040000</td>
+      <td>2100.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>750.000000</td>
+      <td>10.400000</td>
+      <td>2.726500</td>
+      <td>5858.000000</td>
+      <td>3248.000000</td>
+      <td>0.203000</td>
+      <td>67.190000</td>
+      <td>3850.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1049.200000</td>
+      <td>18.000000</td>
+      <td>3.650000</td>
+      <td>6478.000000</td>
+      <td>3740.000000</td>
+      <td>0.545000</td>
+      <td>171.730000</td>
+      <td>23900.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Boxplot of each feature without anomalies</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="n">subplots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">flierprops</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Features Without Anomalies&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">();</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_002.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_002.png" alt="Features Without Anomalies" class = "sphx-glr-single-img"/><p>Save features without anomalies</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;Output/features2.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="nans-in-the-features">
+<h2>NaNs in the Features<a class="headerlink" href="#nans-in-the-features" title="Link to this heading">¶</a></h2>
+<p>Original NaNs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Hole     0
+From     0
+Len      8
+Den      2
+Vp      19
+Vs      40
+Mag      3
+Ip      26
+Res     26
+Form     0
+dtype: int64
+</pre></div>
+</div>
+<p>Total original NaNs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>np.int64(124)
+</pre></div>
+</div>
+<p>% of original NaNs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Hole     0.000000
+From     0.000000
+Len      2.431611
+Den      0.607903
+Vp       5.775076
+Vs      12.158055
+Mag      0.911854
+Ip       7.902736
+Res      7.902736
+Form     0.000000
+dtype: float64
+</pre></div>
+</div>
+<p>Total % original and new NaNs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;% NaN in Features:&#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">features</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>% NaN in Features: 3.8
+</pre></div>
+</div>
+<p>Original and new NaNs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Hole     0
+From     0
+Len      8
+Den     10
+Vp      24
+Vs      45
+Mag      4
+Ip      26
+Res     26
+Form     0
+dtype: int64
+</pre></div>
+</div>
+<p>Total original and new NaNs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>np.int64(143)
+</pre></div>
+</div>
+<p>Total % original and new NaNs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s1">&#39;% NaN in features2:&#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">features2</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">features2</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>% NaN in features2: 4.3
+</pre></div>
+</div>
+<p>% Total original and new NaNs by feature</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Hole     0.000000
+From     0.000000
+Len      2.431611
+Den      3.039514
+Vp       7.294833
+Vs      13.677812
+Mag      1.215805
+Ip       7.902736
+Res      7.902736
+Form     0.000000
+dtype: float64
+</pre></div>
+</div>
+<p>Bar plot of NaNs</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Count&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;All Features NaN&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Without anomalies&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">features</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;With anomalies&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_003.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_003.png" alt="All Features NaN" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;All Features NaN&#39;}, ylabel=&#39;Count&#39;&gt;
+</pre></div>
+</div>
+<p>Bar plot of NaNs (%)</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Without anomalies&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">features</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;With anomalies&#39;</span><span class="p">,</span> <span class="n">legend</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                       <span class="n">title</span><span class="o">=</span><span class="s1">&#39;All Features NaN&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;%&#39;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">);</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_004.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_004.png" alt="All Features NaN" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;Axes: title={&#39;center&#39;: &#39;All Features NaN&#39;}, ylabel=&#39;%&#39;&gt;
+</pre></div>
+</div>
+<p>Total rows at least one with NaN and their indexes</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">total_nan_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features2</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">features2</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Total rows with at least one NaN:&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">total_nan_index</span><span class="p">),</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;Rows indexes:&#39;</span><span class="p">)</span>
+<span class="n">total_nan_index</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Total rows with at least one NaN: 62
+
+ Rows indexes:
+
+[0, 1, 3, 6, 7, 11, 12, 13, 15, 24, 36, 45, 47, 63, 68, 71, 75, 77, 79, 99, 100, 105, 110, 111, 112, 113, 114, 115, 117, 118, 135, 158, 159, 160, 164, 174, 183, 185, 187, 189, 191, 194, 197, 198, 201, 206, 209, 210, 229, 233, 240, 243, 248, 251, 276, 305, 311, 312, 318, 319, 320, 325]
+</pre></div>
+</div>
+</section>
+<section id="filling-the-holes">
+<h2>Filling the holes<a class="headerlink" href="#filling-the-holes" title="Link to this heading">¶</a></h2>
+<section id="imputations-evaluation">
+<h3>Imputations Evaluation<a class="headerlink" href="#imputations-evaluation" title="Link to this heading">¶</a></h3>
+<p>Imputation refers to the alternative process of filling in all the missing values (NaN) or gaps in a dataset. Instead of removing rows or columns with missing values, those values are replaced (imputed) with estimated values based on information available in the entire dataset (in all variables). This is typically done when you want to preserve the other values in the rows where the NaNs are, and when the missing values for each variable or column do not exceed 25%.</p>
+<p>Since multiple imputation methods are available, it’s important to evaluate each one and select the method that yields the best results, based on metrics such as the sum of residuals, MAE, MSE, RMSE, and R² (formulas of these metrics in the annex). In this case, we tested six imputation methods:</p>
+<ul class="simple">
+<li><p>Simple mean (mean)</p></li>
+<li><p>Simple K-Means (knn)</p></li>
+<li><p>Iterative Impute (ii)</p></li>
+<li><p>Normalized mean (nmean)</p></li>
+<li><p>Normalized K-Means (nknn)</p></li>
+<li><p>Normalized Iterative Imputer (nii)</p></li>
+</ul>
+<p>To compare these methods, we first created fictitious gaps in the Vp values (just this variable due to its importance, and for simplicity and speed) of a non-NaN dataset to compare them later the real values of Vp against the imputed. By doing so, we can compute each method’s metrics and determine which performs best. In addition to these metrics, at the end of the section, there is a plot with the resulting values of each imputer method with respect to the real values, showing less dispersion towards the top of the plot.</p>
+<p>Non-NaN dataframe to test the imputation</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2_num</span> <span class="o">=</span> <span class="n">features2</span><span class="p">[[</span><span class="s1">&#39;From&#39;</span><span class="p">,</span> <span class="s1">&#39;Den&#39;</span><span class="p">,</span> <span class="s1">&#39;Vp&#39;</span><span class="p">,</span> <span class="s1">&#39;Vs&#39;</span><span class="p">,</span> <span class="s1">&#39;Mag&#39;</span><span class="p">,</span> <span class="s1">&#39;Ip&#39;</span><span class="p">,</span> <span class="s1">&#39;Res&#39;</span><span class="p">]]</span>
+<span class="n">features2_num_nonan</span> <span class="o">=</span> <span class="n">features2_num</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>277.05</td>
+      <td>3.399</td>
+      <td>5754.0</td>
+      <td>2085.0</td>
+      <td>0.237</td>
+      <td>17.52</td>
+      <td>10200.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>287.20</td>
+      <td>3.293</td>
+      <td>6034.0</td>
+      <td>2122.0</td>
+      <td>0.176</td>
+      <td>6.88</td>
+      <td>15500.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>296.75</td>
+      <td>2.782</td>
+      <td>4661.0</td>
+      <td>2294.0</td>
+      <td>0.107</td>
+      <td>27.81</td>
+      <td>2100.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>318.75</td>
+      <td>3.386</td>
+      <td>5815.0</td>
+      <td>2115.0</td>
+      <td>0.060</td>
+      <td>8.53</td>
+      <td>10700.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>325.75</td>
+      <td>2.616</td>
+      <td>4785.0</td>
+      <td>1946.0</td>
+      <td>0.040</td>
+      <td>84.90</td>
+      <td>296.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Generation of random mask for the fictitious NaNs or gaps</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">missing_rate</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># Porcentaje de valores faltantes</span>
+<span class="n">Vp_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">missing_rate</span>
+<span class="n">Vp_mask</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([False, False, False, False, False, False, False, False, False,
+       False, False, False, False,  True, False, False,  True,  True,
+       False, False, False, False, False, False, False, False, False,
+       False, False, False,  True, False, False, False, False, False,
+       False, False, False, False, False,  True, False, False, False,
+       False, False, False, False, False,  True, False, False, False,
+       False, False, False, False, False, False, False, False, False,
+       False, False,  True, False, False,  True, False,  True, False,
+       False, False,  True, False, False,  True,  True, False, False,
+       False, False, False, False, False, False,  True, False, False,
+       False, False, False, False, False, False,  True, False, False,
+       False, False, False,  True,  True, False, False, False, False,
+       False, False, False, False,  True, False, False, False, False,
+       False,  True, False, False, False, False, False, False, False,
+       False, False, False, False, False,  True, False, False, False,
+        True, False, False, False, False,  True, False, False, False,
+       False, False, False,  True, False, False,  True, False, False,
+       False, False,  True, False, False, False, False, False, False,
+       False,  True, False, False, False, False, False, False, False,
+        True, False, False, False,  True,  True,  True, False, False,
+       False,  True, False, False, False, False,  True, False, False,
+       False, False, False, False, False,  True, False,  True, False,
+       False,  True, False,  True, False, False, False, False,  True,
+       False, False,  True, False, False, False, False, False, False,
+        True, False, False,  True, False, False, False, False, False,
+        True, False, False, False,  True, False,  True, False, False,
+       False,  True, False, False, False, False,  True, False, False,
+       False,  True, False, False, False, False, False, False, False,
+       False, False,  True, False, False, False,  True, False, False,
+        True, False, False, False, False,  True])
+</pre></div>
+</div>
+<p>New gaps in Vp of the Non-NaN dataframe</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2_new_missing</span> <span class="o">=</span> <span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">features2_new_missing</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">,</span> <span class="s1">&#39;Vp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+<span class="n">features2_new_missing</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>277.05</td>
+      <td>3.399</td>
+      <td>5754.0</td>
+      <td>2085.0</td>
+      <td>0.237</td>
+      <td>17.52</td>
+      <td>10200.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>287.20</td>
+      <td>3.293</td>
+      <td>6034.0</td>
+      <td>2122.0</td>
+      <td>0.176</td>
+      <td>6.88</td>
+      <td>15500.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>296.75</td>
+      <td>2.782</td>
+      <td>4661.0</td>
+      <td>2294.0</td>
+      <td>0.107</td>
+      <td>27.81</td>
+      <td>2100.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>318.75</td>
+      <td>3.386</td>
+      <td>5815.0</td>
+      <td>2115.0</td>
+      <td>0.060</td>
+      <td>8.53</td>
+      <td>10700.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>325.75</td>
+      <td>2.616</td>
+      <td>4785.0</td>
+      <td>1946.0</td>
+      <td>0.040</td>
+      <td>84.90</td>
+      <td>296.1</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>323</th>
+      <td>809.47</td>
+      <td>2.786</td>
+      <td>5621.0</td>
+      <td>2334.0</td>
+      <td>0.105</td>
+      <td>55.20</td>
+      <td>706.5</td>
+    </tr>
+    <tr>
+      <th>324</th>
+      <td>814.55</td>
+      <td>2.763</td>
+      <td>5680.0</td>
+      <td>3179.0</td>
+      <td>0.158</td>
+      <td>70.94</td>
+      <td>481.1</td>
+    </tr>
+    <tr>
+      <th>326</th>
+      <td>825.60</td>
+      <td>2.762</td>
+      <td>5593.0</td>
+      <td>1787.0</td>
+      <td>0.337</td>
+      <td>78.44</td>
+      <td>334.6</td>
+    </tr>
+    <tr>
+      <th>327</th>
+      <td>828.80</td>
+      <td>2.804</td>
+      <td>5858.0</td>
+      <td>1964.0</td>
+      <td>0.311</td>
+      <td>73.73</td>
+      <td>466.5</td>
+    </tr>
+    <tr>
+      <th>328</th>
+      <td>833.40</td>
+      <td>2.735</td>
+      <td>NaN</td>
+      <td>3217.0</td>
+      <td>0.308</td>
+      <td>33.86</td>
+      <td>2300.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>267 rows × 7 columns</p>
+</div>
+</div>
+<br />
+<br /><p>At index 328 the original Vp is</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">328</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Hole    TC-3660-008
+From          833.4
+Len            10.1
+Den           2.735
+Vp           5805.0
+Vs           3217.0
+Mag           0.308
+Ip            33.86
+Res          2300.0
+Form            PAL
+Name: 328, dtype: object
+</pre></div>
+</div>
+<p>True Vp values</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">true_vp</span> <span class="o">=</span> <span class="n">features2_num_nonan</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">]</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">true_vp</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0    5196.0
+1    6159.0
+2    6037.0
+3    5815.0
+4    4930.0
+Name: Vp, dtype: float64
+</pre></div>
+</div>
+<p>Evaluation of the imputers</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># List of imputers</span>
+<span class="n">imputers</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Initialize imputers</span>
+<span class="n">mean_imputer</span> <span class="o">=</span> <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="n">ii_imputer</span> <span class="o">=</span> <span class="n">IterativeImputer</span><span class="p">(</span><span class="n">max_iter</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">knn_imputer</span> <span class="o">=</span> <span class="n">KNNImputer</span><span class="p">(</span><span class="n">n_neighbors</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># Normalization</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">features2_new_missing_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">features2_new_missing</span><span class="p">)</span>
+
+<span class="c1"># Append of imputer (name, norm, imputer, data)</span>
+<span class="n">imputers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="n">mean_imputer</span><span class="p">,</span> <span class="n">features2_new_missing</span><span class="p">))</span>
+<span class="n">imputers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;ii&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="n">ii_imputer</span><span class="p">,</span> <span class="n">features2_new_missing</span><span class="p">))</span>
+<span class="n">imputers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;knn&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="n">knn_imputer</span><span class="p">,</span> <span class="n">features2_new_missing</span><span class="p">))</span>
+<span class="n">imputers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;nmean&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="n">mean_imputer</span><span class="p">,</span> <span class="n">features2_new_missing_scaled</span><span class="p">))</span>
+<span class="n">imputers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;nii&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="n">ii_imputer</span><span class="p">,</span> <span class="n">features2_new_missing_scaled</span><span class="p">))</span>
+<span class="n">imputers</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="s1">&#39;nknn&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="n">knn_imputer</span><span class="p">,</span> <span class="n">features2_new_missing_scaled</span><span class="p">))</span>
+
+<span class="c1"># Results table</span>
+<span class="n">headers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Imputer&#39;</span><span class="p">,</span> <span class="s1">&#39;Normalization&#39;</span><span class="p">,</span> <span class="s1">&#39;Sum Residual&#39;</span><span class="p">,</span> <span class="s1">&#39;MAE&#39;</span><span class="p">,</span> <span class="s1">&#39;MSE&#39;</span><span class="p">,</span> <span class="s1">&#39;RMSE&#39;</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">]</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># Loop over the imputers</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">imputer</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">imputers</span><span class="p">:</span>
+    <span class="c1"># Impute the data</span>
+    <span class="n">imputed_data</span> <span class="o">=</span> <span class="n">imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+    <span class="c1"># Reverse the normalization if data was normalized</span>
+    <span class="k">if</span> <span class="n">norm</span> <span class="o">==</span> <span class="s1">&#39;yes&#39;</span><span class="p">:</span>
+        <span class="n">imputed_data</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">imputed_data</span><span class="p">)</span>
+
+    <span class="c1"># Convert the array to dataframe</span>
+    <span class="n">imputed_data_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">imputed_data</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">features2_new_missing</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">imputed_vp</span> <span class="o">=</span> <span class="n">imputed_data_df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">,</span> <span class="s1">&#39;Vp&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Calculate residuals and metrics</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">true_vp</span> <span class="o">-</span> <span class="n">imputed_vp</span><span class="p">)</span>
+    <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputed_vp</span><span class="p">)</span>
+    <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputed_vp</span><span class="p">)</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">r2_score</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputed_vp</span><span class="p">)</span>
+
+    <span class="c1"># Create a dataframe for imputer using globals()</span>
+    <span class="nb">globals</span><span class="p">()[</span><span class="sa">f</span><span class="s1">&#39;imputer_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">imputed_data_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1"># Append results</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">name</span><span class="p">,</span> <span class="n">norm</span><span class="p">,</span> <span class="n">residual</span><span class="p">,</span> <span class="n">mae</span><span class="p">,</span> <span class="n">mse</span><span class="p">,</span> <span class="n">rmse</span><span class="p">,</span> <span class="n">r2</span><span class="p">])</span>
+
+<span class="c1"># Print the results in a formatted table</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Seed:&#39;</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">tabulate</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">tablefmt</span><span class="o">=</span><span class="s2">&quot;fancy_outline&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Seed: 123
+╒═══════════╤═════════════════╤════════════════╤═════════╤════════╤═════════╤═════════════╕
+│ Imputer   │ Normalization   │   Sum Residual │     MAE │    MSE │    RMSE │          R2 │
+╞═══════════╪═════════════════╪════════════════╪═════════╪════════╪═════════╪═════════════╡
+│ mean      │ no              │        1779.8  │ 394.903 │ 256363 │ 506.323 │ -0.00517294 │
+│ ii        │ no              │       -1106.23 │ 308.72  │ 163029 │ 403.768 │  0.360781   │
+│ knn       │ no              │        -490.6  │ 310.118 │ 168360 │ 410.317 │  0.339878   │
+│ nmean     │ yes             │        1779.8  │ 394.903 │ 256363 │ 506.323 │ -0.00517294 │
+│ nii       │ yes             │        -646.02 │ 296.29  │ 160690 │ 400.862 │  0.36995    │
+│ nknn      │ yes             │        -924.4  │ 298.808 │ 166131 │ 407.592 │  0.348616   │
+╘═══════════╧═════════════════╧════════════════╧═════════╧════════╧═════════╧═════════════╛
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">imputer_nii</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>277.05</td>
+      <td>3.399</td>
+      <td>5754.0</td>
+      <td>2085.0</td>
+      <td>0.237</td>
+      <td>17.52</td>
+      <td>10200.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>287.20</td>
+      <td>3.293</td>
+      <td>6034.0</td>
+      <td>2122.0</td>
+      <td>0.176</td>
+      <td>6.88</td>
+      <td>15500.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>296.75</td>
+      <td>2.782</td>
+      <td>4661.0</td>
+      <td>2294.0</td>
+      <td>0.107</td>
+      <td>27.81</td>
+      <td>2100.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>318.75</td>
+      <td>3.386</td>
+      <td>5815.0</td>
+      <td>2115.0</td>
+      <td>0.060</td>
+      <td>8.53</td>
+      <td>10700.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>325.75</td>
+      <td>2.616</td>
+      <td>4785.0</td>
+      <td>1946.0</td>
+      <td>0.040</td>
+      <td>84.90</td>
+      <td>296.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Plot of the real Vp vs. the imputed Vp</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">true_vp</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;True Values&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputer_mean</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">]</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Mean (mean)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputer_nmean</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">]</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normalized Mean (nmean)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputer_ii</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">]</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Iterative (ii)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputer_nii</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">]</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normalized (nii)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputer_knn</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">]</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;K-Mean Neighbor (knn)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">true_vp</span><span class="p">,</span> <span class="n">imputer_nknn</span><span class="p">[</span><span class="n">Vp_mask</span><span class="p">]</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Normalized K-Mean Neighbor (nknn)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;True Vp (m/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Imputed Vp (m/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Real Vp vs. Imputed Vp&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">([</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">6750</span><span class="p">,</span> <span class="mi">4000</span><span class="p">,</span> <span class="mi">6750</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_005.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_005.png" alt="Real Vp vs. Imputed Vp" class = "sphx-glr-single-img"/><dl class="simple">
+<dt>Best Imputation</dt><dd></dd>
+</dl>
+<p>By a closer examination of the metrics, we can conclude that the normalized Iterative Imputer (nii), also called MICE (Multiple Imputation by Chained Equations), performs the best (or least poorly), particularly for the Vp variable, with the mean of the imputed values increasing just 1.2 % with respect to the mean of the real values. Consequently, we used the nii imputer to fill the gaps across all variables and saved the updated dataset in a new dataframe (features3).</p>
+<p>The multiplot of this section shows that the imputation process maintains the shape of the boxplot of the variables from which the anomalies have been removed. In other words, this multiplot of the imputed dataset (features3) is almost identical to the multiplot of features2 in section 7.2.</p>
+<p>Normalized interactive imputation of features2</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Data normalization</span>
+<span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+<span class="n">features2_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">features2_num</span><span class="p">)</span>
+
+<span class="c1"># Imputation of normalized data</span>
+<span class="n">nii_features3_array</span> <span class="o">=</span> <span class="n">ii_imputer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">features2_scaled</span><span class="p">)</span>
+
+<span class="c1"># Reverse normalization and new imputed dataframe</span>
+<span class="n">features3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scaler</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">nii_features3_array</span><span class="p">),</span> <span class="n">columns</span><span class="o">=</span><span class="n">features2_num</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+
+<span class="n">features3</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>265.77</td>
+      <td>2.610000</td>
+      <td>5725.879959</td>
+      <td>3073.767206</td>
+      <td>0.108</td>
+      <td>36.995337</td>
+      <td>5489.392555</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>271.66</td>
+      <td>2.786624</td>
+      <td>5514.000000</td>
+      <td>2222.000000</td>
+      <td>0.108</td>
+      <td>26.060000</td>
+      <td>4600.000000</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>277.05</td>
+      <td>3.399000</td>
+      <td>5754.000000</td>
+      <td>2085.000000</td>
+      <td>0.237</td>
+      <td>17.520000</td>
+      <td>10200.000000</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>282.55</td>
+      <td>2.800579</td>
+      <td>5773.000000</td>
+      <td>2011.000000</td>
+      <td>0.151</td>
+      <td>28.130000</td>
+      <td>5800.000000</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>287.20</td>
+      <td>3.293000</td>
+      <td>6034.000000</td>
+      <td>2122.000000</td>
+      <td>0.176</td>
+      <td>6.880000</td>
+      <td>15500.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features3</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+      <td>329.000000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>543.279696</td>
+      <td>2.723043</td>
+      <td>5501.096555</td>
+      <td>2808.728436</td>
+      <td>0.142841</td>
+      <td>48.950658</td>
+      <td>3401.316252</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>262.864370</td>
+      <td>0.143224</td>
+      <td>538.939658</td>
+      <td>517.989081</td>
+      <td>0.100134</td>
+      <td>24.374350</td>
+      <td>3623.480943</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>9.600000</td>
+      <td>2.420000</td>
+      <td>3009.000000</td>
+      <td>1295.000000</td>
+      <td>0.001000</td>
+      <td>5.390000</td>
+      <td>156.900000</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>355.580000</td>
+      <td>2.679000</td>
+      <td>5266.000000</td>
+      <td>2448.000000</td>
+      <td>0.064000</td>
+      <td>31.808800</td>
+      <td>1200.000000</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>547.800000</td>
+      <td>2.707000</td>
+      <td>5587.000000</td>
+      <td>2994.000000</td>
+      <td>0.115000</td>
+      <td>46.200000</td>
+      <td>2300.000000</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>750.000000</td>
+      <td>2.731000</td>
+      <td>5849.000000</td>
+      <td>3231.000000</td>
+      <td>0.201000</td>
+      <td>65.470000</td>
+      <td>4200.000000</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>1049.200000</td>
+      <td>3.650000</td>
+      <td>6478.000000</td>
+      <td>3740.000000</td>
+      <td>0.545000</td>
+      <td>171.730000</td>
+      <td>23900.000000</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Boxplot of each imputed feature</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features3</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">box</span><span class="p">(</span><span class="n">subplots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">layout</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">flierprops</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;marker&quot;</span><span class="p">:</span> <span class="s2">&quot;.&quot;</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Imputed Features&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_006.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_006.png" alt="Imputed Features" class = "sphx-glr-single-img"/><p>Copy reference variable to features3</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features3</span><span class="p">[[</span><span class="s1">&#39;Hole&#39;</span><span class="p">,</span> <span class="s1">&#39;Len&#39;</span><span class="p">,</span> <span class="s1">&#39;Form&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">features2</span><span class="p">[[</span><span class="s1">&#39;Hole&#39;</span><span class="p">,</span> <span class="s1">&#39;Len&#39;</span><span class="p">,</span> <span class="s1">&#39;Form&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>Order of the variables</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features3_series</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+<span class="n">features3_series</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;Hole&#39;, &#39;From&#39;, &#39;Len&#39;, &#39;Den&#39;, &#39;Vp&#39;, &#39;Vs&#39;, &#39;Mag&#39;, &#39;Ip&#39;, &#39;Res&#39;, &#39;Form&#39;]
+</pre></div>
+</div>
+<p>Reordering features3</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features3</span> <span class="o">=</span> <span class="n">features3</span><span class="p">[</span><span class="n">features3_series</span><span class="p">]</span>
+<span class="n">features3</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Hole</th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+      <th>Form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>TC-1319-005</td>
+      <td>265.77</td>
+      <td>11.2</td>
+      <td>2.610000</td>
+      <td>5725.879959</td>
+      <td>3073.767206</td>
+      <td>0.108</td>
+      <td>36.995337</td>
+      <td>5489.392555</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>TC-1319-005</td>
+      <td>271.66</td>
+      <td>11.8</td>
+      <td>2.786624</td>
+      <td>5514.000000</td>
+      <td>2222.000000</td>
+      <td>0.108</td>
+      <td>26.060000</td>
+      <td>4600.000000</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>TC-1319-005</td>
+      <td>277.05</td>
+      <td>10.3</td>
+      <td>3.399000</td>
+      <td>5754.000000</td>
+      <td>2085.000000</td>
+      <td>0.237</td>
+      <td>17.520000</td>
+      <td>10200.000000</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>TC-1319-005</td>
+      <td>282.55</td>
+      <td>11.2</td>
+      <td>2.800579</td>
+      <td>5773.000000</td>
+      <td>2011.000000</td>
+      <td>0.151</td>
+      <td>28.130000</td>
+      <td>5800.000000</td>
+      <td>CALP</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>TC-1319-005</td>
+      <td>287.20</td>
+      <td>10.8</td>
+      <td>3.293000</td>
+      <td>6034.000000</td>
+      <td>2122.000000</td>
+      <td>0.176</td>
+      <td>6.880000</td>
+      <td>15500.000000</td>
+      <td>CALP</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Save features3</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features3</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;Output/features3.csv&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Indixes of Vp values in features2</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="p">[</span><span class="o">~</span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>1      5514.0
+2      5754.0
+3      5773.0
+4      6034.0
+5      4661.0
+        ...
+323    5621.0
+324    5680.0
+326    5593.0
+327    5858.0
+328    5805.0
+Name: Vp, Length: 305, dtype: float64
+</pre></div>
+</div>
+<p>Indixes of Vp NaNs in features2</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="p">[</span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0     NaN
+15    NaN
+36    NaN
+77    NaN
+79    NaN
+111   NaN
+118   NaN
+159   NaN
+174   NaN
+183   NaN
+185   NaN
+187   NaN
+189   NaN
+191   NaN
+194   NaN
+201   NaN
+210   NaN
+233   NaN
+240   NaN
+251   NaN
+276   NaN
+311   NaN
+320   NaN
+325   NaN
+Name: Vp, dtype: float64
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">Vp_nan_index</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="p">[</span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">isna</span><span class="p">()]</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+<span class="n">Vp_nan_index</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[0, 15, 36, 77, 79, 111, 118, 159, 174, 183, 185, 187, 189, 191, 194, 201, 210, 233, 240, 251, 276, 311, 320, 325]
+</pre></div>
+</div>
+<p>Original Vp without anomalies</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>count     305.000000
+mean     5496.386885
+std       556.077848
+min      3009.000000
+25%      5220.000000
+50%      5581.000000
+75%      5858.000000
+max      6478.000000
+Name: Vp, dtype: float64
+</pre></div>
+</div>
+<p>Imputed Vp</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features3</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">Vp_nan_index</span><span class="p">]</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>count      24.000000
+mean     5560.948607
+std       225.846356
+min      5210.315493
+25%      5369.531486
+50%      5605.088801
+75%      5779.916352
+max      5854.418200
+Name: Vp, dtype: float64
+</pre></div>
+</div>
+<p>% of increase of the mean of the imputed Vp compared with the real Vp</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vp_change_den</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">features3</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">Vp_nan_index</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Increase of the mean:&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:.1f}</span><span class="s1"> %&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">vp_change_den</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Increase of the mean: 1.2 %
+</pre></div>
+</div>
+<p>nii Vp for comparison</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nii_vp</span> <span class="o">=</span> <span class="n">features3</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">Vp_nan_index</span><span class="p">]</span>
+<span class="n">nii_vp</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0     5725.879959
+15    5604.870331
+36    5558.402401
+77    5374.912754
+79    5210.315493
+Name: Vp, dtype: float64
+</pre></div>
+</div>
+</section>
+</section>
+<section id="estimating-vp">
+<h2>Estimating Vp<a class="headerlink" href="#estimating-vp" title="Link to this heading">¶</a></h2>
+<p>The calculation of a single variable such as Vp (again, just this variable due to its importance, for simplicity and speed) allows us to try and evaluate different methods for filling the gaps, from empirical formulas to the simplest Machine Learning (ML) algorithms.</p>
+<section id="vp-by-gardner">
+<h3>Vp by Gardner<a class="headerlink" href="#vp-by-gardner" title="Link to this heading">¶</a></h3>
+<p>The Gardner’s formula is a well-known empirical formula that allows us to transform the density (Den) into compressional velocity (Vp):</p>
+<div class="math notranslate nohighlight">
+\[Vp = \alpha * \phi ^ {\beta}\]</div>
+<p>Where</p>
+<p><span class="math notranslate nohighlight">\(\phi\)</span> is the density and the standard coefficients (reference: <a class="reference external" href="https://wiki.seg.org/wiki/Dictionary:Gardner%E2%80%99s_equation">https://wiki.seg.org/wiki/Dictionary:Gardner%E2%80%99s_equation</a>) are:</p>
+<div class="math notranslate nohighlight">
+\[\alpha \approx 4348\]</div>
+<div class="math notranslate nohighlight">
+\[\beta = 0.25\]</div>
+<p>Contrary to the expected increasing trend between Den and Vp, the plot below shows an anomalous vertical trend, where multiple Vp values are associated with a single Den value (around 2.7). This anomalous trend results in a negative R² (-0.021, the worst so far) when Vp is calculated using all values, and this score improves slightly when we filter out the pairs that fall outside the expected increasing trend. This is confirmed by the low covariance presented by the Den-Vp pair in the covariance matrix of this section (low correlation coefficient in the previous notebook 1/3).
+%%
+Plot of Den vs. Vp</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">Den</span><span class="p">,</span> <span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Den (g/cm$^3$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Vp (m/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Data Without Anomalies&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_007.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_007.png" alt="Data Without Anomalies" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Text(0.5, 1.0, &#39;Data Without Anomalies&#39;)
+</pre></div>
+</div>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>265.77</td>
+      <td>11.2</td>
+      <td>2.610</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.108</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>271.66</td>
+      <td>11.8</td>
+      <td>NaN</td>
+      <td>5514.0</td>
+      <td>2222.0</td>
+      <td>0.108</td>
+      <td>26.06</td>
+      <td>4600.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>277.05</td>
+      <td>10.3</td>
+      <td>3.399</td>
+      <td>5754.0</td>
+      <td>2085.0</td>
+      <td>0.237</td>
+      <td>17.52</td>
+      <td>10200.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>282.55</td>
+      <td>11.2</td>
+      <td>NaN</td>
+      <td>5773.0</td>
+      <td>2011.0</td>
+      <td>0.151</td>
+      <td>28.13</td>
+      <td>5800.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>287.20</td>
+      <td>10.8</td>
+      <td>3.293</td>
+      <td>6034.0</td>
+      <td>2122.0</td>
+      <td>0.176</td>
+      <td>6.88</td>
+      <td>15500.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>324</th>
+      <td>814.55</td>
+      <td>9.6</td>
+      <td>2.763</td>
+      <td>5680.0</td>
+      <td>3179.0</td>
+      <td>0.158</td>
+      <td>70.94</td>
+      <td>481.1</td>
+    </tr>
+    <tr>
+      <th>325</th>
+      <td>819.92</td>
+      <td>NaN</td>
+      <td>2.649</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0.024</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>326</th>
+      <td>825.60</td>
+      <td>9.9</td>
+      <td>2.762</td>
+      <td>5593.0</td>
+      <td>1787.0</td>
+      <td>0.337</td>
+      <td>78.44</td>
+      <td>334.6</td>
+    </tr>
+    <tr>
+      <th>327</th>
+      <td>828.80</td>
+      <td>9.9</td>
+      <td>2.804</td>
+      <td>5858.0</td>
+      <td>1964.0</td>
+      <td>0.311</td>
+      <td>73.73</td>
+      <td>466.5</td>
+    </tr>
+    <tr>
+      <th>328</th>
+      <td>833.40</td>
+      <td>10.1</td>
+      <td>2.735</td>
+      <td>5805.0</td>
+      <td>3217.0</td>
+      <td>0.308</td>
+      <td>33.86</td>
+      <td>2300.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>329 rows × 8 columns</p>
+</div>
+</div>
+<br />
+<br /><p>Covariance of the features2</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vari_mat</span> <span class="o">=</span> <span class="n">features2</span><span class="o">.</span><span class="n">select_dtypes</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;number&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">cov</span><span class="p">()</span>
+<span class="n">vari_mat</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>From</th>
+      <td>69097.677012</td>
+      <td>-16.222055</td>
+      <td>-7.748490</td>
+      <td>-53382.663546</td>
+      <td>-40566.665284</td>
+      <td>7.019153</td>
+      <td>2766.653801</td>
+      <td>-5.105614e+05</td>
+    </tr>
+    <tr>
+      <th>Len</th>
+      <td>-16.222055</td>
+      <td>1.145171</td>
+      <td>0.052440</td>
+      <td>-49.309151</td>
+      <td>-165.827338</td>
+      <td>-0.010128</td>
+      <td>-0.338487</td>
+      <td>-2.218782e+02</td>
+    </tr>
+    <tr>
+      <th>Den</th>
+      <td>-7.748490</td>
+      <td>0.052440</td>
+      <td>0.021088</td>
+      <td>2.888883</td>
+      <td>-12.299676</td>
+      <td>-0.000414</td>
+      <td>-0.243046</td>
+      <td>5.485842e+01</td>
+    </tr>
+    <tr>
+      <th>Vp</th>
+      <td>-53382.663546</td>
+      <td>-49.309151</td>
+      <td>2.888883</td>
+      <td>309222.573512</td>
+      <td>93428.327238</td>
+      <td>0.964435</td>
+      <td>-3777.361458</td>
+      <td>9.111955e+05</td>
+    </tr>
+    <tr>
+      <th>Vs</th>
+      <td>-40566.665284</td>
+      <td>-165.827338</td>
+      <td>-12.299676</td>
+      <td>93428.327238</td>
+      <td>299730.099574</td>
+      <td>-2.230359</td>
+      <td>-1474.676736</td>
+      <td>5.989462e+05</td>
+    </tr>
+    <tr>
+      <th>Mag</th>
+      <td>7.019153</td>
+      <td>-0.010128</td>
+      <td>-0.000414</td>
+      <td>0.964435</td>
+      <td>-2.230359</td>
+      <td>0.010142</td>
+      <td>0.674282</td>
+      <td>-1.611072e+01</td>
+    </tr>
+    <tr>
+      <th>Ip</th>
+      <td>2766.653801</td>
+      <td>-0.338487</td>
+      <td>-0.243046</td>
+      <td>-3777.361458</td>
+      <td>-1474.676736</td>
+      <td>0.674282</td>
+      <td>632.281488</td>
+      <td>-6.145102e+04</td>
+    </tr>
+    <tr>
+      <th>Res</th>
+      <td>-510561.399578</td>
+      <td>-221.878244</td>
+      <td>54.858423</td>
+      <td>911195.549174</td>
+      <td>598946.207455</td>
+      <td>-16.110723</td>
+      <td>-61451.019939</td>
+      <td>1.380012e+07</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vari_mat</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>8.000000</td>
+      <td>8.000000</td>
+      <td>8.000000</td>
+      <td>8.000000</td>
+      <td>8.000000</td>
+      <td>8.000000</td>
+      <td>8.000000</td>
+      <td>8.000000e+00</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>-66582.918624</td>
+      <td>-56.548474</td>
+      <td>4.691151</td>
+      <td>157080.121136</td>
+      <td>118735.366859</td>
+      <td>-1.210452</td>
+      <td>-7913.003762</td>
+      <td>1.842258e+06</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>183023.873982</td>
+      <td>87.703069</td>
+      <td>20.884445</td>
+      <td>325158.301042</td>
+      <td>222378.924444</td>
+      <td>6.584200</td>
+      <td>21711.748328</td>
+      <td>4.851295e+06</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>-510561.399578</td>
+      <td>-221.878244</td>
+      <td>-12.299676</td>
+      <td>-53382.663546</td>
+      <td>-40566.665284</td>
+      <td>-16.110723</td>
+      <td>-61451.019939</td>
+      <td>-5.105614e+05</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>-43770.664850</td>
+      <td>-78.438698</td>
+      <td>-2.119407</td>
+      <td>-981.322228</td>
+      <td>-493.039688</td>
+      <td>-0.565186</td>
+      <td>-2050.347917</td>
+      <td>-1.552916e+04</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>-11.985273</td>
+      <td>-8.280271</td>
+      <td>0.010337</td>
+      <td>1.926659</td>
+      <td>-7.265017</td>
+      <td>0.004864</td>
+      <td>-0.290766</td>
+      <td>1.937385e+01</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>696.927815</td>
+      <td>0.005514</td>
+      <td>0.761551</td>
+      <td>147376.888806</td>
+      <td>145003.770322</td>
+      <td>0.746820</td>
+      <td>158.576084</td>
+      <td>6.770085e+05</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>69097.677012</td>
+      <td>1.145171</td>
+      <td>54.858423</td>
+      <td>911195.549174</td>
+      <td>598946.207455</td>
+      <td>7.019153</td>
+      <td>2766.653801</td>
+      <td>1.380012e+07</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Covariance matrix</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">vari_mat</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">500</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">.1</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;seismic_r&#39;</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Covariance Matrix&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_008.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_008.png" alt="Covariance Matrix" class = "sphx-glr-single-img"/><p>Gardner Vp in features2, with the standard alpha of 4348</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2</span><span class="p">[</span><span class="s1">&#39;VpG&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4348</span> <span class="o">*</span> <span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">Den</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.25</span>
+<span class="n">features2</span><span class="p">[</span><span class="s1">&#39;VpG&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0      5526.493483
+1              NaN
+2      5903.741408
+3              NaN
+4      5857.165129
+          ...
+324    5605.763308
+325    5547.023745
+326    5605.256023
+327    5626.444480
+328    5591.506938
+Name: VpG, Length: 329, dtype: float64
+</pre></div>
+</div>
+<p>Drop NaNs for metrics calculation</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2_nonan</span> <span class="o">=</span> <span class="n">features2</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">features2_nonan</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Hole</th>
+      <th>From</th>
+      <th>Len</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+      <th>Form</th>
+      <th>VpG</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>TC-1319-005</td>
+      <td>277.05</td>
+      <td>10.3</td>
+      <td>3.399</td>
+      <td>5754.0</td>
+      <td>2085.0</td>
+      <td>0.237</td>
+      <td>17.52</td>
+      <td>10200.0</td>
+      <td>CALP</td>
+      <td>5903.741408</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>TC-1319-005</td>
+      <td>287.20</td>
+      <td>10.8</td>
+      <td>3.293</td>
+      <td>6034.0</td>
+      <td>2122.0</td>
+      <td>0.176</td>
+      <td>6.88</td>
+      <td>15500.0</td>
+      <td>CALP</td>
+      <td>5857.165129</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>TC-1319-005</td>
+      <td>296.75</td>
+      <td>10.3</td>
+      <td>2.782</td>
+      <td>4661.0</td>
+      <td>2294.0</td>
+      <td>0.107</td>
+      <td>27.81</td>
+      <td>2100.0</td>
+      <td>CALP</td>
+      <td>5615.375681</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>TC-1319-005</td>
+      <td>318.75</td>
+      <td>10.7</td>
+      <td>3.386</td>
+      <td>5815.0</td>
+      <td>2115.0</td>
+      <td>0.060</td>
+      <td>8.53</td>
+      <td>10700.0</td>
+      <td>CALP</td>
+      <td>5898.088351</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>TC-1319-005</td>
+      <td>325.75</td>
+      <td>10.0</td>
+      <td>2.616</td>
+      <td>4785.0</td>
+      <td>1946.0</td>
+      <td>0.040</td>
+      <td>84.90</td>
+      <td>296.1</td>
+      <td>CALP</td>
+      <td>5529.666895</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Metrics of the Gardner calculation with all values</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vpg_metrics</span> <span class="o">=</span> <span class="n">basic_stat</span><span class="o">.</span><span class="n">metrics</span><span class="p">(</span><span class="n">features2_nonan</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">features2_nonan</span><span class="o">.</span><span class="n">VpG</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Metrics for Gardner:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vpg_metrics</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Metrics for Gardner:
+
+{&#39;Sum of Residuals&#39;: np.float64(-10723.609649536735), &#39;MAE&#39;: np.float64(365.5125465596317), &#39;MSE&#39;: np.float64(254469.14816210992), &#39;RMSE&#39;: np.float64(504.44935143392735), &#39;R2&#39;: -0.021743605762918117}
+</pre></div>
+</div>
+<p>Metrics of the Gardner calculation with filtered values</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">vpg_metrics2</span> <span class="o">=</span> <span class="n">basic_stat</span><span class="o">.</span><span class="n">metrics</span><span class="p">(</span>
+    <span class="n">features2_nonan</span><span class="o">.</span><span class="n">Vp</span><span class="p">[(</span><span class="n">features2_nonan</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">features2_nonan</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&lt;</span> <span class="mi">6000</span><span class="p">)],</span>
+    <span class="n">features2_nonan</span><span class="o">.</span><span class="n">VpG</span><span class="p">[(</span><span class="n">features2_nonan</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">features2_nonan</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&lt;</span> <span class="mi">6000</span><span class="p">)]</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Metrics for Gardner with Filtered Data Vp):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vpg_metrics2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Metrics for Gardner with Filtered Data Vp):
+
+{&#39;Sum of Residuals&#39;: np.float64(-25589.572721078162), &#39;MAE&#39;: np.float64(295.9254751013969), &#39;MSE&#39;: np.float64(162331.10374522334), &#39;RMSE&#39;: np.float64(402.9033429313082), &#39;R2&#39;: -0.0937786027043972}
+</pre></div>
+</div>
+<p>Gardner Vp for comparison</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">gard_vp</span> <span class="o">=</span> <span class="n">features2</span><span class="o">.</span><span class="n">VpG</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">Vp_nan_index</span><span class="p">]</span>
+<span class="n">gard_vp</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>0     5526.493483
+15    5520.661324
+36    5633.454391
+77    5586.388848
+79    5691.523695
+Name: VpG, dtype: float64
+</pre></div>
+</div>
+</section>
+<section id="simpliest-ml-models-for-vp">
+<h3>Simpliest ML models for Vp<a class="headerlink" href="#simpliest-ml-models-for-vp" title="Link to this heading">¶</a></h3>
+<p>Machine Learning (ML) algorithms offer a wide range of options to calculate missing values of a single variable. From the simplest and most well-known, such as linear regression with an independent variable, to the most complex. Below we use the simplest ML algorithms and their respective metrics, applied again to predict Vp and fill its gaps. But first, we split the non-NaN portion of the filtered data (features2) for training and testing.</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="output_subarea output_html rendered_html output_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>From</th>
+      <th>Den</th>
+      <th>Vp</th>
+      <th>Vs</th>
+      <th>Mag</th>
+      <th>Ip</th>
+      <th>Res</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>277.05</td>
+      <td>3.399</td>
+      <td>5754.0</td>
+      <td>2085.0</td>
+      <td>0.237</td>
+      <td>17.52</td>
+      <td>10200.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>287.20</td>
+      <td>3.293</td>
+      <td>6034.0</td>
+      <td>2122.0</td>
+      <td>0.176</td>
+      <td>6.88</td>
+      <td>15500.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>296.75</td>
+      <td>2.782</td>
+      <td>4661.0</td>
+      <td>2294.0</td>
+      <td>0.107</td>
+      <td>27.81</td>
+      <td>2100.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>318.75</td>
+      <td>3.386</td>
+      <td>5815.0</td>
+      <td>2115.0</td>
+      <td>0.060</td>
+      <td>8.53</td>
+      <td>10700.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>325.75</td>
+      <td>2.616</td>
+      <td>4785.0</td>
+      <td>1946.0</td>
+      <td>0.040</td>
+      <td>84.90</td>
+      <td>296.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+<br />
+<br /><p>Target from filtered features2</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># The target or objective of the model is the Vp</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">Vp</span><span class="p">[(</span><span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&lt;</span> <span class="mi">6000</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">target</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">target</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>(225,)
+
+2     5754.0
+5     4661.0
+8     5815.0
+9     4785.0
+10    5707.0
+Name: Vp, dtype: float64
+</pre></div>
+</div>
+<p>Filtered density is the independent feature to compute Vp, the target</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">features2_den</span> <span class="o">=</span> <span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">Den</span><span class="p">[(</span><span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&gt;</span> <span class="mi">4000</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">features2_num_nonan</span><span class="o">.</span><span class="n">Vp</span> <span class="o">&lt;</span> <span class="mi">6000</span><span class="p">)]</span>
+<span class="n">features2_den</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>2     3.399
+5     2.782
+8     3.386
+9     2.616
+10    2.821
+Name: Den, dtype: float64
+</pre></div>
+</div>
+<p>Split and shape of data for training and testing</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">features2_den</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;X_train shape:&#39;</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;y_train shape:&#39;</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;X_test shape:&#39;</span><span class="p">,</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;y_test shape:&#39;</span><span class="p">,</span> <span class="n">y_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>X_train shape: (180, 1)
+y_train shape: (180, 1)
+X_test shape: (45, 1)
+y_test shape: (45, 1)
+</pre></div>
+</div>
+</section>
+<section id="simple-linear-regression">
+<h3>Simple Linear Regression<a class="headerlink" href="#simple-linear-regression" title="Link to this heading">¶</a></h3>
+<p>The linear regression is perhaps one of the simplest ML algorithms, it allows us to define a simple formula to compute Vp from Den, the only feature. The regression using all the data gave a negative $R^2$ (the predictions are worse than if it had simply predicted the mean), while applying a filter in the input data(4000 &lt; Vp &lt; 6000) resulted in a positive $R^2$, although a very small one (0.003).</p>
+<p>Linear Regression</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Model training and prediction</span>
+<span class="n">lr_model</span> <span class="o">=</span> <span class="n">LinearRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">lr_predict</span> <span class="o">=</span> <span class="n">lr_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_test</span><span class="p">))</span>
+
+<span class="c1"># Coheficients</span>
+<span class="n">coef</span> <span class="o">=</span> <span class="n">lr_model</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">inter</span> <span class="o">=</span> <span class="n">lr_model</span><span class="o">.</span><span class="n">intercept_</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Metric of the linear regression with filtered data</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">lr_metrics</span> <span class="o">=</span> <span class="n">basic_stat</span><span class="o">.</span><span class="n">metrics</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">lr_predict</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Metrics for Linear Regressor:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lr_metrics</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Metrics for Linear Regressor:
+
+{&#39;Sum of Residuals&#39;: np.float64(-663.6657176180624), &#39;MAE&#39;: np.float64(321.4070681962207), &#39;MSE&#39;: np.float64(152576.8824032091), &#39;RMSE&#39;: np.float64(390.61090922196365), &#39;R2&#39;: 0.002886141920427243}
+</pre></div>
+</div>
+<p>Plot of filtered data and regression</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Real data&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.65</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">lr_predict</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Prediction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vp = </span><span class="si">{</span><span class="n">coef</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> * den + </span><span class="si">{</span><span class="n">inter</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Linear Regression&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Density (g/cm$^3$)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Vp (m/s)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_009.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_009.png" alt="Linear Regression, Vp = 175.7 * den + 4996.3" class = "sphx-glr-single-img"/><div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend object at 0x7f3199fc2ce0&gt;
+</pre></div>
+</div>
+<p>lr Vp for comparison</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="c1">#  Density of the Vp calculations</span>
+<span class="n">den_feature</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">Den</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">Vp_nan_index</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">lr_vp</span> <span class="o">=</span> <span class="n">lr_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">den_feature</span><span class="p">)</span>
+<span class="n">lr_vp</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([[5454.81134299],
+       [5452.87886354],
+       [5491.35277254],
+       [5475.01453721],
+       [5512.08300661],
+       [5473.43341766],
+       [5454.98702294],
+       [5427.58095077],
+       [5466.58189962],
+       [5467.28461942],
+       [5474.66317731],
+       [5468.33869912],
+       [5458.85198183],
+       [5466.05485977],
+       [5454.81134299],
+       [5517.70476501],
+       [5469.74413872],
+       [5470.27117857],
+       [5467.98733922],
+       [5478.52813621],
+       [5470.27117857],
+       [5462.01422093],
+       [5495.74477128],
+       [5461.66286103]])
+</pre></div>
+</div>
+</section>
+<section id="non-linear-fit">
+<h3>Non Linear Fit<a class="headerlink" href="#non-linear-fit" title="Link to this heading">¶</a></h3>
+<p>Although the non_linear fit is more powerful since it can fit the alpha and beta coefficients of a non-linear curve of density to Vp, the $R^2$ metric (0.004) does not differ much from the linear regression with the filtered data.</p>
+<p>Reshaping the filtered data</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_train</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;X_train shape:&#39;</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;y_train shape:&#39;</span><span class="p">,</span> <span class="n">y_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>X_train shape: (180,)
+y_train shape: (180,)
+</pre></div>
+</div>
+<p>Gardner function for double fitting, for alpha and beta</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">gardner_model</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">X_train</span> <span class="o">**</span> <span class="n">beta</span>
+</pre></div>
+</div>
+<p>Model fit</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">popt</span><span class="p">,</span> <span class="n">pcov</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">gardner_model</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>  <span class="c1"># p0 is the initial estimation of alpha y beta</span>
+</pre></div>
+</div>
+<p>Coheficients and prediction</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="n">popt</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Alpha:&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Beta:&#39;</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+
+<span class="n">nlf_predict</span> <span class="o">=</span> <span class="n">gardner_model</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Alpha: 4944.85723377095
+Beta: 0.1017276747649569
+</pre></div>
+</div>
+<p>Metric of the non linear fit with filtered data</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nlf_metrics</span> <span class="o">=</span> <span class="n">basic_stat</span><span class="o">.</span><span class="n">metrics</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">nlf_predict</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Metrics for Non Linear Fit:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">nlf_metrics</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>Metrics for Non Linear Fit:
+
+{&#39;Sum of Residuals&#39;: np.float64(-672.1847517458073), &#39;MAE&#39;: np.float64(321.430456631444), &#39;MSE&#39;: np.float64(152446.9582936085), &#39;RMSE&#39;: np.float64(390.4445649431024), &#39;R2&#39;: 0.003735216355170601}
+</pre></div>
+</div>
+<p>Plot of filtered data and NLF equation</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Real data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">nlf_predict</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Prediction&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vp = </span><span class="si">{</span><span class="n">alpha</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> * den ** </span><span class="si">{</span><span class="n">beta</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Density (g/cm3)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Non Linear Fit&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Vp (m/s)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_010.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_010.png" alt="Non Linear Fit, Vp = 4944.86 * den ** 0.10" class = "sphx-glr-single-img"/><p>nlf Vp for comparison</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">nlf_vp</span> <span class="o">=</span> <span class="n">gardner_model</span><span class="p">(</span><span class="n">den_feature</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+<span class="n">nlf_vp</span>
+</pre></div>
+</div>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>array([[5451.77127868],
+       [5449.42946455],
+       [5494.46242706],
+       [5475.7369865 ],
+       [5517.43839526],
+       [5473.89450644],
+       [5451.98373102],
+       [5417.92250818],
+       [5465.84650885],
+       [5466.67677416],
+       [5475.32801939],
+       [5467.92008814],
+       [5456.63928719],
+       [5465.22307824],
+       [5451.77127868],
+       [5523.52610545],
+       [5469.57396647],
+       [5470.19303406],
+       [5467.50592748],
+       [5479.81189483],
+       [5470.19303406],
+       [5460.42246055],
+       [5499.40142812],
+       [5460.00324939]])
+</pre></div>
+</div>
+</section>
+</section>
+<section id="vps-comparison">
+<h2>Vps Comparison<a class="headerlink" href="#vps-comparison" title="Link to this heading">¶</a></h2>
+<p>The real Vp values allow us to evaluate the quality of different procedures that estimate Vp, such as different imputation algorithms, the Gardner empirical formula, and the simpliest ML regression model.</p>
+<p>Datos y títulos a utilizar en el bucle</p>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+
+<span class="c1"># Histograms</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">2500</span><span class="p">,</span> <span class="mi">7000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;m/s&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Real Vp&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">box</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">dropna</span><span class="p">(),</span> <span class="n">vert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">showmeans</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">meanline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">patch_artist</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mean_line</span> <span class="o">=</span> <span class="n">box</span><span class="p">[</span><span class="s1">&#39;means&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Obtener la línea de la media</span>
+<span class="n">median_line</span> <span class="o">=</span> <span class="n">box</span><span class="p">[</span><span class="s1">&#39;medians&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># Obtener la línea de la mediana</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="n">mean_line</span><span class="p">,</span> <span class="n">median_line</span><span class="p">],</span> <span class="p">[</span><span class="s1">&#39;Mean&#39;</span><span class="p">,</span> <span class="s1">&#39;Median&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">2500</span><span class="p">,</span> <span class="mi">7000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Real Vp&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;m/s&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">gard_vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gardner Vp&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">nii_vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;NII Imputer Vp&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">lr_vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;LR Vp&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">nlf_vp</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;NLF Vp&#39;</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">2500</span><span class="p">,</span> <span class="mi">7000</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;m/s&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Estimated Vps&#39;</span><span class="p">)</span>
+
+<span class="c1"># Boxplots</span>
+<span class="n">data_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">gard_vp</span><span class="p">,</span> <span class="n">nii_vp</span><span class="p">,</span> <span class="n">lr_vp</span><span class="p">,</span> <span class="n">nlf_vp</span><span class="p">]</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Gardner Vp&#39;</span><span class="p">,</span> <span class="s1">&#39;NII Inputer Vp&#39;</span><span class="p">,</span> <span class="s1">&#39;LR Vp&#39;</span><span class="p">,</span> <span class="s1">&#39;NLF Vp&#39;</span><span class="p">]</span>
+<span class="n">means</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">dropna</span><span class="p">()),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gard_vp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">nii_vp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lr_vp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">nlf_vp</span><span class="p">)]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">data_list</span><span class="p">)):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data_list</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">showmeans</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">meanline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">vp_change</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">data_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">features2</span><span class="o">.</span><span class="n">Vp</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="mi">500</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="s1">&#39;Mean: </span><span class="si">{:.0f}</span><span class="s1">, </span><span class="si">% c</span><span class="s1">hange: </span><span class="si">{:.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vp_change</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">2500</span><span class="p">,</span> <span class="mi">7000</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">titles</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;m/s&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+<img src="../../_images/sphx_glr_02_no_2_filling_gaps_011.png" srcset="../../_images/sphx_glr_02_no_2_filling_gaps_011.png" alt="Real Vp, Real Vp, Estimated Vps, Gardner Vp, NII Inputer Vp, LR Vp, NLF Vp" class = "sphx-glr-single-img"/></section>
+<section id="observations">
+<h2>Observations<a class="headerlink" href="#observations" title="Link to this heading">¶</a></h2>
+<p>Here are some observations related to the tasks covered in this notebook:</p>
+<ul class="simple">
+<li><p>Anomalies represent 0.5% (18) of the data, and after removing them we reach a total of 4.3% of NaN (142).</p></li>
+<li><p>The metrics favor the nii imputer. However, the knn, ii, and nknn imputer provided similar results. In the end, the dataset without anomalies (features2) was filled with the nii imputer (features3) because it was the best option.</p></li>
+<li><p>In addition to the correlation matrix (described in the previous notebook 1/3), it is important to explore the covariance matrix because it provides valuable information regarding the scale-dependent relationships between variables, reflecting how changes in one variable are associated with changes in another in terms of their actual units.</p></li>
+<li><p>The poor correlation (low covariance) between Den and Vp was not realized until Gardner’s Vp was calculated. This gave negative <span class="math notranslate nohighlight">\(R^2\)</span>, even after filtering part of the data outside the increasing trend.</p></li>
+<li><p>Filtering the Den and Vp values outside the increasing trend allows us to obtain positive but very small <span class="math notranslate nohighlight">\(R^2\)</span> for the LR and the NLF ML algorithms.</p></li>
+</ul>
+</section>
+<section id="next-step">
+<h2>Next Step<a class="headerlink" href="#next-step" title="Link to this heading">¶</a></h2>
+<p>The next and last notebook (3/3), after the imputation, is going to focus on the prediction of an entire variable (GR), missing in one of the available boreholes.</p>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<p><a class="reference external" href="https://wiki.seg.org/wiki/Dictionary:Gardner%E2%80%99s_equation">Gardner’s Equation</a></p>
+</section>
+<section id="annex-regression-metrics">
+<h2>Annex - Regression Metrics<a class="headerlink" href="#annex-regression-metrics" title="Link to this heading">¶</a></h2>
+<p>These metrics help you understand different aspects of prediction accuracy and are critical for evaluating and comparing regression models. The main metrics are:</p>
+<p>The Sum of Residuals is the sum of errors between the predicted and the actual values. Ideally, it should add up to 0.</p>
+<div class="math notranslate nohighlight">
+\[\text{Sum of Residuals} = \sum_{i=1}^{n} (y_i - \hat{y}_i)\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(y_i\)</span> is the real value.</p></li>
+<li><p><span class="math notranslate nohighlight">\(\hat{y}_i\)</span> is the predicted value.</p></li>
+</ul>
+<p>The MAE measures the average of the absolute errors between the predicted and the actual values. It is an intuitive and easy-to-interpret metric.</p>
+<div class="math notranslate nohighlight">
+\[\text{MAE} = \frac{1}{n} \sum_{i=1}^{n} |y_i - \hat{y}_i|\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(n\)</span> is the number of observations.</p></li>
+</ul>
+<p>The MSE measures the average of the squared errors between the predicted values and the actual values. It penalizes large errors more than the MAE.</p>
+<div class="math notranslate nohighlight">
+\[\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2\]</div>
+<p>The RMSE is the square root of the MSE. It is expressed in the same units as the output variable, which makes it more interpretable.</p>
+<div class="math notranslate nohighlight">
+\[\text{RMSE} = \sqrt{\frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y}_i)^2} = \sqrt{\text{MSE}}\]</div>
+<p>The <span class="math notranslate nohighlight">\(R^2\)</span> measures the proportion of the variance of the dependent or predicted variable against the independent variables. Normally it ranges from 0 (not fit at all) to 1 (perfect fit). A rare negative value indicates the prediction model is worse than a prediction with the mean.</p>
+<div class="math notranslate nohighlight">
+\[R^2 = 1 - \frac{\sum_{i=1}^{n} (y_i - \hat{y}_i)^2}{\sum_{i=1}^{n} (y_i - \bar{y})^2}\]</div>
+<p>Where:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\bar{y}\)</span> is the mean of the real values <span class="math notranslate nohighlight">\(y_i\)</span>.</p></li>
+</ul>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 1.429 seconds)</p>
+<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-05-petrophysics-02-no-2-filling-gaps-py">
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/0470ca9704d632cf8eaa5cb584eb6555/02_no_2_filling_gaps.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">02_no_2_filling_gaps.ipynb</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../../_downloads/29664bf649e3956ae7ec572c790d4b35/02_no_2_filling_gaps.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">02_no_2_filling_gaps.py</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/vector-logo.png" alt="Logo"/>
+            </a></p>
+<h1 class="logo"><a href="../../index.html">Vector Geology</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Vector Geology Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../external/external_examples.html">Bayesian Inference Theory</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../01_readers/index.html">Readers and Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../02_structural_modeling/index.html">Structural Modeling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../03_forward_engines/index.html">GeoPhysics and Inversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../04_probabilistic_modeling/index.html">Probabilistic Modeling</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Petrophysical Data Integration and Modeling</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="01_eda_integration_delivery_1.html">Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (1/3)</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Modeling and Propagation of Petrophysical Data for Mining Exploration (2/3)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#variables">Variables</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#libraries">Libraries</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#settings">Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#data-loading">Data Loading</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#features-cleaning">Features Cleaning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nan-and-anomalies-preservation">NaN and Anomalies Preservation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#anomalies-deletion">Anomalies Deletion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#nans-in-the-features">NaNs in the Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#filling-the-holes">Filling the holes</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#imputations-evaluation">Imputations Evaluation</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#estimating-vp">Estimating Vp</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#vp-by-gardner">Vp by Gardner</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#simpliest-ml-models-for-vp">Simpliest ML models for Vp</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#simple-linear-regression">Simple Linear Regression</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#non-linear-fit">Non Linear Fit</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#vps-comparison">Vps Comparison</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#observations">Observations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#next-step">Next Step</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reference">Reference</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#annex-regression-metrics">Annex - Regression Metrics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="03_no_3_modeling.html">Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (3/3)</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../maintenance.html">Maintenance</a></li>
+</ul>
+
+
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023-2024, Vector Geology Team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 7.2.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="../../_sources/examples/05_petrophysics/02_no_2_filling_gaps.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

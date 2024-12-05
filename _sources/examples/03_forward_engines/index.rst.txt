@@ -77,6 +77,23 @@ Our tutorials are crafted to guide you through the process of applying geophysic
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Multiphysics property prediction from hyperspectral drill core data">
+
+.. only:: html
+
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_04_VectorGeology_HyTorch_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_03_forward_engines_04_VectorGeology_HyTorch.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Multiphysics property prediction from hyperspectral drill core data</div>
+    </div>
+
+
+.. raw:: html
+
     </div>
 
 
@@ -86,4 +103,5 @@ Our tutorials are crafted to guide you through the process of applying geophysic
    /examples/03_forward_engines/01_gravity_gradiometry_inversion_pgi
    /examples/03_forward_engines/02_model_1_gempy_fw_gravity
    /examples/03_forward_engines/03_HSI_To_Petrophysics
+   /examples/03_forward_engines/04_VectorGeology_HyTorch
 

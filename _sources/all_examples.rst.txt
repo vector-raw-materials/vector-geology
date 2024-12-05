@@ -1,0 +1,281 @@
+.. _all_examples:
+
+All Examples
+============
+
+All Examples
+============
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF (Open Mining Format) project file in Python, visu...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_01_read_OMF_sites_thumb.png
+    :alt: OMF Reader Example
+
+  :ref:`sphx_glr_examples_01_readers_01_read_OMF_sites.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading OMF Project Into Python</div>
+    </div>
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF (Open Mining Format) project file and convert it ...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_02_model_1_OMF_to_subsurface_thumb.png
+    :alt: OMF to Subsurface
+
+  :ref:`sphx_glr_examples_01_readers_02_model_1_OMF_to_subsurface.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading Model 1 OMF Project into Subsurface</div>
+    </div>
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This tutorial demonstrates how to read an OMF project file and export it for use with Subsurfac...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_03_model_2_OMF_to_subsurface_thumb.png
+    :alt: OMF to Subsurface Example 1
+
+  :ref:`sphx_glr_examples_01_readers_03_model_2_OMF_to_subsurface.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Reading OMF project and exporting it to Subsurface: Example 1</div>
+    </div>
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to read gravity data from the Stonepark project and visualize it. ...">
+
+.. only:: html
+
+  .. image:: /examples/01_readers/images/thumb/sphx_glr_04_model_1_read_gravity_thumb.png
+    :alt: Gravity Data Visualization
+
+  :ref:`sphx_glr_examples_01_readers_04_model_1_read_gravity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Gravity Data Visualization</div>
+    </div>
+
+.. raw:: html
+
+    </div>
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates how to construct a 3D geological model of a deposit using GemPy.">
+
+.. only:: html
+
+  .. image:: /examples/02_structural_modeling/images/thumb/sphx_glr_01_model_1_gempy_step_by_step_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_02_structural_modeling_01_model_1_gempy_step_by_step.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Constructing Structural Geological Model</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to construct a 3D geological model of the Model 1 deposit using G...">
+
+.. only:: html
+
+  .. image:: /examples/02_structural_modeling/images/thumb/sphx_glr_02_model_1_gempy_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_02_structural_modeling_02_model_1_gempy.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Construct Model 1 with Helper Functions</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates how to construct a 3D geological model of the Model 1 deposit using G...">
+
+.. only:: html
+
+  .. image:: /examples/02_structural_modeling/images/thumb/sphx_glr_03_model_spremberg_import_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_02_structural_modeling_03_model_spremberg_import.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Construct Spremberg: Importing borehole data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates...">
+
+.. only:: html
+
+  .. image:: /examples/02_structural_modeling/images/thumb/sphx_glr_04_model_spremberg_building_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_02_structural_modeling_04_model_spremberg_building.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Construct Spremberg: Building initial model</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example illustrates the inversion of sub-surface density models from Full-Tensor Gravity G...">
+
+.. only:: html
+
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_01_gravity_gradiometry_inversion_pgi_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_03_forward_engines_01_gravity_gradiometry_inversion_pgi.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Inversion of Full Tensor Gravity Gradiometry Data</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This script demonstrates the calculation of forward gravity for model 1. It utilizes libraries ...">
+
+.. only:: html
+
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_02_model_1_gempy_fw_gravity_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_03_forward_engines_02_model_1_gempy_fw_gravity.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Model 1 Forward Gravity</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates the prediction of P-Wave velocities from hyperspectral data using mac...">
+
+.. only:: html
+
+  .. image:: /examples/03_forward_engines/images/thumb/sphx_glr_03_HSI_To_Petrophysics_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_03_forward_engines_03_HSI_To_Petrophysics.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Predicting P-Wave Velocity from Hyperspectral Data</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Complex probabilistic model ---------------------------">
+
+.. only:: html
+
+  .. image:: /examples/04_probabilistic_modeling/images/thumb/sphx_glr_01_thickness_problem_gempy_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_04_probabilistic_modeling_01_thickness_problem_gempy.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">2.2 - Including GemPy</div>
+    </div>
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="This example demonstrates a probabilistic inversion of a geological model using Bayesian method...">
+
+.. only:: html
+
+  .. image:: /examples/04_probabilistic_modeling/images/thumb/sphx_glr_02_model_1_bayesian_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_04_probabilistic_modeling_02_model_1_bayesian.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Probabilistic Inversion Example: Geological Model</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbnails">
+
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Barcelona 25/09/24 GEO3BCN Manuel David Soto, Juan Alcalde, Adrià Hernàndez-Pineda, Ramón Carbo...">
+
+.. only:: html
+
+  .. image:: /examples/05_Geo/images/thumb/sphx_glr_eda_integration_delivery_1_thumb.png
+    :alt:
+
+  :ref:`sphx_glr_examples_05_Geo_eda_integration_delivery_1.py`
+
+.. raw:: html
+
+      <div class="sphx-glr-thumbnail-title">Modelling and Propagation of Legacy Petrophysical Data for Mining Exploration (1/3)</div>
+    </div>
+
+
+.. raw:: html
+
+    </div>
+

@@ -21,6 +21,9 @@ import gempy_viewer as gpv
 from gempy_engine.core.backend_tensor import BackendTensor
 import arviz as az
 from gempy_probability.plot_posterior import default_red, default_blue
+
+from gempy_viewer.modules.plot_2d.drawer_contours_2d import plot_regular_grid_contacts
+
 # sphinx_gallery_thumbnail_number = -1
 
 # %%
@@ -36,7 +39,7 @@ data_path = os.path.abspath('../')
 
 # %%
 # Define a function for plotting geological settings with wells
-def plot_geo_setting_well(geo_model):
+def plot_geo_setting_well(geo_model, alpha=1., show_lith=True):
     """
     This function plots the geological settings along with the well locations.
     It uses gempy_viewer to create 2D plots of the model.
@@ -47,7 +50,14 @@ def plot_geo_setting_well(geo_model):
     well_2 = 3.6e3
 
     # Create a 2D plot
-    p2d = gpv.plot_2d(geo_model, show_topography=False, legend=False, show=False)
+    p2d = gpv.plot_2d(
+        geo_model,
+        show_topography=False,
+        legend=False,
+        show=False,
+        show_lith=show_lith,
+        kwargs_boundaries={'alpha': alpha}
+    )
 
     # Add well and device markers to the plot
     p2d.axes[0].scatter([3e3], [well_1], marker='^', s=400, c='#71a4b3', zorder=10)
@@ -60,6 +70,7 @@ def plot_geo_setting_well(geo_model):
 
     # Show the plot
     p2d.fig.show()
+    return p2d
 
 
 # %%
@@ -67,7 +78,6 @@ def plot_geo_setting_well(geo_model):
 # -----------------------------
 # Here we create a geological model using GemPy. The model defines the spatial extent,
 # resolution, and geological information derived from orientations and surface points data.
-
 geo_model = gp.create_geomodel(
     project_name='Wells',
     extent=[0, 12000, -500, 500, 0, 4000],
@@ -79,16 +89,15 @@ geo_model = gp.create_geomodel(
     )
 )
 
-
 # %%
 # Configuring the Model
 # ---------------------
 # We configure the interpolation options for the geological model. 
 # These options determine how the model interpolates between data points.
 
-geo_model.interpolation_options.uni_degree = 0
+geo_model.interpolation_options.uni_degree = 1
 geo_model.interpolation_options.mesh_extraction = False
-geo_model.interpolation_options.sigmoid_slope = -1  # ! Temporary fix to set the hard sigmoid 
+geo_model.interpolation_options.sigmoid_slope = 1000  # ! Temporary fix to set the hard sigmoid 
 
 # %%
 # Setting up a Custom Grid
@@ -111,7 +120,6 @@ gp.set_custom_grid(geo_model.grid, xyz_coord=xyz_coord)
 # Plot initial geological settings
 plot_geo_setting_well(geo_model=geo_model)
 
-
 # %%
 # Interpolating the Initial Guess
 # -------------------------------
@@ -123,7 +131,6 @@ gp.compute_model(
     engine_config=gp.data.GemPyEngineConfig(backend=gp.data.AvailableBackends.numpy)
 )
 plot_geo_setting_well(geo_model=geo_model)
-
 
 # %%
 # Probabilistic Geomodeling with Pyro
@@ -152,7 +159,10 @@ def model(y_obs_list):
     """
     # Define prior for the top layer's location
     prior_mean = sp_coords_copy[0, 2]
-    mu_top = pyro.sample(r'$\mu_{top}$', dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64)))
+    mu_top = pyro.sample(
+        name=r'$\mu_{top}$',
+        fn=dist.Normal(prior_mean, torch.tensor(0.02, dtype=torch.float64))
+    )
 
     # Update the model with the new top layer's location
     interpolation_input = geo_model.interpolation_input_copy
@@ -206,9 +216,14 @@ plt.show()
 
 # Magic sauce
 from gempy_engine.core.backend_tensor import BackendTensor
+
 # import gempy_engine.config
 # config.DEFAULT_PYKEOPS = False
-BackendTensor._change_backend(engine_backend=gp.data.AvailableBackends.PYTORCH, dtype="float64", pykeops_enabled=False)
+BackendTensor._change_backend(
+    engine_backend=gp.data.AvailableBackends.PYTORCH,
+    dtype="float64",
+    pykeops_enabled=False
+)
 
 pyro.primitives.enable_validation(is_validate=True)
 nuts_kernel = NUTS(model, step_size=0.0085, adapt_step_size=True, target_accept_prob=0.9, max_tree_depth=10, init_strategy=init_to_mean)
@@ -229,7 +244,6 @@ data = az.from_pyro(posterior=mcmc, prior=prior, posterior_predictive=posterior_
 az.plot_trace(data)
 plt.show()
 
-
 # %%
 # Density Plot of Posterior Predictive
 # ------------------------------------
@@ -247,5 +261,29 @@ az.plot_density(
     colors=[default_red, default_blue],
 )
 plt.show()
+
+# %%
+# Plot spagetti
+p2d = plot_geo_setting_well(geo_model, alpha=0.1, show_lith=False)
+for i in range(0,199,5):
+    gp.modify_surface_points(
+        geo_model=geo_model,
+        slice=0,
+        Z= geo_model.input_transform.apply_inverse(
+            points=np.array([[0, 0, data.posterior[r'$\mu_{top}$'][0][i].item()]]))[0,2]
+    )
+
+    gp.compute_model(geo_model)
+
+    plot_regular_grid_contacts(
+        gempy_model=geo_model,
+        ax=p2d.axes[0],
+        slicer_data=p2d.section_data_list[0].slicer_data,
+        resolution=geo_model.grid.regular_grid.resolution,
+        only_faults=False,
+        kwargs={'alpha': 0.1}
+    )
+
+p2d.fig.show()
 
 # sphinx_gallery_thumbnail_number = 2

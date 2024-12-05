@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:18.998** total execution time for 3 files **from examples/03_forward_engines**:
+**05:15.254** total execution time for 4 files **from examples/03_forward_engines**:
 
 .. container::
 
@@ -32,10 +32,13 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_examples_03_forward_engines_02_model_1_gempy_fw_gravity.py` (``02_model_1_gempy_fw_gravity.py``)
-     - 00:18.998
+   * - :ref:`sphx_glr_examples_03_forward_engines_04_VectorGeology_HyTorch.py` (``04_VectorGeology_HyTorch.py``)
+     - 05:15.254
      - 0.0
    * - :ref:`sphx_glr_examples_03_forward_engines_01_gravity_gradiometry_inversion_pgi.py` (``01_gravity_gradiometry_inversion_pgi.py``)
+     - 00:00.000
+     - 0.0
+   * - :ref:`sphx_glr_examples_03_forward_engines_02_model_1_gempy_fw_gravity.py` (``02_model_1_gempy_fw_gravity.py``)
      - 00:00.000
      - 0.0
    * - :ref:`sphx_glr_examples_03_forward_engines_03_HSI_To_Petrophysics.py` (``03_HSI_To_Petrophysics.py``)

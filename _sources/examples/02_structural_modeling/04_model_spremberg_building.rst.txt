@@ -53,10 +53,11 @@ This example demonstrates...
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 17-47
+.. GENERATED FROM PYTHON SOURCE LINES 17-48
 
 .. code-block:: default
 
+    vertical_exaggeration = 3
     elements_to_gempy = {
             "Buntsandstein"       : {
                     "id"   : 53_300,
@@ -105,21 +106,21 @@ This example demonstrates...
 
  .. code-block:: none
 
-    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:16: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
       d = reader(
-    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:130: SettingWithCopyWarning: 
+    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:129: SettingWithCopyWarning: 
     A value is trying to be set on a copy of a slice from a DataFrame.
     Try using .loc[row_indexer,col_indexer] = value instead
 
     See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
       lith_df['top'] = np.abs(lith_df['top'])
-    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:131: SettingWithCopyWarning: 
+    /home/leguark/subsurface/subsurface/modules/reader/wells/read_borehole_interface.py:130: SettingWithCopyWarning: 
     A value is trying to be set on a copy of a slice from a DataFrame.
     Try using .loc[row_indexer,col_indexer] = value instead
 
     See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stable/user_guide/indexing.html#returning-a-view-versus-a-copy
       lith_df['base'] = np.abs(lith_df['base'])
-    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:16: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
       d = reader(
     Well '13E_56' does not exist in the attributes DataFrame.
     Well '4_56' does not exist in the attributes DataFrame.
@@ -140,21 +141,21 @@ This example demonstrates...
     Well 'N8_71' does not exist in the attributes DataFrame.
     Well 'N9_71' does not exist in the attributes DataFrame.
     ('cell',) are not coordinates with an index xarray dataset must include 'cell' key (KeyError) or xarray 'cell' has no index (ValueError).
-    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:13: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
+    /home/leguark/subsurface/subsurface/modules/reader/wells/_read_to_df.py:16: ParserWarning: Falling back to the 'python' engine because the 'c' engine does not support sep=None with delim_whitespace=False; you can avoid this warning by specifying engine='python'.
       d = reader(
     /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy/core/data/grid_modules/grid_types.py:248: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
       plt.show()
-    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_3d_API.py:213: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_3d_API.py:213: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
       plt.show(block=False)
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 48-49
+.. GENERATED FROM PYTHON SOURCE LINES 49-50
 
 Add one orientation to the model
 
-.. GENERATED FROM PYTHON SOURCE LINES 49-62
+.. GENERATED FROM PYTHON SOURCE LINES 50-63
 
 .. code-block:: default
 
@@ -224,7 +225,7 @@ Add one orientation to the model
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 63-73
+.. GENERATED FROM PYTHON SOURCE LINES 64-74
 
 .. code-block:: default
 
@@ -245,7 +246,7 @@ Add one orientation to the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 74-77
+.. GENERATED FROM PYTHON SOURCE LINES 75-78
 
 .. code-block:: default
 
@@ -266,20 +267,20 @@ Add one orientation to the model
  .. code-block:: none
 
     Active grids: GridTypes.NONE|SECTIONS|OCTREE
-    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_2d_API.py:200: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_2d_API.py:202: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
       plot.fig.show()
 
-    <function plot_section_traces at 0x7f797772e440>
+    <function plot_section_traces at 0x7f885735e4d0>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 78-92
+.. GENERATED FROM PYTHON SOURCE LINES 79-93
 
 .. code-block:: default
 
     _ = gpv.plot_3d(
         model=geo_model,
-        ve=10,
+        ve=vertical_exaggeration,
         image=True,
         transformed_data=True,
         kwargs_pyvista_bounds={
@@ -309,13 +310,13 @@ Add one orientation to the model
 
  .. code-block:: none
 
-    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_3d_API.py:213: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_3d_API.py:213: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
       plt.show(block=False)
 
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 93-112
+.. GENERATED FROM PYTHON SOURCE LINES 94-113
 
 .. code-block:: default
 
@@ -324,7 +325,7 @@ Add one orientation to the model
     geo_model.interpolation_options.kernel_options.range = 3
     geo_model.interpolation_options.compute_scalar_gradient = False
     geo_model.interpolation_options.evaluation_options.octree_curvature_threshold = 0.4
-    geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 5
+    geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 6 
 
     geo_model.interpolation_options.evaluation_options.octree_error_threshold = 1
     geo_model.interpolation_options.evaluation_options.verbose = True
@@ -390,14 +391,14 @@ Add one orientation to the model
     <br />
     <br />
 
-.. GENERATED FROM PYTHON SOURCE LINES 113-120
+.. GENERATED FROM PYTHON SOURCE LINES 114-121
 
 .. code-block:: default
 
     gpv.plot_2d(
         model=geo_model,
         figsize=(15, 15),
-        ve=10,
+        ve=vertical_exaggeration,
         section_names=['section1', 'section2', 'section3']
     )
 
@@ -414,33 +415,35 @@ Add one orientation to the model
 
  .. code-block:: none
 
-    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_2d_sections_api.py:105: UserWarning: Section contacts not implemented yet. We need to pass scalar field for the sections grid
+    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_2d_sections_api.py:106: UserWarning: Section contacts not implemented yet. We need to pass scalar field for the sections grid
       warnings.warn(
-    /home/leguark/.virtualenvs/gempy_2024.2/lib/python3.10/site-packages/gempy_viewer/API/_plot_2d_API.py:174: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+    /home/leguark/gempy_viewer/gempy_viewer/API/_plot_2d_API.py:176: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
       p.fig.show()
 
-    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f790b5aad10>
+    <gempy_viewer.modules.plot_2d.visualization_2d.Plot2D object at 0x7f880c9933a0>
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 121-169
+.. GENERATED FROM PYTHON SOURCE LINES 122-172
 
 .. code-block:: default
 
     gempy_plot = gpv.plot_3d(
         model=geo_model,
         show_lith=False,
-        ve=10,
+        ve=vertical_exaggeration,
         show=False,
         image=False,
         transformed_data=False,
         kwargs_pyvista_bounds={
-                'show_xlabels': True,
-                'show_ylabels': True,
+                'show_xlabels': False,
+                'show_ylabels': False,
                 'show_zlabels': False,
+                'show_xaxis': False,
+                'show_yaxis': False,
         },
         kwargs_plot_data={
-                'arrow_size': 100.001000
+                'arrow_size': 40.001000
         }
     )
 
@@ -487,7 +490,7 @@ Add one orientation to the model
 
 
 
-.. GENERATED FROM PYTHON SOURCE LINES 170-178
+.. GENERATED FROM PYTHON SOURCE LINES 173-181
 
 LiquidEarth Integration
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -498,7 +501,7 @@ This makes it an excellent tool for sharing your models with others and viewing 
 To upload a model to LiquidEarth, you must have an account and a user token. Once your model is uploaded, 
 you can easily share the link with anyone.
 
-.. GENERATED FROM PYTHON SOURCE LINES 178-190
+.. GENERATED FROM PYTHON SOURCE LINES 181-193
 
 .. code-block:: default
 
@@ -524,7 +527,7 @@ you can easily share the link with anyone.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  11.808 seconds)
+   **Total running time of the script:** ( 0 minutes  13.795 seconds)
 
 
 .. _sphx_glr_download_examples_02_structural_modeling_04_model_spremberg_building.py:

@@ -14,6 +14,7 @@ from subsurface.modules.visualization import to_pyvista_line, to_pyvista_points
 from vector_geology.model_contructor.spremberg import generate_spremberg_model, get_spremberg_borehole_set, add_wells_plot
 
 # %%
+vertical_exaggeration = 3
 elements_to_gempy = {
         "Buntsandstein"       : {
                 "id"   : 53_300,
@@ -77,7 +78,7 @@ gpv.plot_section_traces(geo_model)
 # %%
 _ = gpv.plot_3d(
     model=geo_model,
-    ve=10,
+    ve=vertical_exaggeration,
     image=True,
     transformed_data=True,
     kwargs_pyvista_bounds={
@@ -95,7 +96,7 @@ _ = gpv.plot_3d(
 geo_model.interpolation_options.kernel_options.range = 3
 geo_model.interpolation_options.compute_scalar_gradient = False
 geo_model.interpolation_options.evaluation_options.octree_curvature_threshold = 0.4
-geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 5
+geo_model.interpolation_options.evaluation_options.number_octree_levels_surface = 6 
 
 geo_model.interpolation_options.evaluation_options.octree_error_threshold = 1
 geo_model.interpolation_options.evaluation_options.verbose = True
@@ -113,7 +114,7 @@ gp.compute_model(
 gpv.plot_2d(
     model=geo_model,
     figsize=(15, 15),
-    ve=10,
+    ve=vertical_exaggeration,
     section_names=['section1', 'section2', 'section3']
 )
 
@@ -121,17 +122,19 @@ gpv.plot_2d(
 gempy_plot = gpv.plot_3d(
     model=geo_model,
     show_lith=False,
-    ve=10,
+    ve=vertical_exaggeration,
     show=False,
     image=False,
     transformed_data=False,
     kwargs_pyvista_bounds={
-            'show_xlabels': True,
-            'show_ylabels': True,
+            'show_xlabels': False,
+            'show_ylabels': False,
             'show_zlabels': False,
+            'show_xaxis': False,
+            'show_yaxis': False,
     },
     kwargs_plot_data={
-            'arrow_size': 100.001000
+            'arrow_size': 40.001000
     }
 )
 
