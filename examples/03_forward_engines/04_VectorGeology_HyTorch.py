@@ -453,3 +453,5 @@ for i in range(pred_.shape[1]):
     ax.set_aspect("equal")
 
 plt.show()
+
+# sphinx_gallery_thumbnail_number = -1

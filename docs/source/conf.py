@@ -106,7 +106,7 @@ todo_include_todos = True
 sphinx_gallery_conf = {
         # path to your examples scripts
         "examples_dirs"          : [
-                "../../examples/05_petrophysics",
+                "../../examples/",
         ],
         # path where to save gallery generated examples
         "gallery_dirs"           : [
