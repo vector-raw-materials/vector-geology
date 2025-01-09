@@ -26,6 +26,8 @@ from subsurface.core.geological_formats.boreholes.survey import Survey
 from subsurface.core.reader_helpers.readers_data import GenericReaderFilesHelper
 from subsurface.modules.reader.wells.read_borehole_interface import read_lith, read_survey, read_collar
 from subsurface.modules.visualization import to_pyvista_line, to_pyvista_points, init_plotter
+from subsurface.modules.reader import read_unstructured_topography, read_structured_topography
+from subsurface.modules.reader.mesh.dxf_reader import DXFEntityType
 
 # %%
 # Load OMF Project
@@ -108,7 +110,7 @@ for block_index in range(omf_project.n_blocks):
 plotter = init_plotter()
 
 for mesh in meshes:
-    plotter.add_mesh(mesh, cmap="magma", opacity=0.7)
+    plotter.add_mesh(mesh, cmap="magma", opacity=0.3)
 
 for line in lines:
     plotter.add_mesh(line, cmap="viridis", opacity=1)
@@ -209,5 +211,15 @@ pyvista_plotter.add_mesh(
     point_size=10,
     render_points_as_spheres=True
 )
+
+file_path = os.getenv("PATH_TO_TOPOGRAPHY")
+unstruct = read_unstructured_topography(
+    path=file_path,
+    additional_reader_kwargs={'entity_type': DXFEntityType.POLYLINE}
+)
+ts = TriSurf(mesh=unstruct)
+s1 = to_pyvista_mesh(ts)
+
+pyvista_plotter.add_mesh(s1,  opacity=1)
 
 pyvista_plotter.show()
