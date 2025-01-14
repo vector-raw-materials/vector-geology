@@ -1,19 +1,19 @@
-import os
+import omfvista
 import omfvista
 import pandas as pd
 import pyvista
-from dotenv import dotenv_values
+
 import subsurface
 from subsurface import TriSurf, LineSet
-from subsurface.modules.visualization import to_pyvista_mesh, to_pyvista_line, init_plotter
 from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
 from subsurface.core.geological_formats.boreholes.collars import Collars
 from subsurface.core.geological_formats.boreholes.survey import Survey
 from subsurface.core.reader_helpers.readers_data import GenericReaderFilesHelper
-from subsurface.modules.reader.wells.read_borehole_interface import read_lith, read_survey, read_collar
-from subsurface.modules.visualization import to_pyvista_line, to_pyvista_points, init_plotter
-from subsurface.modules.reader import read_unstructured_topography, read_structured_topography
+from subsurface.modules.reader import read_unstructured_topography
 from subsurface.modules.reader.mesh.dxf_reader import DXFEntityType
+from subsurface.modules.reader.wells.read_borehole_interface import read_lith, read_survey, read_collar
+from subsurface.modules.visualization import to_pyvista_line, to_pyvista_points
+from subsurface.modules.visualization import to_pyvista_mesh
 
 
 def load_spremberg_meshes(path_to_files: str) -> tuple[list[pyvista.PolyData], list[pyvista.PolyData]]:
@@ -150,3 +150,46 @@ def read_topography(file_path):
     ts = TriSurf(mesh=unstruct)
     s1 = to_pyvista_mesh(ts)
     return s1
+
+def read_seismic_profiles(
+            interpretation_path: str,
+            section_path: str,
+            crop_coords: dict,
+            zmin: float,
+            zmax: float
+) -> pyvista.PolyData:
+        import tifffile as tiff  # Install with pip install tifffile
+        import pandas as pd
+        from subsurface import TriSurf, UnstructuredData, StructuredData
+        from subsurface.modules.reader.profiles.profiles_core import create_vertical_mesh
+        from subsurface.modules.visualization import to_pyvista_mesh
+
+        image = tiff.imread(interpretation_path)
+
+        # Perform the crop
+        cropped_image = image[crop_coords['y_start']:crop_coords['y_end'], crop_coords['x_start']:crop_coords['x_end']]
+        texture = StructuredData.from_numpy(cropped_image)
+
+        # Read coordinates
+        df = pd.read_csv(
+            filepath_or_buffer=section_path,
+            skiprows=4,  # Skip the header lines above 'CDP'
+            delim_whitespace=True,  # Treat consecutive spaces as separators
+            names=["CDP", "X_COORD", "Y_COORD"]  # Assign column names
+        )
+        coords = df[["X_COORD", "Y_COORD"]].to_numpy()
+
+        vertices, faces = create_vertical_mesh(coords, zmin, zmax)
+        geometry: UnstructuredData = UnstructuredData.from_array(vertices, faces)
+
+        ts = TriSurf(
+            mesh=geometry,
+            texture=texture,
+            texture_origin=[coords[0][0], coords[0][1], zmin],
+            texture_point_u=[coords[-1][0], coords[-1][1], zmin],
+            texture_point_v=[coords[0][0], coords[0][1], zmax]
+        )
+        
+        return to_pyvista_mesh(ts)
+
+

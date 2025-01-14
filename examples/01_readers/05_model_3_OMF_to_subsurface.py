@@ -17,7 +17,7 @@ import os
 import dotenv
 
 from subsurface.modules.visualization import init_plotter
-from vector_geology.model_contructor.spremberg_reader import load_spremberg_meshes, process_borehole_data, read_topography
+from vector_geology.model_contructor.spremberg_reader import load_spremberg_meshes, process_borehole_data, read_topography, read_seismic_profiles
 
 dotenv.load_dotenv()
 meshes, lines = load_spremberg_meshes(os.getenv('PATH_TO_SPREMBERG_OMF'))
@@ -30,6 +30,19 @@ well_mesh, collars = process_borehole_data(
 
 s1 = read_topography(os.getenv("PATH_TO_TOPOGRAPHY"))
 
+seismic_profiles = read_seismic_profiles(
+    interpretation_path=os.getenv("PATH_TO_SEISMIC_INTERPRETATION"),
+    section_path=os.getenv("PATH_TO_SEISMIC_SECTION"),
+    crop_coords={
+        "x_start": 60,
+        "x_end": 2080,
+        "y_start": 83,
+        "y_end": 730
+    },
+    zmin=-450,
+    zmax=140,
+)
+
 # Export to desired format here if necessary
 
 # %%
@@ -40,14 +53,14 @@ s1 = read_topography(os.getenv("PATH_TO_TOPOGRAPHY"))
 
 plotter = init_plotter()
 
-for mesh in meshes:
-    plotter.add_mesh(mesh, cmap="magma", opacity=0.3)
+if True:
+    for mesh in meshes:
+        plotter.add_mesh(mesh, cmap="magma", opacity=0.1)
 
 for line in lines:
     plotter.add_mesh(line, cmap="viridis", opacity=1)
 
-    file_or_buffer=os.getenv("PATH_TO_SPREMBERG_STRATIGRAPHY"),
-
+    file_or_buffer = os.getenv("PATH_TO_SPREMBERG_STRATIGRAPHY"),
 
 # Initialize the PyVista plotter.
 pyvista_plotter = plotter
@@ -69,6 +82,13 @@ pyvista_plotter.add_mesh(
 )
 
 
-pyvista_plotter.add_mesh(s1,  opacity=1)
+pyvista_plotter.add_mesh(s1, opacity=1)
+
+get = seismic_profiles._textures.get(0, None)
+pyvista_plotter.add_mesh(
+    mesh=seismic_profiles, 
+    texture=get,
+    opacity=1
+)
 
 pyvista_plotter.show()
