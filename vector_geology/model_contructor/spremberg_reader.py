@@ -1,16 +1,19 @@
-import omfvista
+import numpy as np
 import omfvista
 import pandas as pd
 import pyvista
+import tifffile as tiff  # Install with pip install tifffile
 
 import subsurface
-from subsurface import TriSurf, LineSet
+from subsurface import LineSet
+from subsurface import TriSurf, UnstructuredData, StructuredData
 from subsurface.core.geological_formats.boreholes.boreholes import BoreholeSet, MergeOptions
 from subsurface.core.geological_formats.boreholes.collars import Collars
 from subsurface.core.geological_formats.boreholes.survey import Survey
 from subsurface.core.reader_helpers.readers_data import GenericReaderFilesHelper
 from subsurface.modules.reader import read_unstructured_topography
 from subsurface.modules.reader.mesh.dxf_reader import DXFEntityType
+from subsurface.modules.reader.profiles.profiles_core import create_vertical_mesh
 from subsurface.modules.reader.wells.read_borehole_interface import read_lith, read_survey, read_collar
 from subsurface.modules.visualization import to_pyvista_line, to_pyvista_points
 from subsurface.modules.visualization import to_pyvista_mesh
@@ -158,12 +161,6 @@ def read_seismic_profiles(
             zmin: float,
             zmax: float
 ) -> pyvista.PolyData:
-        import tifffile as tiff  # Install with pip install tifffile
-        import pandas as pd
-        from subsurface import TriSurf, UnstructuredData, StructuredData
-        from subsurface.modules.reader.profiles.profiles_core import create_vertical_mesh
-        from subsurface.modules.visualization import to_pyvista_mesh
-
         image = tiff.imread(interpretation_path)
 
         # Perform the crop
@@ -191,5 +188,77 @@ def read_seismic_profiles(
         )
         
         return to_pyvista_mesh(ts)
+
+
+def read_magnetic_profiles(
+        interpretation_path: str,
+        section_path: str,
+        crop_coords: dict,
+        zmin: float,
+        zmax: float,
+        profile_number: int
+) -> pyvista.PolyData:
+    from pdf2image import convert_from_path
+
+    # Convert PDF to image
+
+    # Convert PDF to image
+    pages = convert_from_path(interpretation_path)
+    if len(pages) > 1:
+        raise ValueError("PDF contains multiple pages. Please provide a single-page PDF.")
+    image = np.array(pages[0])
+    # Perform the crop
+    cropped_image = image[crop_coords['y_start']:crop_coords['y_end'], crop_coords['x_start']:crop_coords['x_end']]
+    texture = StructuredData.from_numpy(cropped_image)
+
+
+    # region coords
+    import pandas as pd
+
+    df = pd.read_excel(
+        io=section_path,
+        header=0,  # or None if there's no header row
+    )
+
+    # 1) Convert Easting & Northing to shorter column names X, Y
+    #    (They might be in km, so keep that in mind if you need meters instead.)
+    df["X_COORD"] = df["Easting [km]"] * 10  # There is something off with the units in the original data set
+    df["Y_COORD"] = df["Northing [km]"] * 10
+
+
+    def get_profile_number(station_id: str) -> int:
+        """
+        Extract the numeric part (e.g. '101' from 'SP101')
+        and return the 'hundreds' group as the profile number.
+        """
+        import re
+        match = re.search(r"SP(\d+)$", station_id)
+        if not match:
+            return None
+        num = int(match.group(1))  # e.g. 101
+        return num // 100  # -> 1 for '101', 2 for '202', etc.
+
+
+    # Add a 'Profile' column
+    df["Profile"] = df["ID station"].apply(get_profile_number)
+    # Then group by 'Profile' rather than the full station ID:
+    profile_dict = {
+            profile_no: sub_df for profile_no, sub_df in df.groupby("Profile")
+    }
+
+    coords = profile_dict[profile_number][["X_COORD", "Y_COORD"]].to_numpy()
+    # endregion
+    vertices, faces = create_vertical_mesh(coords, zmin, zmax)
+    geometry: UnstructuredData = UnstructuredData.from_array(vertices, faces)
+
+    ts = TriSurf(
+        mesh=geometry,
+        texture=texture,
+        texture_origin=[coords[0][0], coords[0][1], zmin],
+        texture_point_u=[coords[-1][0], coords[-1][1], zmin],
+        texture_point_v=[coords[0][0], coords[0][1], zmax]
+    )
+    
+    return to_pyvista_mesh(ts)
 
 

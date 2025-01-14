@@ -17,7 +17,7 @@ import os
 import dotenv
 
 from subsurface.modules.visualization import init_plotter
-from vector_geology.model_contructor.spremberg_reader import load_spremberg_meshes, process_borehole_data, read_topography, read_seismic_profiles
+from vector_geology.model_contructor.spremberg_reader import load_spremberg_meshes, process_borehole_data, read_topography, read_seismic_profiles, read_magnetic_profiles
 
 dotenv.load_dotenv()
 meshes, lines = load_spremberg_meshes(os.getenv('PATH_TO_SPREMBERG_OMF'))
@@ -41,6 +41,20 @@ seismic_profiles = read_seismic_profiles(
     },
     zmin=-450,
     zmax=140,
+)
+
+magnetic_profiles = read_magnetic_profiles(
+    interpretation_path=os.getenv("PATH_TO_MAGNETIC_INTERPRETATION"),
+    section_path=os.getenv("PATH_TO_MAGNETIC_SECTION"),
+    crop_coords={
+        "x_start": 250,
+        "x_end": 1535,
+        "y_start": 120,
+        "y_end": 1495
+    },
+    zmin=-2500,
+    zmax=500,
+    profile_number=1
 )
 
 # Export to desired format here if necessary
@@ -84,10 +98,15 @@ pyvista_plotter.add_mesh(
 
 pyvista_plotter.add_mesh(s1, opacity=1)
 
-get = seismic_profiles._textures.get(0, None)
 pyvista_plotter.add_mesh(
-    mesh=seismic_profiles, 
-    texture=get,
+    mesh=seismic_profiles,
+    texture=seismic_profiles._textures.get(0, None),
+    opacity=1
+)
+
+pyvista_plotter.add_mesh(
+    mesh=magnetic_profiles,
+    texture=magnetic_profiles._textures.get(0, None),
     opacity=1
 )
 
