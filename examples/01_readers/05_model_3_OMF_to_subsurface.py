@@ -57,7 +57,6 @@ magnetic_profiles = read_magnetic_profiles(
     profile_number=1
 )
 
-# Export to desired format here if necessary
 
 # %%
 # Visualize Unstructured Data

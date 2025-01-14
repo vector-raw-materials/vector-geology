@@ -247,6 +247,28 @@ def read_magnetic_profiles(
     }
 
     coords = profile_dict[profile_number][["X_COORD", "Y_COORD"]].to_numpy()
+
+    from pyproj import CRS, Transformer
+    # Example: "ETRS89 / UTM zone 33N" is EPSG:25833 
+    #   (central meridian = 15° E)
+    source_crs = CRS.from_epsg(25833)
+
+    # "DHDN / 3-degree Gauss-Kruger zone 5" is EPSG:31469
+    target_crs = CRS.from_epsg(31469)
+
+    # Create a Transformer object
+    transformer = Transformer.from_crs(source_crs, target_crs, always_xy=True)
+
+    # Suppose df has columns X, Y in the source CRS:
+    # coords = df[["X", "Y"]].to_numpy()
+    X_utm = coords[:, 0]
+    Y_utm = coords[:, 1]
+
+    # Transform them from UTM -> Gauss-Krüger
+    X_gk, Y_gk = transformer.transform(X_utm, Y_utm)
+
+    coords = np.column_stack((X_gk, Y_gk))
+   
     # endregion
     vertices, faces = create_vertical_mesh(coords, zmin, zmax)
     geometry: UnstructuredData = UnstructuredData.from_array(vertices, faces)
