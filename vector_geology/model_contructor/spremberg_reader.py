@@ -13,7 +13,7 @@ from subsurface.core.geological_formats.boreholes.survey import Survey
 from subsurface.core.reader_helpers.readers_data import GenericReaderFilesHelper
 from subsurface.modules.reader import read_unstructured_topography
 from subsurface.modules.reader.mesh.dxf_reader import DXFEntityType
-from subsurface.modules.reader.profiles.profiles_core import create_vertical_mesh
+from subsurface.modules.reader.profiles.profiles_core import create_vertical_mesh, get_uv_from_pyvista
 from subsurface.modules.reader.wells.read_borehole_interface import read_lith, read_survey, read_collar
 from subsurface.modules.visualization import to_pyvista_line, to_pyvista_points
 from subsurface.modules.visualization import to_pyvista_mesh
@@ -133,6 +133,8 @@ def process_borehole_data(
         survey=survey,
         merge_option=MergeOptions.INTERSECT
     )
+    
+    borehole_set.to_binary("spremberg")
 
     # Visualize the borehole trajectories and collars using PyVista.
     well_mesh = to_pyvista_line(
@@ -186,7 +188,22 @@ def read_seismic_profiles(
             texture_point_u=[coords[-1][0], coords[-1][1], zmin],
             texture_point_v=[coords[0][0], coords[0][1], zmax]
         )
-        
+
+        if write_binary:=True:
+            uv: pd.DataFrame = get_uv_from_pyvista(ts)
+            geometry: UnstructuredData = UnstructuredData.from_array(
+                vertex=vertices, 
+                cells=faces,
+                vertex_attr=uv
+            )
+
+            
+            name = interpretation_path.split("/")[-1].split(".")[0]
+            new_file = open(f"{name}.le", "wb")
+            new_file.write(geometry.to_binary())
+            # Save cropped image as png
+            tiff.imwrite(f"{name}.png", cropped_image)
+
         return to_pyvista_mesh(ts)
 
 
