@@ -16,7 +16,10 @@ import os
 
 import dotenv
 
-from subsurface.modules.visualization import init_plotter
+import subsurface
+from subsurface import StructuredGrid
+from subsurface.modules.reader.volume.read_volume import read_VTK_structured_grid
+from subsurface.modules.visualization import init_plotter, to_pyvista_grid
 from vector_geology.model_contructor.spremberg_reader import load_spremberg_meshes, process_borehole_data, read_topography, read_seismic_profiles, read_magnetic_profiles
 
 dotenv.load_dotenv()
@@ -57,6 +60,13 @@ magnetic_profiles = read_magnetic_profiles(
     profile_number=1
 )
 
+structured_data: subsurface.StructuredData = read_VTK_structured_grid(
+    file_or_buffer= os.getenv("PATH_TO_SPREMBERG_FAKE_GEOPHYSICS"),
+    active_scalars="model_name"
+)
+
+sg: subsurface.StructuredGrid = StructuredGrid(structured_data)
+pyvista_structured_data = to_pyvista_grid(sg)
 
 # %%
 # Visualize Unstructured Data
@@ -96,6 +106,8 @@ pyvista_plotter.add_mesh(
 
 
 pyvista_plotter.add_mesh(s1, opacity=1)
+
+pyvista_plotter.add_mesh(pyvista_structured_data, opacity=.5)
 
 pyvista_plotter.add_mesh(
     mesh=seismic_profiles,
